@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 
-#[Fillable(['montant_main_oeuvre', 'montant_materiel', 'frais_deplacement',
- 'total_devis', 'conditions_execution', 'date_validite', 'statut_client', 'contact_id'])]
+#[Fillable([
+    'montant_main_oeuvre', 'montant_materiel', 'frais_deplacement',
+    'total_devis', 'conditions_execution', 'date_validite', 'statut_client', 
+    'canal_envoi', 'date_envoi', 'motif_refus', 'contact_id'
+])]
 
 class Devis extends Model
 {

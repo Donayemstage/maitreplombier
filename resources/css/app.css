@@ -203,11 +203,18 @@
         @apply border-border outline-ring/50;
     }
 
+    html, body {
+        max-width: 100vw;
+        overflow-x: hidden;
+        position: relative;
+    }
+
     body {
         @apply bg-background text-foreground;
     }
-  html {
-    @apply font-sans;
+
+    html {
+        @apply font-sans;
     }
 }
 

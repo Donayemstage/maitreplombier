@@ -26,7 +26,7 @@ class ContactRequest extends FormRequest
     {
         return [
             'nom' => ['required', 'string', 'max:255', 'min:2'],
-            'telephone' => ['required', 'string', 'regex:/^[0-9\+\s\-]{8,20}$/'],
+            'telephone' => ['required', 'string', 'regex:/^(?:\+237|00237)?6[25-9][0-9]{7}$/'],
             'email' => ['required', 'email'],
             'ville' => ['required', 'string', 'max:100'],
             'adresse' => ['required', 'string', 'max:255'],

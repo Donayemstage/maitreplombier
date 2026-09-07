@@ -5,6 +5,17 @@ export function FeaturesSection() {
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
+        <div className="mb-8">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2 block">
+            Savoir-faire & Réactivité
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+            Pour tout imprévu, <br />
+            <span className="font-normal text-slate-600">
+              un dépannage fiable chez Maître Plombier
+            </span>
+          </h2>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature) => {
             let icon;

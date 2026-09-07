@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
+import AppLogo from '@/components/app-logo';
 import {
   Sheet,
   SheetClose,
@@ -10,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Menu, Phone, Lock, Home, Wrench, Info, Mail, Copy, Check, MessageSquare, X, ShieldCheck } from "lucide-react"
+import { Menu, Phone, Lock, Home, Wrench, Info, Mail, Copy, Check, MessageSquare, X, ShieldCheck, Sparkles } from "lucide-react"
 import { Link, usePage } from "@inertiajs/react"
 import { cn } from "@/lib/utils"
 
@@ -52,90 +53,89 @@ export function Navbar({
   }
 
   return (
-    <>
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-100 shadow-sm">
       {/* Navigation Desktop */}
-      <nav className="hidden md:flex md:items-center md:justify-between md:px-6 py-3 bg-white border-b border-slate-100 shadow-sm">
+      <nav className="hidden md:flex md:items-center md:justify-between md:px-6 py-3 bg-white antialiased">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex flex-col leading-tight">
-            <span className="text-xl font-bold text-blue-900">Maître</span>
-            <span className="text-blue-600 font-semibold">Plombier</span>
+            <AppLogo />
           </Link>
         </div>
 
-        {/* Liens de navigation clients */}
-        <div className="hidden md:flex md:items-center md:space-x-6">
+        {/* Liens de navigation */}
+        <div className="hidden md:flex md:items-center md:space-x-1">
           <Link
             href="/"
             className={cn(
-              "flex items-center gap-2 text-base font-semibold transition-colors px-3 py-2 rounded-md",
+              "flex items-center gap-1.5 text-[13.5px] font-semibold tracking-tight transition-colors px-3 py-2 rounded-md antialiased",
               currentUrl === "/" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
             )}
           >
-            <Home className="h-5 w-5 text-blue-600" />
+            <Home className="h-4 w-4 text-blue-600" />
             Accueil
           </Link>
 
           <Link
             href="/services"
             className={cn(
-              "flex items-center gap-2 text-base font-semibold transition-colors px-3 py-2 rounded-md",
+              "flex items-center gap-1.5 text-[13.5px] font-semibold tracking-tight transition-colors px-3 py-2 rounded-md antialiased",
               currentUrl === "/services" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
             )}
           >
-            <Wrench className="h-5 w-5 text-blue-600" />
+            <Wrench className="h-4 w-4 text-blue-600" />
             Nos Services
+          </Link>
+
+          <Link
+            href="/projets"
+            className={cn(
+              "flex items-center gap-1.5 text-[13.5px] font-semibold tracking-tight transition-colors px-3 py-2 rounded-md antialiased",
+              currentUrl === "/projets" || currentUrl === "/galerie" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
+            )}
+          >
+            <Sparkles className="h-4 w-4 text-blue-600" />
+            Réalisations
           </Link>
 
           <Link
             href="/a-propos"
             className={cn(
-              "flex items-center gap-2 text-base font-semibold transition-colors px-3 py-2 rounded-md",
+              "flex items-center gap-1.5 text-[13.5px] font-semibold tracking-tight transition-colors px-3 py-2 rounded-md antialiased",
               currentUrl === "/a-propos" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
             )}
           >
-            <Info className="h-5 w-5 text-blue-600" />
+            <Info className="h-4 w-4 text-blue-600" />
             À propos
           </Link>
 
           <Link
             href="/contact"
             className={cn(
-              "flex items-center gap-2 text-base font-semibold transition-colors px-3 py-2 rounded-md",
+              "flex items-center gap-1.5 text-[13.5px] font-semibold tracking-tight transition-colors px-3 py-2 rounded-md antialiased",
               currentUrl === "/contact" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
             )}
           >
-            <Mail className="h-5 w-5 text-blue-600" />
+            <Mail className="h-4 w-4 text-blue-600" />
             Contact
           </Link>
         </div>
 
-        {/* Boutons d'action : Priorité Client + Connexion Admin Discrète */}
-        <div className="hidden md:flex md:items-center md:space-x-3">
+        {/* Bouton d'action */}
+        <div className="hidden md:flex md:items-center pl-4 border-l border-slate-200">
           <Button
             onClick={handleCallClick}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold gap-2 px-4 py-2 shadow-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider gap-2 px-4 py-2 shadow-sm antialiased"
           >
             <Phone className="h-4 w-4" />
             Appeler maintenant
           </Button>
-
-          {/* Accès réservé Administrateur / Opérateur */}
-          <Link
-            href="/login"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 px-2 py-1.5 rounded-md transition-colors"
-            title="Espace de gestion administrateur"
-          >
-            <Lock className="h-3.5 w-3.5" />
-            <span>Admin</span>
-          </Link>
         </div>
       </nav>
 
       {/* Navigation Mobile */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 border-b bg-white">
+      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white">
         <Link href="/" className="flex flex-col leading-tight">
-          <span className="text-lg font-bold text-blue-900">Maître</span>
-          <span className="text-blue-600 font-semibold">Plombier</span>
+          <AppLogo />
         </Link>
 
         <Sheet>
@@ -146,9 +146,8 @@ export function Navbar({
           <SheetContent side="right" className="flex flex-col justify-between">
             <div>
               <SheetHeader className="text-left border-b pb-4">
-                <SheetTitle className="text-xl font-bold text-blue-900 flex flex-col leading-tight">
-                  <span>Maître</span>
-                  <span className="text-blue-600">Plombier</span>
+                <SheetTitle className="flex flex-col leading-tight">
+                  <AppLogo />
                 </SheetTitle>
                 <SheetDescription>
                   Services de plomberie & dépannage 24/7
@@ -176,6 +175,17 @@ export function Navbar({
                 >
                   <Wrench className="h-5 w-5 text-blue-600" />
                   Nos Services
+                </Link>
+
+                <Link
+                  href="/projets"
+                  className={cn(
+                    "flex items-center gap-3 text-base font-semibold transition-colors p-2 rounded-md",
+                    currentUrl === "/projets" || currentUrl === "/galerie" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
+                  )}
+                >
+                  <Sparkles className="h-5 w-5 text-blue-600" />
+                  Réalisations (Avant / Après)
                 </Link>
 
                 <Link
@@ -292,6 +302,6 @@ export function Navbar({
           </div>
         </div>
       )}
-    </>
+    </header>
   )
 }

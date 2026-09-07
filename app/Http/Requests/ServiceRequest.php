@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rule;
@@ -20,38 +19,56 @@ class ServiceRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
+        $isUpdating = $this->isMethod('PUT') || $this->isMethod('PATCH') || $this->route('service');
+
         return [
             'nom_service' => ['required', 'string', 'max:255', 'min:2'],
-            'description_service' => ['required', 'string', 'trim', 'max:255', 'min:2'],
-            'description_detail_service' => ['required', 'string', 'max:3000', 'trim', 'min:20'],
-            
-
+            'description_service' => ['required', 'string', 'max:500', 'min:5'],
+            'description_detail_service' => ['required', 'string', 'max:5000', 'min:10'],
             'icone_service' => [
                 'required',
                 'string',
                 Rule::in([
                     'wrench',       // Clé anglaise
-                    'droplet',      // Goutte d'eau
-                    'pipe',         // Tuyau
-                    'flame',        // Flamme / Chauffage
-                    'shield-check', // Garantie / Sécurité
-                    'hammer',       // Travaux
-                    'shower-head',  // Salle de bain
-                    'thermometer',  // Chauffage
+                    'droplets',     // Goutte d'eau
+                    'droplet',      // Gouttelette
+                    'pipe',         // Tuyauterie
+                    'flame',        // Chauffage / Chauffe-eau
+                    'shield-check', // Garantie / Normes
+                    'hammer',       // Travaux & Rénovation
+                    'shower-head',  // Salle de bain / Douche
+                    'bath',         // Baignoire
+                    'thermometer',  // Thermique
+                    'sparkles',     // Finition / Rénovation
+                    'zap',          // Dépannage express
                 ]),
-],
-            'prix_service' => ['required', 'numeric', 'gt:0', 'decimal:0,2', 'digits_between:1,8'],
+            ],
+            'prix_service' => ['required', 'numeric', 'min:0'],
             'image_service' => [
-                'required',
+                $isUpdating ? 'nullable' : 'required',
                 File::image()
-                ->min('1kb')
-                ->max('5mb')
-            
+                    ->min('1kb')
+                    ->max('5mb'),
             ],
         ]; 
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nom_service.required' => 'Le nom du service est obligatoire.',
+            'description_service.required' => 'La description courte est obligatoire.',
+            'description_detail_service.required' => 'La description détaillée est obligatoire.',
+            'icone_service.required' => 'Veuillez choisir une icône représentative.',
+            'prix_service.required' => 'Le tarif indicatif est obligatoire.',
+            'prix_service.numeric' => 'Le tarif indicatif doit être un montant valide en FCFA.',
+            'image_service.required' => 'Une image d’illustration est obligatoire pour ce service.',
+            'image_service.image' => 'Le fichier doit être une image valide (JPG, PNG, WEBP).',
+            'image_service.max' => 'L’image ne doit pas dépasser 5 Mo.',
+        ];
     }
 }

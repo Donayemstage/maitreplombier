@@ -12,8 +12,7 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex flex-col bg-white relative">
-
+      <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-white relative">
         <Toaster 
           position="top-right"
           richColors

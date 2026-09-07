@@ -1,12 +1,29 @@
-import { createInertiaApp } from '@inertiajs/react';
-//import { Toaster } from '@/components/ui/sonner';
+import { createInertiaApp, router } from '@inertiajs/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster, toast } from 'sonner';
 import { initializeTheme } from '@/hooks/use-appearance';
-import AppLayout from '@/layouts/app-layout';
+import AppSidebarLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+// Écouteur global pour les messages flash de session Laravel via Sonner
+router.on('success', (event) => {
+    const flash = (event.detail.page.props as any)?.flash;
+    if (flash?.success) {
+        toast.success(flash.success);
+    }
+    if (flash?.error) {
+        toast.error(flash.error);
+    }
+    if (flash?.warning) {
+        toast.warning(flash.warning);
+    }
+    if (flash?.info) {
+        toast.info(flash.info);
+    }
+});
+
+const appName = import.meta.env.VITE_APP_NAME || 'Maître Plombier';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -17,9 +34,12 @@ createInertiaApp({
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
-                return [AppLayout, SettingsLayout];
+                return [AppSidebarLayout, SettingsLayout];
+            case name.startsWith('admin/') || name === 'dashboard':
+                return AppSidebarLayout;
             default:
-                return AppLayout;
+                // Les pages publiques gèrent leur propre layout persistant
+                return null;
         }
     },
     strictMode: true,
@@ -27,14 +47,14 @@ createInertiaApp({
         return (
             <TooltipProvider delayDuration={0}>
                 {app}
-                {/* <Toaster /> */}
+                <Toaster position="bottom-right" richColors closeButton duration={4500} />
             </TooltipProvider>
         );
     },
     progress: {
-        color: '#4B5563',
+        color: '#2563eb',
     },
 });
 
-// This will set light / dark mode on load...
+// Initialiser le thème au chargement
 initializeTheme();

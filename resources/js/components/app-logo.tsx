@@ -19,7 +19,7 @@ export default function AppLogo() {
     );
 }*/
 
-import { Wrench } from 'lucide-react';
+/*import { Wrench } from 'lucide-react';
 
 export default function AppLogo() {
     return (
@@ -37,4 +37,16 @@ export default function AppLogo() {
             </div>
         </div>
     );
+}*/
+
+export default function AppLogo() {
+  return (
+    <div className="flex items-center gap-3">
+      <img 
+        src="/logo-maitre-plombier.svg" 
+        alt="Maître Plombier" 
+        className="h-12 w-auto object-contain" 
+      />
+    </div>
+  );
 }

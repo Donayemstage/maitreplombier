@@ -24,7 +24,14 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(\Laravel\Fortify\Contracts\LogoutResponse::class, function () {
+            return new class implements \Laravel\Fortify\Contracts\LogoutResponse {
+                public function toResponse($request)
+                {
+                    return redirect('/login')->with('success', 'Vous avez été déconnecté avec succès.');
+                }
+            };
+        });
     }
 
     /**

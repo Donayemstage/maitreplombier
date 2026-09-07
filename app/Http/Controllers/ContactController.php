@@ -55,8 +55,7 @@ class ContactController extends Controller
             
         ]);
 
-        //ToastMagic::success('votre demande a ete enregistree !');
-        return redirect()->route('home')->with('success', 'Votre demande a été enregistrée avec succès !');
+        return redirect()->back()->with('success', 'Votre demande de devis a été enregistrée avec succès !');
     }
 
 }
