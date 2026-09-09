@@ -53,7 +53,7 @@ export function Navbar({
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-100 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white border-b border-slate-100 shadow-sm">
       {/* Navigation Desktop */}
       <nav className="hidden md:flex md:items-center md:justify-between md:px-6 py-3 bg-white antialiased">
         <div className="flex items-center space-x-4">

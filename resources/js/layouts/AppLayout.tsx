@@ -12,7 +12,7 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-white relative">
+      <div className="min-h-screen w-full flex flex-col bg-white relative">
         <Toaster 
           position="top-right"
           richColors
@@ -27,20 +27,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
             },
           }}
         />
-        {/* Navbar collée en haut */}
-        <header className="border-b sticky top-0 bg-white z-40">
-          <Navbar />
-        </header>
 
-        {/* Contenu principal */}
-        <main className="flex-1">
+        {/* 1. Navbar (fixed/sticky géré directement dans le composant Navbar) */}
+        <Navbar />
+
+        {/* 2. Contenu principal avec décalage pour la navbar fixe */}
+        <main className="flex-1 pt-16 md:pt-20">
           {children}
         </main>
 
-        {/* Footer complet */}
+        {/* 3. Footer */}
         <NavFooter />
 
-        {/* Bouton WhatsApp flottant fixe en bas à droite */}
+        {/* 4. Bouton WhatsApp flottant */}
         <FloatingWhatsapp whatsappNumber="237678953071" />
       </div>
     </SidebarProvider>
