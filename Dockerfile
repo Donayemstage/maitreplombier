@@ -1,25 +1,26 @@
-FROM php:8.4-fpm
+# Étape 1: Compilation du Frontend avec Node
+FROM node:20-slim AS frontend
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+COPY . .
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+RUN npm run build
 
-# Installation des dépendances système et extensions PHP
+# Étape 2: Application Laravel PHP
+FROM php:8.4-fpm
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libonig-dev libxml2-dev zip unzip nginx
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Installation de Node.js 20 (LTS) au lieu de Node 18
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs
-
-# Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
-
 COPY . .
+COPY --from=frontend /app/public/build /var/www/public/build
 
-# Installation des dépendances PHP et compilation Frontend (avec fix npm)
 RUN composer install --no-dev --optimize-autoloader
-RUN npm install --legacy-peer-deps && npm run build
 
 EXPOSE 80
 
