@@ -11,7 +11,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copie de tout le projet (y compris public/build compilé en local)
+# Copie de tout le projet (incluant le dossier public/build local)
 COPY . .
 
 # Installation des dépendances PHP uniquement
