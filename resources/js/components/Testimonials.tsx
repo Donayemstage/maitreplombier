@@ -206,7 +206,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ testimonialsList }) 
                 <div>
                   <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
                     <span>{item.nom_client}</span>
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" title="Client Vérifié" />
+                    <span title="Client Vérifié"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /></span>
                   </h4>
                   <div className="flex items-center gap-1.5 text-xs text-slate-500">
                     {item.ville && <span>{item.ville}</span>}

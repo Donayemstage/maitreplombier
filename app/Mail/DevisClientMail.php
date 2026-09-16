@@ -33,7 +33,7 @@ class DevisClientMail extends Mailable
         $prestation = $contact->type_intervention;
         $waText = "Bonjour Maître Plombier, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
         
-        $this->whatsappUrl = "https://wa.me/237678953071?text=" . urlencode($waText);
+        $this->whatsappUrl = "https://wa.me/237679473691?text=" . urlencode($waText);
     }
 
     /**
@@ -41,8 +41,12 @@ class DevisClientMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $fromAddress = config('mail.from.address', 'foalengfranck6@gmail.com');
+        $fromName = config('mail.from.name', 'Maître Plombier');
+
         return new Envelope(
-            from: new Address('foalengfranck6@gmail.com', 'Maître Plombier'),
+            from: new Address($fromAddress, $fromName),
+            replyTo: [new Address($fromAddress, $fromName)],
             subject: "Votre Devis Officiel N° DEVIS-" . str_pad((string)$this->devis->id, 4, '0', STR_PAD_LEFT) . " - Maître Plombier",
         );
     }

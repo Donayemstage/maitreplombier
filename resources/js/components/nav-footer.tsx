@@ -9,8 +9,8 @@ export function NavFooter({ className = '' }: FooterProps) {
   // Variables à mettre à jour plus tard avec les données réelles du client
   const contactInfo = {
     address: "Douala, Cameroun",
-    phone: "+237 678 95 30 71",
-    email: "contact@maitreplombier.cm",
+    phone: "+237 79 47 36 91",
+    email: "donayemtech.com",
   };
 
   return (
@@ -78,7 +78,7 @@ export function NavFooter({ className = '' }: FooterProps) {
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                <a href="tel:237678953071" className="hover:text-blue-400 transition-colors">{contactInfo.phone}</a>
+                <a href="tel:23779473691" className="hover:text-blue-400 transition-colors">{contactInfo.phone}</a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />

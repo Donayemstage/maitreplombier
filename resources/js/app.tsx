@@ -6,20 +6,39 @@ import AppSidebarLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
-// Écouteur global pour les messages flash de session Laravel via Sonner
+// Écouteur global pour les messages flash de session Laravel via Sonner avec dédoublonnage intelligent
+const recentToasts = new Map<string, number>();
+
+export function showDeduplicatedToast(type: 'success' | 'error' | 'warning' | 'info', message: string, description?: string) {
+    if (!message) return;
+    const key = `${type}:${message}:${description || ''}`;
+    const now = Date.now();
+    const lastShown = recentToasts.get(key);
+    if (lastShown && now - lastShown < 2500) {
+        return;
+    }
+    recentToasts.set(key, now);
+
+    const toastFn = toast[type] || toast;
+    toastFn(message, {
+        id: `toast-${key.slice(0, 40)}`,
+        description,
+    });
+}
+
 router.on('success', (event) => {
     const flash = (event.detail.page.props as any)?.flash;
     if (flash?.success) {
-        toast.success(flash.success);
+        showDeduplicatedToast('success', flash.success);
     }
     if (flash?.error) {
-        toast.error(flash.error);
+        showDeduplicatedToast('error', flash.error);
     }
     if (flash?.warning) {
-        toast.warning(flash.warning);
+        showDeduplicatedToast('warning', flash.warning);
     }
     if (flash?.info) {
-        toast.info(flash.info);
+        showDeduplicatedToast('info', flash.info);
     }
 });
 

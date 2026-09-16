@@ -9,12 +9,10 @@ export function FeaturesSection() {
           <span className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2 block">
             Savoir-faire & Réactivité
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-            Pour tout imprévu, <br />
-            <span className="font-normal text-slate-600">
-              un dépannage fiable chez Maître Plombier
-            </span>
-          </h2>
+          <h4 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+             Pour tous vos problèmes, vous trouverez une solution chez Maître Plombier 
+            
+          </h4>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature) => {

@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
+import 'animate.css';
 import { PhoneCall, Asterisk, Copy, Check, MessageSquare, X, ShieldCheck } from 'lucide-react';
 
 interface EmergencyBannerProps {
   phoneNumber?: string;
   whatsappNumber?: string;
   responseTime?: string;
+  backgroundImageUrl?: string;
 }
 
 export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
-  phoneNumber = '+237 678 95 30 71',
-  whatsappNumber = '237678953071',
+  phoneNumber = '+237 79 47 36 91',
+  whatsappNumber = '237679473691',
   responseTime = '30 min',
+  // URL d'image par défaut (modifiable via les props)
+  backgroundImageUrl = '/images/gpt0.png',
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Message pré-rempli engageant et professionnel prêt à être envoyé par le client
   const prefilledMessage = "Bonjour Maître Plombier 🛠️, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -35,18 +38,28 @@ export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
 
   return (
     <>
-      <section className="bg-blue-600 text-white py-16 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/50 text-white mb-2">
+      <section className="relative text-white py-16 px-4 sm:px-6 lg:px-8 text-center overflow-hidden">
+        {/* Conteneur d'image d'arrière-plan avec Brightness à 50% */}
+        <div
+          className="absolute inset-0 bg-cover bg-center brightness-50"
+          style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+        />
+
+        {/* Superposition Linear Gradient (Overlay sombre) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/60 to-slate-950/80" />
+
+        {/* Contenu principal */}
+        <div className="relative z-10 max-w-4xl mx-auto space-y-6">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white mb-2 shadow-inner">
             <Asterisk className="w-6 h-6 animate-pulse" />
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight drop-shadow-md">
             Un problème urgent ? <br className="hidden sm:inline" />
             Nous intervenons en moins de {responseTime}.
           </h2>
 
-          <p className="text-blue-100 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed drop-shadow">
             Nos équipes sont prêtes à se déplacer immédiatement pour sécuriser votre domicile et résoudre votre problème de plomberie.
           </p>
 
@@ -54,9 +67,9 @@ export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
             <a
               href={`tel:${phoneNumber.replace(/\s+/g, '')}`}
               onClick={handleClick}
-              className="inline-flex items-center justify-center gap-3 bg-white text-blue-900 font-bold py-3.5 px-8 rounded-full shadow-lg hover:bg-blue-50 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 text-base group"
+              className="inline-flex items-center justify-center gap-3 bg-white text-slate-900 font-bold py-3.5 px-8 rounded-full shadow-2xl hover:bg-slate-100 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 text-base group"
             >
-              <PhoneCall className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
+              <PhoneCall className="animate__animated animate__tada animate__infinite w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform animate-bounce" />
               <span>Appeler le {phoneNumber}</span>
             </a>
           </div>
@@ -88,7 +101,7 @@ export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
 
               {/* Bloc Téléphone */}
               <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl p-3 mt-4">
-                <span className="font-mono text-lg font-bold text-blue-900">{phoneNumber}</span>
+                <span className="font-mono text-lg font-bold text-slate-900">{phoneNumber}</span>
                 <button
                   onClick={copyToClipboard}
                   className="flex items-center gap-1.5 text-xs bg-white text-slate-700 px-3 py-1.5 rounded-lg border shadow-sm hover:bg-slate-50 transition-colors font-medium"

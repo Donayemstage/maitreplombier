@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DevisClientMail;
+use App\Mail\AdminNewContactMail;
+use App\Events\ContactProcedEvent;
 
 class ContactController extends Controller
 
@@ -18,15 +22,7 @@ class ContactController extends Controller
     public function store(ContactRequest $request){
         $validated = $request->validated();
 
-        //$file = $validated['photo_probleme'];
-
-        //$name = time().$file->getClientOriginalName();
-
-        /*$path = $file->storeAs(
-            'photo_probleme',
-            $name,
-            'public'
-        );*/
+        
 
         $name = null;
 
@@ -37,7 +33,7 @@ class ContactController extends Controller
             $file->storeAs('photo_probleme', $name, 'public');
         }
 
-        Contact::create([
+        $contact = Contact::create([
             'nom' => $validated['nom'],
             'telephone' => $validated['telephone'],
             'email' => $validated['email'],
@@ -54,6 +50,11 @@ class ContactController extends Controller
 
             
         ]);
+
+        
+        
+            ContactProcedEvent::dispatch($contact);
+
 
         return redirect()->back()->with('success', 'Votre demande de devis a été enregistrée avec succès !');
     }

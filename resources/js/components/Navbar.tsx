@@ -58,7 +58,7 @@ export function Navbar({
       <nav className="hidden md:flex md:items-center md:justify-between md:px-6 py-3 bg-white antialiased">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex flex-col leading-tight">
-            <AppLogo />
+            <AppLogo variant="light" />
           </Link>
         </div>
 
@@ -135,7 +135,7 @@ export function Navbar({
       {/* Navigation Mobile */}
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white">
         <Link href="/" className="flex flex-col leading-tight">
-          <AppLogo />
+          <AppLogo variant="light" />
         </Link>
 
         <Sheet>
@@ -147,7 +147,7 @@ export function Navbar({
             <div>
               <SheetHeader className="text-left border-b pb-4">
                 <SheetTitle className="flex flex-col leading-tight">
-                  <AppLogo />
+                  <AppLogo variant="light" />
                 </SheetTitle>
                 <SheetDescription>
                   Services de plomberie & dépannage 24/7

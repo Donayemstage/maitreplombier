@@ -124,13 +124,15 @@ export default function DevisShow({ contact }: Props) {
     postDevis(`/admin/devis/${contact.id}`, {
       preserveScroll: true,
       onSuccess: () => {
-        toast.success("Votre devis a été enregistré avec succès !", {
-          description: `Total : ${Number(devisData.total_devis).toLocaleString('fr-FR')} FCFA`,
+        toast.success('Le chiffrage du devis a été enregistré avec succès !', {
+          id: 'devis-save-success',
+          description: `Montant total : ${Number(devisData.total_devis).toLocaleString('fr-FR')} FCFA`,
         });
       },
       onError: (err) => {
         toast.error("Erreur lors de l’enregistrement du devis", {
-          description: Object.values(err)[0] as string || 'Vérifiez les champs.',
+          id: 'devis-save-error',
+          description: (Object.values(err)[0] as string) || 'Vérifiez les champs renseignés.',
         });
       },
     });
@@ -139,7 +141,7 @@ export default function DevisShow({ contact }: Props) {
   // Envoi direct par email
   const handleSendEmailDirect = () => {
     if (!contact.devis && Number(devisData.total_devis) <= 0) {
-      toast.error("Veuillez d’abord chiffrer et enregistrer le devis.");
+      toast.error("Veuillez d’abord chiffrer et enregistrer le devis.", { id: 'devis-direct-warn' });
       return;
     }
 
@@ -147,17 +149,22 @@ export default function DevisShow({ contact }: Props) {
     router.post(`/admin/devis/${contact.id}/send-email`, {}, {
       preserveScroll: true,
       onSuccess: () => {
-        toast.success("Votre devis a été envoyé par mail", {
-          description: `Destinataire : ${contact.email}`,
+        toast.success('Le devis a été envoyé par email avec succès au client !', {
+          id: 'devis-send-email-success',
+          description: `Email transmis à ${contact.email}`,
         });
         setSendingEmail(false);
       },
       onError: (err) => {
         toast.error("Erreur lors de l'envoi de l'email", {
-          description: Object.values(err)[0] as string || 'Vérifiez votre configuration mail.',
+          id: 'devis-send-error',
+          description: (Object.values(err)[0] as string) || 'Vérifiez votre configuration mail.',
         });
         setSendingEmail(false);
       },
+      onFinish: () => {
+        setSendingEmail(false);
+      }
     });
   };
 
@@ -167,11 +174,14 @@ export default function DevisShow({ contact }: Props) {
     postStatus(`/admin/devis/${contact.id}/update-status-reason`, {
       preserveScroll: true,
       onSuccess: () => {
-        toast.success('Statut du devis mis à jour avec succès');
+        toast.success('Statut du devis mis à jour avec succès !', {
+          id: 'devis-status-success',
+        });
       },
       onError: (err) => {
         toast.error('Erreur lors de la mise à jour', {
-          description: Object.values(err)[0] as string || 'Veuillez renseigner le motif.',
+          id: 'devis-status-error',
+          description: (Object.values(err)[0] as string) || 'Veuillez renseigner le motif.',
         });
       },
     });
@@ -241,7 +251,7 @@ export default function DevisShow({ contact }: Props) {
           <div className="flex items-center gap-3">
             <Link
               href="/admin/devis"
-              className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+              className="p-2 rounded-none border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
               title="Retour à la liste des devis"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -265,7 +275,7 @@ export default function DevisShow({ contact }: Props) {
                 href={clientConsultUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 text-xs font-bold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-none bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 text-xs font-bold transition-colors cursor-pointer"
                 title="Consulter la page officielle envoyée au client (avec téléchargement PDF)"
               >
                 <ExternalLink className="w-4 h-4" />
@@ -276,7 +286,7 @@ export default function DevisShow({ contact }: Props) {
         </div>
 
         {/* MESSAGE D'ACCUEIL OFFICIEL RAPPELÉ */}
-        <div className="p-4 rounded-2xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 text-blue-900 dark:text-blue-200 text-xs sm:text-sm flex items-center justify-between gap-4">
+        <div className="p-4 rounded-none bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 text-blue-900 dark:text-blue-200 text-xs sm:text-sm flex items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-blue-600 flex-shrink-0" />
             <span>
@@ -286,7 +296,7 @@ export default function DevisShow({ contact }: Props) {
           {clientConsultUrl && (
             <button
               onClick={copyClientLink}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800 bg-white dark:bg-blue-900 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-700 shadow-sm cursor-pointer flex-shrink-0"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800 bg-white dark:bg-blue-900 px-3 py-1.5 rounded-none border border-blue-200 dark:border-blue-700 shadow-sm cursor-pointer flex-shrink-0"
             >
               {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               {copiedLink ? 'Lien copié !' : 'Copier lien client'}
@@ -301,13 +311,13 @@ export default function DevisShow({ contact }: Props) {
           <div className="lg:col-span-7 space-y-6">
             
             {/* 1. CARTE COORDONNÉES & DEMANDE CLIENT */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <User className="w-4 h-4 text-blue-600" />
                   Informations Client & Intervention
                 </h2>
-                <span className="text-xs px-2.5 py-0.5 rounded-md font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                <span className="text-xs px-2.5 py-0.5 rounded-none font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                   {contact.urgence === 'tres_urgente' ? '🚨 TRÈS URGENT' : contact.urgence === 'urgente' ? '⚡ URGENT' : 'Normale'}
                 </span>
               </div>
@@ -350,7 +360,7 @@ export default function DevisShow({ contact }: Props) {
               </div>
 
               {/* Message client */}
-              <div className="bg-slate-50 dark:bg-slate-800/50 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 text-xs">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-3.5 rounded-none border border-slate-100 dark:border-slate-800 text-xs">
                 <span className="text-slate-400 font-medium block mb-1">Description détaillée du client :</span>
                 <p className="text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">
                   {contact.message}
@@ -361,7 +371,7 @@ export default function DevisShow({ contact }: Props) {
               {contact.photo_probleme && (
                 <div className="text-xs space-y-1.5">
                   <span className="text-slate-400 font-medium">Photo fournie par le client :</span>
-                  <div className="relative inline-block border rounded-xl overflow-hidden shadow-sm">
+                  <div className="relative inline-block border rounded-none overflow-hidden shadow-sm">
                     <img
                       src={`/storage/photo_probleme/${contact.photo_probleme}`}
                       alt="Photo du problème"
@@ -374,7 +384,7 @@ export default function DevisShow({ contact }: Props) {
             </div>
 
             {/* 2. FORMULAIRE DE CHIFFRAGE DU DEVIS */}
-            <form onSubmit={handleSubmitDevis} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm space-y-5">
+            <form onSubmit={handleSubmitDevis} className="bg-white dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-5">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Calculator className="w-4 h-4 text-blue-600" />
@@ -396,11 +406,11 @@ export default function DevisShow({ contact }: Props) {
                     <input
                       type="number"
                       min="0"
-                      step="500"
+                      step="any"
                       value={devisData.montant_main_oeuvre}
                       onChange={(e) => handleMoChange(e.target.value)}
                       placeholder="Ex : 25000"
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3.5 py-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-semibold">FCFA</span>
@@ -418,11 +428,11 @@ export default function DevisShow({ contact }: Props) {
                     <input
                       type="number"
                       min="0"
-                      step="500"
+                      step="any"
                       value={devisData.montant_materiel}
                       onChange={(e) => handleMatChange(e.target.value)}
                       placeholder="Ex : 10000"
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3.5 py-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-semibold">FCFA</span>
                   </div>
@@ -436,11 +446,11 @@ export default function DevisShow({ contact }: Props) {
                     <input
                       type="number"
                       min="0"
-                      step="500"
+                      step="any"
                       value={devisData.frais_deplacement}
                       onChange={(e) => handleDepChange(e.target.value)}
                       placeholder="Ex : 3000"
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3.5 py-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-semibold">FCFA</span>
                   </div>
@@ -448,7 +458,7 @@ export default function DevisShow({ contact }: Props) {
               </div>
 
               {/* TOTAL ESTIMÉ MISE EN VALEUR */}
-              <div className="p-4 rounded-2xl bg-slate-900 text-white flex items-center justify-between">
+              <div className="p-4 rounded-none bg-slate-900 text-white flex items-center justify-between shadow-sm">
                 <div>
                   <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Montant Total du Devis</span>
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-blue-400 mt-0.5">
@@ -472,7 +482,7 @@ export default function DevisShow({ contact }: Props) {
                     type="date"
                     value={devisData.date_validite}
                     onChange={(e) => setDevisData('date_validite', e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -482,7 +492,7 @@ export default function DevisShow({ contact }: Props) {
                       type="checkbox"
                       checked={devisData.send_email}
                       onChange={(e) => setDevisData('send_email', e.target.checked)}
-                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300"
+                      className="w-4 h-4 rounded-none text-blue-600 focus:ring-blue-500 border-slate-300"
                     />
                     Envoyer directement par email au client à l'enregistrement
                   </label>
@@ -498,7 +508,7 @@ export default function DevisShow({ contact }: Props) {
                   value={devisData.conditions_execution || ''}
                   onChange={(e) => setDevisData('conditions_execution', e.target.value)}
                   placeholder="Garantie, délais d'approvisionnement, prérequis..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs outline-none resize-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs outline-none resize-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -506,7 +516,7 @@ export default function DevisShow({ contact }: Props) {
                 <button
                   type="submit"
                   disabled={devisProcessing}
-                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-none text-xs shadow-sm transition-all cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-4 h-4" />
                   {devisProcessing ? 'Enregistrement en cours...' : 'Enregistrer le Chiffrage du Devis'}
@@ -520,7 +530,7 @@ export default function DevisShow({ contact }: Props) {
           <div className="lg:col-span-5 space-y-6">
             
             {/* 1. LES DEUX MOYENS D'ENVOI (WHATSAPP & EMAIL) */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                 <Send className="w-4 h-4 text-blue-600" />
                 Transmission au Client (2 Canaux)
@@ -531,7 +541,7 @@ export default function DevisShow({ contact }: Props) {
               </p>
 
               {/* Canal 1 : WhatsApp */}
-              <div className="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 space-y-2">
+              <div className="p-3.5 rounded-none bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
                     <MessageSquare className="w-4 h-4 text-emerald-600" />
@@ -546,7 +556,7 @@ export default function DevisShow({ contact }: Props) {
                   href={generateWhatsAppUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-sm transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-none text-xs shadow-sm transition-all"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   Envoyer le devis sur WhatsApp
@@ -554,7 +564,7 @@ export default function DevisShow({ contact }: Props) {
               </div>
 
               {/* Canal 2 : Email */}
-              <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 space-y-2">
+              <div className="p-3.5 rounded-none bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-blue-800 dark:text-blue-300 flex items-center gap-1.5">
                     <Mail className="w-4 h-4 text-blue-600" />
@@ -569,7 +579,7 @@ export default function DevisShow({ contact }: Props) {
                   type="button"
                   onClick={handleSendEmailDirect}
                   disabled={sendingEmail}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-sm transition-all cursor-pointer disabled:opacity-50"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-none text-xs shadow-sm transition-all cursor-pointer disabled:opacity-50"
                 >
                   <Mail className="w-3.5 h-3.5" />
                   {sendingEmail ? 'Envoi en cours...' : 'Envoyer le devis par Email'}
@@ -586,7 +596,7 @@ export default function DevisShow({ contact }: Props) {
             </div>
 
             {/* 2. GESTION DU STATUT AVEC MOTIF OBLIGATOIRE EN CAS DE REFUS */}
-            <form onSubmit={handleUpdateStatus} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm space-y-4">
+            <form onSubmit={handleUpdateStatus} className="bg-white dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Shield className="w-4 h-4 text-blue-600" />
@@ -602,7 +612,7 @@ export default function DevisShow({ contact }: Props) {
                   <button
                     type="button"
                     onClick={() => setStatusData('statut_client', 'en_attente')}
-                    className={`py-2 px-2 rounded-xl text-xs font-bold border transition-all text-center ${
+                    className={`py-2 px-2 rounded-none text-xs font-bold border transition-all text-center ${
                       statusData.statut_client === 'en_attente'
                         ? 'bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-950 dark:border-amber-700 dark:text-amber-300 ring-2 ring-amber-500/20'
                         : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
@@ -614,7 +624,7 @@ export default function DevisShow({ contact }: Props) {
                   <button
                     type="button"
                     onClick={() => setStatusData('statut_client', 'accepte')}
-                    className={`py-2 px-2 rounded-xl text-xs font-bold border transition-all text-center ${
+                    className={`py-2 px-2 rounded-none text-xs font-bold border transition-all text-center ${
                       statusData.statut_client === 'accepte'
                         ? 'bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-700 dark:text-emerald-300 ring-2 ring-emerald-500/20'
                         : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
@@ -626,7 +636,7 @@ export default function DevisShow({ contact }: Props) {
                   <button
                     type="button"
                     onClick={() => setStatusData('statut_client', 'refuse')}
-                    className={`py-2 px-2 rounded-xl text-xs font-bold border transition-all text-center ${
+                    className={`py-2 px-2 rounded-none text-xs font-bold border transition-all text-center ${
                       statusData.statut_client === 'refuse'
                         ? 'bg-rose-50 border-rose-300 text-rose-800 dark:bg-rose-950 dark:border-rose-700 dark:text-rose-300 ring-2 ring-rose-500/20'
                         : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300'
@@ -639,7 +649,7 @@ export default function DevisShow({ contact }: Props) {
 
               {/* SI REFUSÉ : MOTIF OBLIGATOIRE ET NOTIFICATION */}
               {statusData.statut_client === 'refuse' && (
-                <div className="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 space-y-3">
+                <div className="p-4 rounded-none bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 space-y-3">
                   <label className="block text-xs font-bold text-rose-900 dark:text-rose-300">
                     Motif du rejet ou refus (Obligatoire) *
                   </label>
@@ -651,7 +661,7 @@ export default function DevisShow({ contact }: Props) {
                       onChange={(e) => {
                         if (e.target.value) setStatusData('motif_refus', e.target.value);
                       }}
-                      className="w-full text-xs p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200"
+                      className="w-full text-xs p-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200"
                     >
                       <option value="">-- Choisir un motif type --</option>
                       {COMMON_REASONS.map((r, i) => (
@@ -665,7 +675,7 @@ export default function DevisShow({ contact }: Props) {
                     value={statusData.motif_refus}
                     onChange={(e) => setStatusData('motif_refus', e.target.value)}
                     placeholder="Précisez la raison détaillée qui sera communiquée au client..."
-                    className="w-full p-2.5 rounded-lg border border-rose-300 dark:border-rose-800 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white outline-none resize-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full p-2.5 rounded-none border border-rose-300 dark:border-rose-800 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white outline-none resize-none focus:ring-2 focus:ring-rose-500"
                     required
                   />
                   {statusErrors.motif_refus && (
@@ -677,7 +687,7 @@ export default function DevisShow({ contact }: Props) {
                       type="checkbox"
                       checked={statusData.notifier_client}
                       onChange={(e) => setStatusData('notifier_client', e.target.checked)}
-                      className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 border-rose-300"
+                      className="w-4 h-4 rounded-none text-rose-600 focus:ring-rose-500 border-rose-300"
                     />
                     Envoyer un email d'explication au client avec ce motif
                   </label>
@@ -686,7 +696,7 @@ export default function DevisShow({ contact }: Props) {
 
               {/* MOTIF ACTUEL SI DÉJÀ REFUSÉ */}
               {contact.devis?.statut_client === 'refuse' && contact.devis.motif_refus && (
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl text-xs space-y-1 border border-slate-200 dark:border-slate-700">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-none text-xs space-y-1 border border-slate-200 dark:border-slate-700">
                   <span className="text-slate-400 font-semibold">Motif enregistré :</span>
                   <p className="text-slate-700 dark:text-slate-300 italic">{contact.devis.motif_refus}</p>
                 </div>
@@ -695,7 +705,7 @@ export default function DevisShow({ contact }: Props) {
               <button
                 type="submit"
                 disabled={statusProcessing}
-                className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-sm transition-all cursor-pointer disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-none text-xs shadow-sm transition-all cursor-pointer disabled:opacity-50"
               >
                 <Check className="w-4 h-4" />
                 {statusProcessing ? 'Mise à jour...' : 'Mettre à jour le statut'}
@@ -714,7 +724,7 @@ export default function DevisShow({ contact }: Props) {
           onClick={() => setPreviewPhoto(false)}
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 cursor-pointer"
         >
-          <div className="relative max-w-2xl max-h-[85vh] rounded-2xl overflow-hidden bg-black">
+          <div className="relative max-w-2xl max-h-[85vh] rounded-none overflow-hidden bg-black shadow-2xl">
             <img
               src={`/storage/photo_probleme/${contact.photo_probleme}`}
               alt="Photo problème"
@@ -722,7 +732,7 @@ export default function DevisShow({ contact }: Props) {
             />
             <button
               onClick={() => setPreviewPhoto(false)}
-              className="absolute top-3 right-3 bg-slate-900/80 text-white p-2 rounded-full"
+              className="absolute top-3 right-3 bg-slate-900/80 text-white p-2 rounded-none"
             >
               <X className="w-5 h-5" />
             </button>

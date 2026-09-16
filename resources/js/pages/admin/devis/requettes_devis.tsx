@@ -75,6 +75,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'details' | 'devis'>('details');
+  const [sendingEmailId, setSendingEmailId] = useState<number | null>(null);
 
   // Formulaire de Chiffrage Devis
   const { data: devisData, setData: setDevisData, post: postDevis, processing: devisProcessing, errors: devisErrors, reset: resetDevis } = useForm({
@@ -86,6 +87,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
     date_validite: '',
     statut_client: 'en_attente',
     statut_demande: 'en_cours',
+    send_email: false,
   });
 
   // Calcul automatique du total
@@ -120,6 +122,25 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
     }));
   };
 
+  // Envoi direct par email au client
+  const handleSendEmailDirect = (demandeId: number) => {
+    setSendingEmailId(demandeId);
+    router.post(`/admin/devis/${demandeId}/send-email`, {}, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setSendingEmailId(null);
+      },
+      onError: (err) => {
+        setSendingEmailId(null);
+        toast.error("Erreur lors de l'envoi de l'email", {
+          id: 'devis-send-error',
+          description: (Object.values(err)[0] as string) || 'Vérifiez la boîte de réception ou la configuration mail.',
+        });
+      },
+      onFinish: () => setSendingEmailId(null),
+    });
+  };
+
   // Ouvrir les détails et pré-remplir le formulaire
   const handleOpenDetails = (demande: DemandeContact, defaultTab: 'details' | 'devis' = 'details') => {
     setSelectedDemande(demande);
@@ -135,6 +156,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
         date_validite: demande.devis.date_validite ? demande.devis.date_validite.split('T')[0] : '',
         statut_client: demande.devis.statut_client || 'en_attente',
         statut_demande: demande.statut || 'en_cours',
+        send_email: false,
       });
     } else {
       setDevisData({
@@ -146,6 +168,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
         date_validite: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Valide 15j
         statut_client: 'en_attente',
         statut_demande: 'en_cours',
+        send_email: false,
       });
     }
     
@@ -196,43 +219,67 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
     });
   };
 
-  // Export CSV
+ // Export CSV fonctionnel
   const handleExportCSV = () => {
-    if (!demandesList.data || demandesList.data.length === 0) {
-      toast.error('Aucune donnée à exporter');
+    // On extrait les éléments depuis filteredDemandes ou directement demandesList.data
+    const items = (typeof filteredDemandes !== 'undefined' && filteredDemandes.length > 0)
+      ? filteredDemandes
+      : (demandesList?.data || []);
+
+    if (!items || items.length === 0) {
+      alert('Aucune donnée à exporter !');
       return;
     }
 
-    const headers = ['ID', 'Nom', 'Téléphone', 'Email', 'Ville', 'Adresse', 'Intervention', 'Urgence', 'Date Souhaitée', 'Statut Demande', 'Statut Devis', 'Total Devis (FCFA)', 'Canal Envoi', 'Motif Refus', 'Date de création'];
-    const rows = demandesList.data.map(d => [
-      d.id,
-      `"${d.nom.replace(/"/g, '""')}"`,
-      `"${d.telephone}"`,
-      `"${d.email}"`,
-      `"${d.ville}"`,
-      `"${(d.adresse || '').replace(/"/g, '""')}"`,
-      `"${d.type_intervention}"`,
-      `"${d.urgence}"`,
-      `"${d.date_intervention}"`,
-      `"${d.statut}"`,
-      `"${d.devis?.statut_client || 'Non chiffré'}"`,
+    // En-têtes CSV
+    const headers = [
+      'ID',
+      'Nom',
+      'Téléphone',
+      'Email',
+      'Ville',
+      'Adresse',
+      'Type Intervention',
+      'Urgence',
+      'Date Souhaitée',
+      'Statut Demande',
+      'Statut Devis',
+      'Total Devis (FCFA)',
+      'Date de création'
+    ];
+
+    // Extraction et échappement des données
+    const rows = items.map((d: any) => [
+      d.id ?? '',
+      `"${(d.nom || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.telephone || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.email || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.ville || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.adresse || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.type_intervention || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.urgence || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.date_intervention || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.statut || '').toString().replace(/"/g, '""')}"`,
+      `"${(d.devis?.statut_client || 'Non chiffré').toString().replace(/"/g, '""')}"`,
       d.devis?.total_devis || 0,
-      `"${d.devis?.canal_envoi || 'Non envoyé'}"`,
-      `"${(d.devis?.motif_refus || d.motif_refus || '').replace(/"/g, '""')}"`,
-      `"${new Date(d.created_at).toLocaleDateString('fr-FR')}"`,
+      `"${d.created_at ? new Date(d.created_at).toLocaleDateString('fr-FR') : ''}"`
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `demandes_devis_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    toast.success('Export CSV téléchargé');
-  };
+    // Assemblage CSV (Séparateur point-virgule ';' + BOM UTF-8 '\uFEFF')
+    const csvLines = [headers.join(';'), ...rows.map(r => r.join(';'))];
+    const csvContent = '\uFEFF' + csvLines.join('\r\n');
 
+    // Téléchargement Blob
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `demandes_devis_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
   // Filtrage local en temps réel
   const filteredDemandes = useMemo(() => {
     return demandesList.data.filter(item => {
@@ -363,7 +410,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
           </div>
           <button 
             onClick={handleExportCSV}
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:shadow transition-all text-sm w-full md:w-auto cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-none shadow-sm hover:shadow transition-all text-sm w-full md:w-auto cursor-pointer"
           >
             <Download className="w-4 h-4" /> Exporter en CSV
           </button>
@@ -371,49 +418,49 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
         {/* Cartes KPI Statistiques */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Reçu</p>
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{stats?.total ?? demandesList.data.length}</h3>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-blue-600">
+            <div className="w-10 h-10 rounded-none bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-blue-600">
               <FileText className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">À Traiter</p>
               <h3 className="text-2xl font-bold text-blue-600 mt-1">{stats?.nouveau ?? 0}</h3>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-blue-600">
+            <div className="w-10 h-10 rounded-none bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-blue-600">
               <Clock className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">En Cours</p>
               <h3 className="text-2xl font-bold text-amber-600 mt-1">{stats?.en_cours ?? 0}</h3>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-600">
+            <div className="w-10 h-10 rounded-none bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-600">
               <Wrench className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Traités</p>
               <h3 className="text-2xl font-bold text-emerald-600 mt-1">{stats?.traite ?? 0}</h3>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-600">
+            <div className="w-10 h-10 rounded-none bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-600">
               <CheckCircle className="w-5 h-5" />
             </div>
           </div>
         </div>
 
         {/* Barre de Filtres et Recherche */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="relative w-full md:w-80">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -421,7 +468,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
               placeholder="Rechercher par nom, ville, tel, service..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-none text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
 
@@ -429,7 +476,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full md:w-auto px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full md:w-auto px-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-none font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="all">Tous les statuts ({demandesList.data.length})</option>
               <option value="nouveau">Nouveaux (Non chiffrés)</option>
@@ -446,7 +493,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
             filteredDemandes.map((item) => (
               <div 
                 key={item.id} 
-                className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col gap-3"
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-none p-4 shadow-sm flex flex-col gap-3"
               >
                 <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                   <div>
@@ -475,7 +522,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                   </div>
                 </div>
 
-                <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl text-xs space-y-1">
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-none border border-slate-100 dark:border-slate-800 text-xs space-y-1">
                   <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
                     <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-slate-400" /> {item.telephone}</span>
                     {item.devis && (
@@ -492,14 +539,14 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       href={`https://wa.me/${item.telephone.replace(/\D/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors"
+                      className="p-2 bg-emerald-50 text-emerald-600 rounded-none hover:bg-emerald-100 transition-colors"
                       title="Contacter sur WhatsApp"
                     >
                       <MessageSquare className="w-4 h-4" />
                     </a>
                     <a
                       href={`tel:${item.telephone.replace(/\s+/g, '')}`}
-                      className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                      className="p-2 bg-blue-50 text-blue-600 rounded-none hover:bg-blue-100 transition-colors"
                       title="Appeler"
                     >
                       <Phone className="w-4 h-4" />
@@ -509,7 +556,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                   <div className="flex items-center gap-2">
                     <Link 
                       href={`/admin/devis/${item.id}`}
-                      className="inline-flex items-center gap-1 bg-slate-900 dark:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm"
+                      className="inline-flex items-center gap-1 bg-slate-900 dark:bg-slate-700 text-white px-3 py-1.5 rounded-none text-xs font-semibold shadow-sm"
                       title="Ouvrir la page dédiée du devis"
                     >
                       <FileText className="w-3.5 h-3.5" />
@@ -517,7 +564,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                     </Link>
                     <button 
                       onClick={() => handleOpenDetails(item, 'details')}
-                      className="inline-flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm"
+                      className="inline-flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-none text-xs font-semibold shadow-sm"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       Détails
@@ -527,14 +574,14 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
               </div>
             ))
           ) : (
-            <div className="p-8 text-center text-slate-400 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+            <div className="p-8 text-center text-slate-400 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-none">
               Aucune demande de devis trouvée.
             </div>
           )}
         </div>
 
         {/* 2. AFFICHAGE DESKTOP (Tableau complet) */}
-        <div className="hidden md:block overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+        <div className="hidden md:block overflow-hidden rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <div className="w-full overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -605,7 +652,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                         ) : (
                           <button
                             onClick={() => handleOpenDetails(item, 'devis')}
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 px-2.5 py-1 rounded-none transition-colors cursor-pointer"
                           >
                             <Calculator className="w-3.5 h-3.5" /> Chiffrer
                           </button>
@@ -618,9 +665,20 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
                       <td className="py-4 px-6 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
+                          {item.devis && (
+                            <button
+                              onClick={() => handleSendEmailDirect(item.id)}
+                              disabled={sendingEmailId === item.id}
+                              className="p-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-none transition-colors cursor-pointer disabled:opacity-50"
+                              title="Envoyer le devis officiel par email au client"
+                            >
+                              <Send className="w-4 h-4" />
+                            </button>
+                          )}
+
                           <Link
                             href={`/admin/devis/${item.id}`}
-                            className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                            className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-none transition-colors cursor-pointer"
                             title="Ouvrir la page dédiée du devis"
                           >
                             <FileText className="w-4 h-4" />
@@ -628,7 +686,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
                           <button 
                             onClick={() => handleOpenDetails(item, 'details')}
-                            className="p-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer" 
+                            className="p-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-none transition-colors cursor-pointer" 
                             title="Voir les détails complets"
                           >
                             <Eye className="w-4 h-4" />
@@ -636,7 +694,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
                           <button 
                             onClick={() => handleOpenDetails(item, 'devis')}
-                            className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer" 
+                            className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-800 rounded-none transition-colors cursor-pointer" 
                             title="Gérer le devis financier"
                           >
                             <DollarSign className="w-4 h-4" />
@@ -647,7 +705,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                               setSelectedDemande(item);
                               setIsDeleteModalOpen(true);
                             }}
-                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer" 
+                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-slate-800 rounded-none transition-colors cursor-pointer" 
                             title="Supprimer la demande"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -673,12 +731,12 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
       {/* MODALE DÉTAILS DE LA DEMANDE ET CHIFFRAGE DU DEVIS */}
       {isDetailModalOpen && selectedDemande && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col my-auto">
+          <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-none max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col my-auto">
             
             {/* Header de la modale */}
             <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/40">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-none bg-blue-600 text-white flex items-center justify-center font-bold">
                   <User className="w-5 h-5" />
                 </div>
                 <div>
@@ -693,14 +751,14 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                 {renderStatusBadge(selectedDemande)}
                 <Link
                   href={`/admin/devis/${selectedDemande.id}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 text-white dark:bg-blue-600 text-xs font-bold hover:opacity-90 transition shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-slate-900 text-white dark:bg-blue-600 text-xs font-bold hover:opacity-90 transition shadow-sm"
                   title="Ouvrir la page dédiée"
                 >
                   <ExternalLink className="w-3.5 h-3.5" /> Fiche complète
                 </Link>
                 <button
                   onClick={() => setIsDetailModalOpen(false)}
-                  className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-none hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -746,7 +804,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                 <div className="space-y-6">
                   
                   {/* Actions Rapides de Contact */}
-                  <div className="bg-blue-50/70 dark:bg-blue-950/40 p-4 rounded-2xl border border-blue-100 dark:border-blue-900 flex flex-wrap items-center justify-between gap-3">
+                  <div className="bg-blue-50/70 dark:bg-blue-950/40 p-4 rounded-none border border-blue-100 dark:border-blue-900 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <Phone className="w-5 h-5 text-blue-600" />
                       <div>
@@ -758,7 +816,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                     <div className="flex items-center gap-2">
                       <a
                         href={`tel:${selectedDemande.telephone.replace(/\s+/g, '')}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 shadow-sm"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-none text-xs font-bold hover:bg-blue-700 shadow-sm"
                       >
                         <Phone className="w-3.5 h-3.5" /> Appeler
                       </a>
@@ -766,16 +824,28 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                         href={`https://wa.me/${selectedDemande.telephone.replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour ${selectedDemande.nom}, Maître Plombier fait suite à votre demande de devis pour ${formatInterventionLabel(selectedDemande.type_intervention)}.`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 shadow-sm"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-none text-xs font-bold hover:bg-emerald-700 shadow-sm"
                       >
                         <MessageSquare className="w-3.5 h-3.5" /> WhatsApp
                       </a>
-                      <a
-                        href={`mailto:${selectedDemande.email}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50"
-                      >
-                        <Mail className="w-3.5 h-3.5" /> Email
-                      </a>
+                      {selectedDemande.devis ? (
+                        <button
+                          type="button"
+                          onClick={() => handleSendEmailDirect(selectedDemande.id)}
+                          disabled={sendingEmailId === selectedDemande.id}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-none text-xs font-bold hover:bg-blue-700 shadow-sm cursor-pointer disabled:opacity-50"
+                          title="Envoyer le devis officiel par email au client"
+                        >
+                          <Send className="w-3.5 h-3.5" /> {sendingEmailId === selectedDemande.id ? 'Envoi...' : 'Envoyer Devis'}
+                        </button>
+                      ) : (
+                        <a
+                          href={`mailto:${selectedDemande.email}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-700 border border-slate-200 rounded-none text-xs font-bold hover:bg-slate-50"
+                        >
+                          <Mail className="w-3.5 h-3.5" /> Email
+                        </a>
+                      )}
                     </div>
                   </div>
 
@@ -783,7 +853,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     {/* Bloc 1 : Coordonnées et localisation */}
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+                    <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-none border border-slate-200 dark:border-slate-700 space-y-3 shadow-sm">
                       <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-blue-600" /> Lieu de l'intervention
                       </h3>
@@ -805,7 +875,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                     </div>
 
                     {/* Bloc 2 : Nature des travaux */}
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+                    <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-none border border-slate-200 dark:border-slate-700 space-y-3 shadow-sm">
                       <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
                         <Wrench className="w-4 h-4 text-blue-600" /> Paramètres d'intervention
                       </h3>
@@ -842,7 +912,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                   </div>
 
                   {/* Bloc 3 : Description détaillée du problème */}
-                  <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-none border border-slate-200 dark:border-slate-700 space-y-2 shadow-sm">
                     <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">
                       Message & Description du problème par le client
                     </h3>
@@ -857,17 +927,17 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">
                         Photo jointe par le client
                       </h3>
-                      <div className="relative inline-block border rounded-2xl overflow-hidden shadow-sm group">
+                      <div className="relative inline-block border rounded-none overflow-hidden shadow-sm group">
                         <img
                           src={`/storage/photo_probleme/${selectedDemande.photo_probleme}`}
                           alt="Photo du problème"
-                          className="max-h-64 rounded-2xl object-cover cursor-pointer hover:opacity-90 transition"
+                          className="max-h-64 rounded-none object-cover cursor-pointer hover:opacity-90 transition"
                           onClick={() => setPreviewImage(`/storage/photo_probleme/${selectedDemande.photo_probleme}`)}
                         />
                         <button
                           type="button"
                           onClick={() => setPreviewImage(`/storage/photo_probleme/${selectedDemande.photo_probleme}`)}
-                          className="absolute bottom-3 right-3 bg-slate-900/80 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1"
+                          className="absolute bottom-3 right-3 bg-slate-900/80 text-white text-xs px-3 py-1.5 rounded-none flex items-center gap-1"
                         >
                           <Eye className="w-3.5 h-3.5" /> Agrandir
                         </button>
@@ -879,7 +949,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                   <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
                     <button
                       onClick={() => setActiveTab('devis')}
-                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer text-sm"
+                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-none shadow-sm transition-all cursor-pointer text-sm"
                     >
                       <Calculator className="w-4 h-4" />
                       {selectedDemande.devis ? 'Modifier le chiffrage' : 'Établir le devis financier'}
@@ -893,11 +963,11 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
               {activeTab === 'devis' && (
                 <form onSubmit={handleSaveDevis} className="space-y-6">
                   
-                  <div className="p-4 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-2xl text-xs text-amber-800 dark:text-amber-300 flex items-start gap-3">
+                  <div className="p-4 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-none text-xs text-amber-800 dark:text-amber-300 flex items-start gap-3">
                     <Calculator className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <span className="font-bold text-sm">Chiffrage officiel du devis :</span>
-                      <p className="mt-0.5">Renseignez les montants en FCFA. Le total est automatiquement calculé et prêt à être envoyé par WhatsApp ou validé dans le système.</p>
+                      <p className="mt-0.5">Renseignez les montants en FCFA. Le total est automatiquement calculé et prêt à être envoyé par WhatsApp ou par Email officiel.</p>
                     </div>
                   </div>
 
@@ -909,11 +979,11 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       <input
                         type="number"
                         min="0"
-                        step="500"
+                        step="any"
                         value={devisData.montant_main_oeuvre}
                         onChange={(e) => handleMainOeuvreChange(e.target.value)}
                         placeholder="Ex : 15000"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
                       {devisErrors.montant_main_oeuvre && (
@@ -928,11 +998,11 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       <input
                         type="number"
                         min="0"
-                        step="500"
+                        step="any"
                         value={devisData.montant_materiel}
                         onChange={(e) => handleMaterielChange(e.target.value)}
                         placeholder="Ex : 5000"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
@@ -943,17 +1013,17 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       <input
                         type="number"
                         min="0"
-                        step="500"
+                        step="any"
                         value={devisData.frais_deplacement}
                         onChange={(e) => handleDeplacementChange(e.target.value)}
                         placeholder="Ex : 2000"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
                   </div>
 
                   {/* TOTAL DEVIS MISE EN AVANT */}
-                  <div className="bg-slate-900 text-white p-5 rounded-2xl flex items-center justify-between">
+                  <div className="bg-slate-900 text-white p-5 rounded-none flex items-center justify-between shadow-sm">
                     <div>
                       <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total Général Devis</p>
                       <h4 className="text-3xl font-extrabold text-blue-400 mt-1">
@@ -976,7 +1046,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       <select
                         value={devisData.statut_client}
                         onChange={(e) => setDevisData('statut_client', e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold text-sm outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="en_attente">En attente de réponse</option>
                         <option value="accepte">Accepté par le client</option>
@@ -992,7 +1062,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                         type="date"
                         value={devisData.date_validite}
                         onChange={(e) => setDevisData('date_validite', e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
                   </div>
@@ -1006,34 +1076,67 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
                       value={devisData.conditions_execution}
                       onChange={(e) => setDevisData('conditions_execution', e.target.value)}
                       placeholder="Ex : Travaux garantis 6 mois. Prévoir coupure d'eau générale pendant l'intervention..."
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
+                  {/* Option envoi automatique par email */}
+                  <label className="flex items-center gap-3 p-3.5 bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-none cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(devisData.send_email)}
+                      onChange={(e) => setDevisData('send_email', e.target.checked)}
+                      className="w-4 h-4 text-blue-600 rounded-none border-slate-300"
+                    />
+                    <div className="text-xs">
+                      <span className="font-bold text-blue-900 dark:text-blue-200 flex items-center gap-1.5">
+                        <Mail className="w-3.5 h-3.5 text-blue-600" />
+                        Envoyer automatiquement la proposition de devis par Email au client
+                      </span>
+                      <p className="text-slate-500 dark:text-slate-400 mt-0.5">
+                        Un email officiel contenant le détail du chiffrage sera instantanément adressé à <strong>{selectedDemande.email}</strong>.
+                      </p>
+                    </div>
+                  </label>
+
                   {/* Actions Devis */}
                   <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <a
-                      href={`https://wa.me/${selectedDemande.telephone.replace(/\D/g, '')}?text=${encodeURIComponent(generateWhatsAppMessage())}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm"
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                      Envoyer le devis par WhatsApp
-                    </a>
+                    <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                      <a
+                        href={`https://wa.me/${selectedDemande.telephone.replace(/\D/g, '')}?text=${encodeURIComponent(generateWhatsAppMessage())}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-none text-sm transition-all shadow-sm"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        WhatsApp
+                      </a>
+
+                      {selectedDemande.devis && (
+                        <button
+                          type="button"
+                          disabled={sendingEmailId === selectedDemande.id}
+                          onClick={() => handleSendEmailDirect(selectedDemande.id)}
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-none text-sm transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                        >
+                          <Send className="w-4 h-4" />
+                          {sendingEmailId === selectedDemande.id ? 'Envoi en cours...' : 'Envoyer par Email'}
+                        </button>
+                      )}
+                    </div>
 
                     <div className="flex items-center gap-3 w-full sm:w-auto">
                       <button
                         type="button"
                         onClick={() => setIsDetailModalOpen(false)}
-                        className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50"
+                        className="w-full sm:w-auto px-4 py-2.5 rounded-none border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50"
                       >
                         Annuler
                       </button>
                       <button
                         type="submit"
                         disabled={devisProcessing}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow-md transition-all cursor-pointer disabled:opacity-50"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-none text-sm shadow-sm transition-all cursor-pointer disabled:opacity-50"
                       >
                         <Check className="w-4 h-4" />
                         {devisProcessing ? 'Enregistrement...' : 'Enregistrer le Devis'}
@@ -1053,8 +1156,8 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
       {/* MODALE CONFIRMATION SUPPRESSION */}
       {isDeleteModalOpen && selectedDemande && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200 dark:border-slate-800">
-            <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 mx-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-none max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200 dark:border-slate-800">
+            <div className="w-12 h-12 rounded-none bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
             
@@ -1069,14 +1172,14 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
               <button
                 type="button"
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50"
+                className="flex-1 py-2.5 rounded-none border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50"
               >
                 Annuler
               </button>
               <button
                 type="button"
                 onClick={handleDeleteDemande}
-                className="flex-1 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm hover:bg-red-700 shadow-md"
+                className="flex-1 py-2.5 rounded-none bg-red-600 text-white font-bold text-sm hover:bg-red-700 shadow-sm"
               >
                 Supprimer
               </button>
@@ -1091,11 +1194,11 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 cursor-pointer"
           onClick={() => setPreviewImage(null)}
         >
-          <div className="relative max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl">
+          <div className="relative max-w-3xl max-h-[90vh] overflow-hidden rounded-none">
             <img src={previewImage} alt="Aperçu agrandi" className="w-full h-full object-contain" />
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-4 right-4 bg-slate-900/80 text-white p-2 rounded-full hover:bg-slate-900"
+              className="absolute top-4 right-4 bg-slate-900/80 text-white p-2 rounded-none hover:bg-slate-900"
             >
               <X className="w-6 h-6" />
             </button>

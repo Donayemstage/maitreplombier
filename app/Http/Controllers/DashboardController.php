@@ -26,9 +26,9 @@ class DashboardController extends Controller
         // Demandes reçues sans aucun devis rattaché
         $devisAChiffrerCount = Contact::doesntHave('devis')->count();
         
-        // Demandes urgentes non traitées
-        $urgencesCount = Contact::where('urgence', 'tres_urgent')
-            ->whereIn('statut', ['Nouveau', 'en_attente'])
+        // Demandes urgentes et très urgentes non encore traitées
+        $urgencesCount = Contact::whereIn('urgence', ['urgente', 'tres_urgente', 'urgent', 'tres_urgent'])
+            ->whereNotIn('statut', ['traite', 'annule'])
             ->count();
 
         // Devis envoyés il y a plus de 48h sans confirmation (statut_client en attente)
@@ -62,9 +62,27 @@ class DashboardController extends Controller
                 ];
             });
 
-        // 5. Demandes de Devis Récentes
-        $recentDevis = Contact::with('devis')->orderBy('id', 'desc')
-            ->take(5)
+        // 5. Demandes de Devis Récentes avec filtrage insensible à la casse (icontains)
+        $search = $request->input('search');
+        $recentDevisQuery = Contact::with(['devis', 'service'])->orderBy('id', 'desc');
+
+        if ($request->filled('search')) {
+            $searchTerm = trim((string)$search);
+            $recentDevisQuery->where(function ($q) use ($searchTerm) {
+                $q->where('nom', 'like', "%{$searchTerm}%")
+                  ->orWhere('email', 'like', "%{$searchTerm}%")
+                  ->orWhere('telephone', 'like', "%{$searchTerm}%")
+                  ->orWhere('ville', 'like', "%{$searchTerm}%")
+                  ->orWhere('type_intervention', 'like', "%{$searchTerm}%")
+                  ->orWhere('equipement', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('service', function ($s) use ($searchTerm) {
+                      $s->where('name', 'like', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        $recentDevis = $recentDevisQuery
+            ->take(15)
             ->get()
             ->map(function ($contact) {
                 $serviceName = $contact->type_intervention 
@@ -103,7 +121,9 @@ class DashboardController extends Controller
                     'total_devis' => $montant,
                     'has_devis' => (bool)$contact->devis,
                     'motif_refus' => $contact->devis?->motif_refus ?? $contact->motif_refus,
-                    'created_at' => $contact->created_at ? $contact->created_at->format('d/m/Y') : '',
+                    'heure' => $contact->created_at ? $contact->created_at->format('H:i') : '--:--',
+                    'date' => $contact->created_at ? $contact->created_at->format('d/m/Y') : '',
+                    'created_at' => $contact->created_at ? $contact->created_at->format('d/m/Y H:i') : '',
                 ];
             })
             ->all();
@@ -139,6 +159,9 @@ class DashboardController extends Controller
             ],
             'tauxAcceptation' => $tauxAcceptation,
             'prochaineInterventions' => $prochaineInterventions,
+            'filters' => [
+                'search' => $search ?? '',
+            ],
         ]);
     }
 
@@ -240,6 +263,54 @@ class DashboardController extends Controller
             'projets' => $projets,
             'pages' => $pages,
             'total' => $totalCount,
+        ]);
+    }
+
+    /**
+     * Retourne le nombre de devis non traités / en attente pour la cloche dynamique
+     */
+    public function unreadNotificationsCount()
+    {
+        $count = Contact::where('statut', 'en_attente')
+            ->doesntHave('devis')
+            ->count();
+
+        $urgentCount = Contact::whereIn('urgence', ['urgente', 'tres_urgente', 'urgent', 'tres_urgent'])
+            ->whereNotIn('statut', ['traite', 'annule'])
+            ->count();
+
+        return response()->json([
+            'count' => $count,
+            'urgent_count' => $urgentCount,
+            'timestamp' => now()->timestamp,
+        ]);
+    }
+
+    /**
+     * Retourne les dernières demandes récentes pour le menu déroulant de la cloche
+     */
+    public function latestNotifications()
+    {
+        $latest = Contact::where('statut', 'en_attente')
+            ->doesntHave('devis')
+            ->orderBy('id', 'desc')
+            ->take(6)
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'id' => $c->id,
+                    'nom' => $c->nom,
+                    'type_intervention' => $c->type_intervention,
+                    'ville' => $c->ville,
+                    'urgence' => $c->urgence,
+                    'heure' => $c->created_at ? $c->created_at->format('H:i') : '--:--',
+                    'date' => $c->created_at ? $c->created_at->format('d/m/Y') : '',
+                    'time_ago' => $c->created_at ? $c->created_at->diffForHumans() : '',
+                ];
+            });
+
+        return response()->json([
+            'notifications' => $latest,
         ]);
     }
 }

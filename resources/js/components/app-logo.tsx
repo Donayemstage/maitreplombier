@@ -39,13 +39,22 @@ export default function AppLogo() {
     );
 }*/
 
-export default function AppLogo() {
+interface AppLogoProps {
+  variant?: 'dark' | 'light';
+  className?: string;
+}
+
+export default function AppLogo({ variant = 'dark', className = '' }: AppLogoProps) {
+  const logoSrc = variant === 'dark' 
+    ? '/logo-maitre-plombier-white.svg' 
+    : '/logo-maitre-plombier.svg';
+
   return (
-    <div className="flex items-center gap-3">
+    <div className={`flex items-center gap-3 ${className}`}>
       <img 
-        src="/logo-maitre-plombier.svg" 
+        src={logoSrc} 
         alt="Maître Plombier" 
-        className="h-12 w-auto object-contain" 
+        className="h-11 w-auto object-contain drop-shadow-sm transition-transform hover:scale-105" 
       />
     </div>
   );

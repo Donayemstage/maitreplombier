@@ -69,24 +69,22 @@ export default function Contact() {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  post('/contact', {
-    forceFormData: true,
-    onSuccess: () => {
-      toast.success('Votre demande a bien été enregistrée !', {
-        description: 'Nous vous recontacterons sous 24h pour confirmer votre demande de devis.',
-      });
-      reset();
-    },
-    onError: () => {
-      console.log('Erreurs de validation :', errors);
-      toast.error("Erreur lors de l'envoi", {
-        description: 'Veuillez vérifier les informations du formulaire.',
-      });
-    },
-  });
-};
+    post('/contact', {
+      forceFormData: true,
+      onSuccess: () => {
+        reset();
+      },
+      onError: () => {
+        console.log('Erreurs de validation :', errors);
+        toast.error("Erreur lors de l'envoi", {
+          id: 'contact-form-error',
+          description: 'Veuillez vérifier les informations du formulaire.',
+        });
+      },
+    });
+  };
 
   return (
     <div className="bg-slate-50 text-slate-800">

@@ -39,7 +39,7 @@ class DevisRejeteMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('doe@gmail.com', 'Maître Plombier'),
+            from: new Address('foalengfranck6@gmail.com', 'Maître Plombier'),
             subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Maître Plombier",
         );
     }

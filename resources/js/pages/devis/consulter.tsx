@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { 
   Printer, MessageSquare, Phone, Mail, MapPin, 
   Calendar, CheckCircle, XCircle, Clock, ShieldCheck, 
@@ -83,8 +83,7 @@ export default function DevisConsulter({ contact }: Props) {
   };
 
   const handleAcceptDevis = () => {
-    postResponse(`/devis/consulter/${contact.token}/repondre`, {
-      data: { decision: 'accepte' },
+    router.post(`/devis/consulter/${contact.token}/repondre`, { decision: 'accepte' }, {
       preserveScroll: true,
       onSuccess: () => {
         toast.success('Votre devis a bien été accepté ! Merci pour votre confiance.');
@@ -94,8 +93,7 @@ export default function DevisConsulter({ contact }: Props) {
 
   const handleRefuseDevis = (e: React.FormEvent) => {
     e.preventDefault();
-    postResponse(`/devis/consulter/${contact.token}/repondre`, {
-      data: { decision: 'refuse', motif_refus: responseData.motif_refus },
+    router.post(`/devis/consulter/${contact.token}/repondre`, { decision: 'refuse', motif_refus: responseData.motif_refus }, {
       preserveScroll: true,
       onSuccess: () => {
         toast.info('Votre retour a bien été enregistré. Merci.');

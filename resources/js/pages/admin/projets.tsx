@@ -418,7 +418,7 @@ export default function AdminProjets({ projetsList, filters }: PageProps) {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 space-y-5">
+            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 space-y-5" method="POST" encType="multipart/form-data">
               
               {/* Titre & Catégorie */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -510,6 +510,7 @@ export default function AdminProjets({ projetsList, filters }: PageProps) {
                   )}
 
                   <input
+                  
                     type="file"
                     accept="image/*"
                     onChange={handlePhotoAvantChange}

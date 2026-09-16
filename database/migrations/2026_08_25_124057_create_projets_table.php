@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('lieu')->nullable();
             $table->string('duree_travaux')->nullable();
             $table->string('photo_avant')->nullable();
-            $table->string('photo_apres');
+            $table->string('photo_apres')->nullable();
             $table->string('video_url')->nullable();
             $table->date('date_realisation')->nullable();
             $table->boolean('is_featured')->default(false);

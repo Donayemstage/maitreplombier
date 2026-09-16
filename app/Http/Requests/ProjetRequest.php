@@ -14,7 +14,7 @@ class ProjetRequest extends FormRequest
 
     public function rules(): array
     {
-        $isUpdating = $this->isMethod('PUT') || $this->isMethod('PATCH') || $this->route('projet');
+        $isUpdating = $this->isMethod('PUT') || $this->isMethod('PATCH') || $this->has('_method');
 
         return [
             'titre' => ['required', 'string', 'max:255', 'min:3'],
@@ -22,14 +22,19 @@ class ProjetRequest extends FormRequest
             'description' => ['required', 'string', 'min:10'],
             'lieu' => ['nullable', 'string', 'max:255'],
             'duree_travaux' => ['nullable', 'string', 'max:100'],
+
+            // Photo Avant : Toujours optionnelle (si présent, doit être un fichier image < 5Mo)
             'photo_avant' => [
                 'nullable',
-                File::image()->min('1kb')->max('5mb'),
+                File::types(['jpg', 'jpeg', 'png', 'webp'])->max('5mb'),
             ],
+
+            // Photo Après : Obligatoire en création, optionnelle en modification
             'photo_apres' => [
                 $isUpdating ? 'nullable' : 'required',
-                File::image()->min('1kb')->max('5mb'),
+                File::types(['jpg', 'jpeg', 'png', 'webp'])->max('5mb'),
             ],
+
             'video_url' => ['nullable', 'string', 'max:500'],
             'date_realisation' => ['nullable', 'date'],
             'is_featured' => ['nullable', 'boolean'],
@@ -39,10 +44,9 @@ class ProjetRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'titre.required' => 'Le titre du projet / chantier est obligatoire.',
-            'categorie.required' => 'La catégorie est obligatoire.',
-            'description.required' => 'La description des travaux réalisés est obligatoire.',
-            'photo_apres.required' => 'La photo après travaux (résultat final) est obligatoire.',
+            'photo_apres.required' => 'La photo après travaux est obligatoire.',
+            'photo_apres.max' => 'La photo après ne doit pas dépasser 5 Mo.',
+            'photo_avant.max' => 'La photo avant ne doit pas dépasser 5 Mo.',
         ];
     }
 }

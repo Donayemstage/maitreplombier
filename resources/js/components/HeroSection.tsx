@@ -19,7 +19,7 @@ export function HeroSection({
   titleHighlight = "est déjà en chemin !",
   slogan = "L’imprévu maîtrisé. La tranquillité retrouvée.",
   description = "On s'occupe du vôtre ?",
-  primaryButtonText = "J'ai besoin d'être dépanné",
+  primaryButtonText = "J'ai besoin d'un devis",
   primaryButtonHref = "/contact",
 }: HeroSectionProps) {
   return (

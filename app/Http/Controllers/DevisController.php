@@ -297,4 +297,169 @@ class DevisController extends Controller
 
         return redirect()->route('admin.devis.index')->with('success', 'La demande a été supprimée avec succès.');
     }
+
+    /**
+ * Exporter toutes les demandes de devis en CSV pour Excel / WPS
+ */
+    public function exportCsv()
+    {
+        // Récupérer TOUTES les demandes de devis
+        // avec les relations nécessaires
+        $contacts = Contact::with(['devis', 'service'])
+            ->latest()
+            ->get();
+         
+
+        $filename = 'demandes_devis_' . now()->format('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($contacts) {
+
+            $handle = fopen('php://output', 'w');
+
+            // BOM UTF-8 pour que Excel / WPS affiche correctement
+            // les accents et caractères spéciaux
+            fwrite($handle, "\xEF\xBB\xBF");
+
+            // En-têtes du fichier CSV
+            fputcsv($handle, [
+                'ID',
+                'Nom du client',
+                'Téléphone',
+                'Email',
+                'Ville',
+                'Adresse',
+                'Prestation / Service',
+                'Type d\'intervention',
+                'Équipement',
+                'Urgence',
+                'Message client',
+                'Date de la demande',
+                'Heure de la demande',
+                'Date d\'intervention souhaitée',
+                'Main d\'œuvre (FCFA)',
+                'Matériel (FCFA)',
+                'Frais de déplacement (FCFA)',
+                'Total devis (FCFA)',
+                'Statut devis client',
+                'Canal d\'envoi',
+                'Date envoi devis',
+                'Statut demande',
+            ], ';');
+
+            // Parcourir TOUTES les demandes
+            foreach ($contacts as $contact) {
+
+                $devis = $contact->devis;
+
+                // Nom du service
+                $serviceName = $contact->service?->name
+                    ?? $contact->service?->nom
+                    ?? $contact->type_intervention
+                    ?? $contact->equipement
+                    ?? 'Non spécifié';
+
+                fputcsv($handle, [
+
+                    // Informations client
+                    $contact->id,
+                    $contact->nom ?? '',
+                    $contact->telephone ?? '',
+                    $contact->email ?? '',
+                    $contact->ville ?? '',
+                    $contact->adresse ?? '',
+
+                    // Service
+                    $serviceName,
+
+                    // Intervention
+                    $contact->type_intervention ?? '',
+                    $contact->equipement ?? '',
+                    $contact->urgence ?? '',
+
+                    // Message
+                    $contact->message ?? '',
+
+                    // Date / heure
+                    $contact->created_at
+                        ? $contact->created_at->format('d/m/Y')
+                        : '',
+
+                    $contact->created_at
+                        ? $contact->created_at->format('H:i')
+                        : '',
+
+                    // Date intervention souhaitée
+                    $contact->date_intervention ?? '',
+
+                    // Informations devis
+                    $devis
+                        ? number_format(
+                            (float) ($devis->montant_main_oeuvre ?? 0),
+                            0,
+                            ',',
+                            ' '
+                        )
+                        : '',
+
+                    $devis
+                        ? number_format(
+                            (float) ($devis->montant_materiel ?? 0),
+                            0,
+                            ',',
+                            ' '
+                        )
+                        : '',
+
+                    $devis
+                        ? number_format(
+                            (float) ($devis->frais_deplacement ?? 0),
+                            0,
+                            ',',
+                            ' '
+                        )
+                        : '',
+
+                    $devis
+                        ? number_format(
+                            (float) ($devis->total_devis ?? 0),
+                            0,
+                            ',',
+                            ' '
+                        )
+                        : '',
+
+                    // Statut du devis
+                    $devis?->statut_client ?? '',
+
+                    // Canal d'envoi
+                    $devis?->canal_envoi ?? '',
+
+                    // Date d'envoi du devis
+                    $devis?->date_envoi
+                        ? Carbon::parse($devis->date_envoi)->format('d/m/Y H:i')
+                        : '',
+
+                    // Statut de la demande
+                    $contact->statut ?? '',
+
+                ], ';');
+            }
+
+            fclose($handle);
+        };
+
+        return response()->stream(
+            $callback,
+            200,
+            $headers
+        );
+    }
 }

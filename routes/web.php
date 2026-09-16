@@ -52,8 +52,13 @@ Route::post('/logout', function (Request $request) {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Notifications dynamiques en temps réel
+    Route::get('/admin/notifications/unread-count', [DashboardController::class, 'unreadNotificationsCount'])->name('admin.notifications.count');
+    Route::get('/admin/notifications/latest', [DashboardController::class, 'latestNotifications'])->name('admin.notifications.latest');
+
     // Gestion des Devis et Demandes
     Route::get('/admin/devis', [DevisController::class, 'index'])->name('admin.devis.index');
+    Route::get('/admin/devis/export-csv', [DevisController::class, 'exportCsv'])->name('admin.devis.export_csv');
     Route::get('/admin/devis/{contact}', [DevisController::class, 'show'])->name('admin.devis.show');
     Route::post('/admin/devis/{contact}', [DevisController::class, 'storeOrUpdate'])->name('admin.devis.save');
     Route::post('/admin/devis/{contact}/send-email', [DevisController::class, 'sendEmail'])->name('admin.devis.send_email');
