@@ -15,8 +15,12 @@ WORKDIR /var/www
 COPY . .
 
 # Installation des dépendances PHP uniquement
+# Installation des dépendances PHP uniquement
 RUN composer install --no-dev --optimize-autoloader
+
+# Création du lien symbolique pour le stockage d'images
+RUN php artisan storage:link
 
 EXPOSE 80
 
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=80
+CMD php artisan storage:link && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=80
