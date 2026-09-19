@@ -1,5 +1,6 @@
 import React from 'react';
 import { Wrench, MapPin, Phone, Mail } from 'lucide-react';
+import { Link } from '@inertiajs/react';
 
 interface FooterProps {
   className?: string;
@@ -57,13 +58,19 @@ export function NavFooter({ className = '' }: FooterProps) {
             <h4 className="font-bold text-white text-xs uppercase tracking-wider mb-3">Légal</h4>
             <ul className="space-y-2">
               <li>
-                <a href="/confidentialite" className="hover:text-blue-400 transition-colors">Politique de confidentialité</a>
+                <Link href="/confidentialite" className="hover:text-blue-400 transition-colors hover:underline text-gray-400">
+                  Politique de confidentialité
+                </Link>
               </li>
               <li>
-                <a href="/termes" className="hover:text-blue-400 transition-colors">Conditions d'utilisation</a>
+                <Link href="/terms" className="hover:text-blue-400 transition-colors hover:underline text-gray-400">
+                  Conditions d'utilisation
+                </Link>
               </li>
               <li>
-                <a href="/mentions-legales" className="hover:text-blue-400 transition-colors">Mentions légales</a>
+                <Link href="/mentions-legales" className="hover:text-blue-400 transition-colors hover:underline text-gray-400">
+                  Mentions légales
+                </Link>
               </li>
             </ul>
           </div>

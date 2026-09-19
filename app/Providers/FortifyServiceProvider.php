@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Contracts\RegisterResponse; // <-- IMPORTATION OBLIGATOIRE AJOUTÉE
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -29,6 +30,16 @@ class FortifyServiceProvider extends ServiceProvider
                 public function toResponse($request)
                 {
                     return redirect('/login')->with('success', 'Vous avez été déconnecté avec succès.');
+                }
+            };
+        });
+
+        // NOUVEAU : Redirection après inscription vers la page de vérification d'email (évite le 403)
+        $this->app->singleton(RegisterResponse::class, function () {
+            return new class implements RegisterResponse {
+                public function toResponse($request)
+                {
+                    return redirect()->route('verification.notice');
                 }
             };
         });

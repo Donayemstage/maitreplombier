@@ -120,7 +120,7 @@ export default function Contact() {
             className="w-full md:w-auto px-8 py-4 bg-white text-red-600 font-extrabold rounded-xl hover:bg-red-50 transition-colors text-center text-lg flex items-center justify-center gap-3 shadow-md cursor-pointer"
           >
             <Phone className="w-6 h-6 animate-bounce" />
-            <span>Appeler le 678 95 30 71</span>
+            <span>Appeler le 679 47 36 91</span>
           </a>
         </div>
 
@@ -140,7 +140,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-900 text-sm">Téléphone Service Client</h3>
-                    <p className="text-slate-800 font-bold text-sm mt-0.5">+237 678 95 30 71</p>
+                    <p className="text-slate-800 font-bold text-sm mt-0.5">+237 679 47 36 91</p>
                     <p className="text-slate-500 text-xs mt-1 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-slate-400" /> Du Lundi au Samedi : 8h00 - 18h00
                     </p>
@@ -153,7 +153,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-900 text-sm">Email</h3>
-                    <p className="text-slate-700 text-sm mt-0.5">contact@maitreplombier.cm</p>
+                    <p className="text-slate-700 text-sm mt-0.5">donayemtech.com</p>
                   </div>
                 </div>
 

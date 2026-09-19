@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User; // <-- Importation ajoutée
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str; // <-- Importation ajoutée
 use Inertia\Inertia;
 
 class AdminSettingsController extends Controller
@@ -74,5 +77,30 @@ class AdminSettingsController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Votre mot de passe a été modifié avec succès !');
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+        ], [
+            'name.required' => 'Le nom est obligatoire.',
+            'email.required' => 'L\'adresse email est obligatoire.',
+            'email.unique' => 'Cet email est déjà utilisé.',
+        ]);
+
+        // Création du compte adjoint avec email_verified_at à null
+        $adjunct = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make(Str::random(16)), // Mot de passe aléatoire temporaire
+            'is_admin' => true,
+        ]);
+
+        // Déclenche l'envoi automatique du mail de vérification Laravel
+        event(new Registered($adjunct));
+
+        return redirect()->back()->with('success', 'Invitation envoyée avec succès à l\'adresse email du nouvel administrateur !');
     }
 }

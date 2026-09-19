@@ -20,7 +20,7 @@ const DEFAULT_SERVICES = [
     id: 1,
     title: "Dépannage d'urgence & Fuites",
     description: "Détection et réparation immédiate de fuites d'eau visibles ou encastrées sans dégât inutile.",
-    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=500&auto=format&fit=crop",
+    image: "/images/plombier.jpg",
     price: "15 000"
   },
   {

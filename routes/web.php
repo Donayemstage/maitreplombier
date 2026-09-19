@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\EmailVerificationRequest; // <-- À ajouter en haut
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\DashboardController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\LegalController;
+use App\Http\Controllers\UtilisationController;
 
 // Routes publiques
 Route::get('/', [ServiceController::class, 'homeIndex'])->name('home');
@@ -20,6 +23,8 @@ Route::get('/galerie', [ProjetController::class, 'publicIndex'])->name('galerie'
 Route::inertia('/contact', 'contact')->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::inertia('/a-propos', 'a_propos')->name('a-propos');
+Route::get('/confidentialite', [LegalController::class, 'confidentialite'])->name('confidentialite');
+Route::get('/terms', [UtilisationController::class, 'show'])->name('terms');
 
 // Dépôt d'avis public par les clients
 Route::post('/avis', [AvisController::class, 'publicStore'])->name('avis.store');
@@ -49,7 +54,7 @@ Route::post('/logout', function (Request $request) {
 })->name('logout');
 
 // Espace d'administration protégé
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Notifications dynamiques en temps réel
@@ -86,9 +91,18 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/avis/{avi}', [AvisController::class, 'destroy'])->name('admin.avis.destroy');
 
     // Paramètres & Configuration Administrateur
+    //Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
+    //Route::patch('/admin/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
+    //Route::put('/admin/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('admin.settings.password');
+    // Route d'invitation d'un administrateur adjoint
+    //Route::post('/admin/settings/add-admin', [AdminSettingsController::class, 'storeAdmin'])->name('admin.settings.add-admin');
+    // Paramètres & Configuration Administrateur
     Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
     Route::patch('/admin/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
     Route::put('/admin/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('admin.settings.password');
+    // Route d'invitation d'un administrateur adjoint
+    Route::post('/admin/settings/add-admin', [AdminSettingsController::class, 'storeAdmin'])->name('admin.settings.add-admin');
+
 });
 
 // Redirection globale /settings vers /admin/settings
@@ -98,5 +112,20 @@ Route::middleware(['auth'])->group(function () {
     Route::redirect('settings/security', '/admin/settings');
     Route::redirect('settings/appearance', '/admin/settings');
 });
+
+// Routes de vérification d'email
+Route::get('/email/verify', function () {
+    return Inertia::render('auth/verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/dashboard')->with('success', 'Votre adresse email a été vérifiée avec succès !');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Un nouveau lien de vérification a été envoyé !');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 require __DIR__.'/settings.php';

@@ -27,6 +27,9 @@ export function Navbar({
   const page = usePage()
   const currentUrl = page.url
 
+  // État pour le Sheet mobile
+  const [isOpen, setIsOpen] = useState(false)
+
   // États pour la Modal Desktop d'appel
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -138,7 +141,7 @@ export function Navbar({
           <AppLogo variant="light" />
         </Link>
 
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger className="inline-flex items-center justify-center p-2 rounded-md border border-slate-200 bg-white hover:bg-slate-100 focus:outline-none">
             <Menu className="h-6 w-6 text-slate-800" />
           </SheetTrigger>
@@ -157,6 +160,7 @@ export function Navbar({
               <nav className="flex flex-col gap-4 my-6">
                 <Link
                   href="/"
+                  onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-3 text-base font-semibold transition-colors p-2 rounded-md",
                     currentUrl === "/" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
@@ -168,6 +172,7 @@ export function Navbar({
 
                 <Link
                   href="/services"
+                  onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-3 text-base font-semibold transition-colors p-2 rounded-md",
                     currentUrl === "/services" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
@@ -179,6 +184,7 @@ export function Navbar({
 
                 <Link
                   href="/projets"
+                  onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-3 text-base font-semibold transition-colors p-2 rounded-md",
                     currentUrl === "/projets" || currentUrl === "/galerie" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
@@ -190,6 +196,7 @@ export function Navbar({
 
                 <Link
                   href="/a-propos"
+                  onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-3 text-base font-semibold transition-colors p-2 rounded-md",
                     currentUrl === "/a-propos" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
@@ -201,6 +208,7 @@ export function Navbar({
 
                 <Link
                   href="/contact"
+                  onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-3 text-base font-semibold transition-colors p-2 rounded-md",
                     currentUrl === "/contact" ? "text-blue-600 bg-slate-100" : "text-slate-800 hover:text-blue-600 hover:bg-slate-100"
@@ -214,7 +222,10 @@ export function Navbar({
 
             <SheetFooter className="flex-col gap-3 sm:flex-col border-t pt-4">
               <Button
-                onClick={handleCallClick}
+                onClick={(e) => {
+                  setIsOpen(false)
+                  handleCallClick(e)
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold gap-2"
               >
                 <Phone className="h-4 w-4" />
@@ -223,6 +234,7 @@ export function Navbar({
 
               <Link
                 href="/login"
+                onClick={() => setIsOpen(false)}
                 className="w-full inline-flex items-center justify-center gap-2 py-2 text-xs font-medium text-slate-500 hover:text-blue-600"
               >
                 <Lock className="h-3.5 w-3.5" />
