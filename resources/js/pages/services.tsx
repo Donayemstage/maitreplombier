@@ -17,6 +17,7 @@ export interface ServiceItem {
   icone_service: string;
   prix_service: string | number;
   image_service: string;
+  image_url?: string | null;
 }
 
 interface ServicesProps {
@@ -210,9 +211,10 @@ export default function Services({
                 <div className="relative h-56 w-full overflow-hidden bg-slate-100">
                   <img
                     src={
-                      service.image_service.startsWith('http') 
-                        ? service.image_service 
-                        : `/storage/services/${service.image_service}`
+                      service.image_url ||
+                      (service.image_service.startsWith('http')
+                        ? service.image_service
+                        : `/storage/services/${service.image_service}`)
                     }
                     alt={service.nom_service}
                     onError={(e) => {
@@ -417,15 +419,16 @@ export default function Services({
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col my-auto animate-in fade-in zoom-in duration-200">
 
             {/* Header modal avec image */}
-            <div className="relative h-60 w-full overflow-hidden bg-slate-900">
+            <div className="relative h-80 md:h-96 w-full overflow-hidden bg-slate-900">
               <img
                 src={
-                  selectedService.image_service.startsWith('http') 
-                    ? selectedService.image_service 
-                    : `/storage/services/${selectedService.image_service}`
+                  selectedService.image_url ||
+                  (selectedService.image_service.startsWith('http')
+                    ? selectedService.image_service
+                    : `/storage/services/${selectedService.image_service}`)
                 }
                 alt={selectedService.nom_service}
-                className="w-full h-full object-cover opacity-80"
+                className="w-full h-full object-contain opacity-80"
               />
 
               <button
