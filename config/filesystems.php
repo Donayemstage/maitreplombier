@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('FILESYSTEM_DISK', 'local'),
+    'supabase_public_url' => env('SUPABASE_PUBLIC_URL'),
 
     /*
     |--------------------------------------------------------------------------

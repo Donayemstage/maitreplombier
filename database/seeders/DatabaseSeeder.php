@@ -10,6 +10,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+            $this->call([
+            ServiceSeeder::class,
+        ]);
         // Création de votre compte Super Admin (déjà vérifié)
         User::create([
             'name' => 'Foaleng Neumann',
@@ -19,4 +22,6 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(), // Empêche le blocage 403
         ]);
     }
+
+
 }

@@ -90,9 +90,9 @@ const DEFAULT_PROJETS: ProjetItem[] = [
 
     duree_travaux: "4 jours",
 
-    photo_avant: "/images/ap2.png",
+    photo_avant: "/images/ap2.jpg",
 
-    photo_apres: "/images/ap1.png",
+    photo_apres: "/images/ap3.png",
 
     date_realisation: "2026-08-10",
 
@@ -171,14 +171,24 @@ export default function Projets({ projetsList }: ProjetsProps) {
   };
 
 
-
   const getImageUrl = (path?: string | null) => {
+    if (!path) {
+      return "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
+    }
+
+    if (path.startsWith('http') || path.startsWith('/')) {
+      return path;
+    }
+
+    return `/storage/projets/${path}`;
+  };
+  /*const getImageUrl = (path?: string | null) => {
 
     if (!path) return "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
 
     return path.startsWith('http') ? path : `/storage/projets/${path}`;
 
-  };
+  };*/
 
 
 
@@ -322,13 +332,13 @@ export default function Projets({ projetsList }: ProjetsProps) {
 
               <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900 p-1.5 shadow-xl">
 
-               
+
 
                 {/* Visualiseur avec clip-path (Ne déborde JAMAIS sur mobile) */}
 
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl select-none">
 
-                 
+
 
                   {/* Image APRÈS (Fond) */}
 
@@ -534,11 +544,20 @@ export default function Projets({ projetsList }: ProjetsProps) {
 
                       <img
 
-                        src={getImageUrl(currentView === 'avant' && hasBefore ? projet.photo_avant : projet.photo_apres)}
+                        src={getImageUrl(
+                          currentView === 'avant'
+                            ? projet.photo_avant
+                            : projet.photo_apres
+                        )}
+                        alt={currentView === 'avant' ? `Avant - ${projet.titre}` : `Après - ${projet.titre}`}
+                        className="h-full w-full object-cover"
+
+
+                        /*src={getImageUrl(currentView === 'avant' && hasBefore ? projet.photo_avant : projet.photo_apres)}
 
                         alt={projet.titre}
 
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover"*/
 
                       />
 

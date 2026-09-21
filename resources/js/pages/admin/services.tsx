@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
-import { 
+import {
   Plus, Search, Edit2, Trash2, X, Check, Eye,
-  Wrench, Droplets, Droplet, Flame, ShieldCheck, 
-  Hammer, ShowerHead, Bath, Thermometer, Sparkles, 
+  Wrench, Droplets, Droplet, Flame, ShieldCheck,
+  Hammer, ShowerHead, Bath, Thermometer, Sparkles,
   Zap, Upload, Image as ImageIcon, DollarSign,
   Info, ExternalLink, Layers
 } from 'lucide-react';
@@ -18,6 +18,8 @@ export interface ServiceItem {
   prix_service: string | number;
   image_service: string;
   created_at: string;
+  image_url?: string | null;
+
 }
 
 interface PageProps {
@@ -87,10 +89,16 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
   const handleOpenEdit = (service: ServiceItem) => {
     setEditingService(service);
     clearErrors();
-    setImagePreview(
-      service.image_service.startsWith('http') 
-        ? service.image_service 
+    /*setImagePreview(
+      service.image_service.startsWith('http')
+        ? service.image_service
         : `/storage/services/${service.image_service}`
+    );*/
+    setImagePreview(
+      service.image_url ||
+      (service.image_service
+        ? `/storage/services/${service.image_service}`
+        : null)
     );
     setData({
       nom_service: service.nom_service,
@@ -167,7 +175,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
 
   // Filtrage local en temps réel
   const filteredServices = useMemo(() => {
-    return servicesList.data.filter(s => 
+    return servicesList.data.filter(s =>
       searchTerm === '' ||
       s.nom_service.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.description_service.toLowerCase().includes(searchTerm.toLowerCase())
@@ -186,7 +194,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
       <Head title="Gestion des Services - Admin Maître Plombier" />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-        
+
         {/* En-tête de page */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -197,7 +205,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
               Créez, modifiez et configurez les prestations de plomberie affichées sur votre site.
             </p>
           </div>
-          
+
           <button
             onClick={handleOpenCreate}
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all text-sm w-full md:w-auto cursor-pointer"
@@ -228,7 +236,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
         {filteredServices.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredServices.map((service) => (
-              <div 
+              <div
                 key={service.id}
                 className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between"
               >
@@ -236,18 +244,24 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
                   {/* Image d'illustration */}
                   <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                     <img
-                      src={
-                        service.image_service.startsWith('http') 
-                          ? service.image_service 
+                       src={
+                        service.image_url ||
+                        (service.image_service
+                          ? `/storage/services/${service.image_service}`
+                          : "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600")
+                      }
+                      /*src={
+                        service.image_service.startsWith('http')
+                          ? service.image_service
                           : `/storage/services/${service.image_service}`
                       }
                       alt={service.nom_service}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
-                      }}
+                      }}*/
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    
+
                     {/* Badge Icône et Prix */}
                     <div className="absolute top-3 left-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm p-2 rounded-xl text-blue-600 shadow-sm border border-slate-200/50">
                       {renderIcon(service.icone_service, "w-5 h-5")}
@@ -321,7 +335,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col my-auto">
-            
+
             {/* Header modal */}
             <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/40">
               <div className="flex items-center gap-3">
@@ -348,7 +362,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
 
             {/* Formulaire */}
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 space-y-5">
-              
+
               {/* Nom & Prix */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -449,7 +463,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Photo d'illustration {editingService ? '(Laisser vide pour conserver l’actuelle)' : '*'}
                 </label>
-                
+
                 <div className="flex items-center gap-4">
                   {imagePreview && (
                     <div className="w-20 h-20 rounded-xl overflow-hidden border border-slate-200 flex-shrink-0 bg-slate-100">
@@ -499,7 +513,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
             <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
-            
+
             <div className="text-center space-y-1">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">Supprimer ce service ?</h3>
               <p className="text-xs text-slate-500">

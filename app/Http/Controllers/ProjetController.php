@@ -21,7 +21,20 @@ class ProjetController extends Controller
             $query->where('categorie', $request->category);
         }
 
+        /*$projets = $query->get();
+
+        return Inertia::render('projets', [
+            'projetsList' => $projets,
+            'selectedCategory' => $request->get('category', 'all'),
+        ]);*/
         $projets = $query->get();
+
+        $projets->transform(function ($projet) {
+            $projet->photo_avant = $this->getImageUrl($projet->photo_avant);
+            $projet->photo_apres = $this->getImageUrl($projet->photo_apres);
+
+            return $projet;
+        });
 
         return Inertia::render('projets', [
             'projetsList' => $projets,
@@ -51,10 +64,24 @@ class ProjetController extends Controller
 
         $projets = $query->paginate(12)->withQueryString();
 
+        $projets->getCollection()->transform(function ($projet) {
+            $projet->photo_avant = $this->getImageUrl($projet->photo_avant);
+            $projet->photo_apres = $this->getImageUrl($projet->photo_apres);
+
+            return $projet;
+        });
+
         return Inertia::render('admin/projets', [
             'projetsList' => $projets,
             'filters' => $request->only(['search', 'category']),
         ]);
+
+        /*$projets = $query->paginate(12)->withQueryString();
+
+        return Inertia::render('admin/projets', [
+            'projetsList' => $projets,
+            'filters' => $request->only(['search', 'category']),
+        ]);*/
     }
 
     /**
@@ -69,6 +96,34 @@ class ProjetController extends Controller
 
         if ($request->hasFile('photo_avant')) {
             $file = $request->file('photo_avant');
+
+            $photoAvantName = time() . '_avant_' .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '_',
+                    $file->getClientOriginalName()
+                );
+
+            // Enregistrement dans Supabase Storage
+            $file->storeAs('projets', $photoAvantName, 's3');
+        }
+
+        if ($request->hasFile('photo_apres')) {
+            $file = $request->file('photo_apres');
+
+            $photoApresName = time() . '_apres_' .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '_',
+                    $file->getClientOriginalName()
+                );
+
+            // Enregistrement dans Supabase Storage
+            $file->storeAs('projets', $photoApresName, 's3');
+        }
+
+        /*if ($request->hasFile('photo_avant')) {
+            $file = $request->file('photo_avant');
             $photoAvantName = time() . '_avant_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
             $file->storeAs('projets', $photoAvantName, 'public');
         }
@@ -77,7 +132,7 @@ class ProjetController extends Controller
             $file = $request->file('photo_apres');
             $photoApresName = time() . '_apres_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
             $file->storeAs('projets', $photoApresName, 'public');
-        }
+        }*/
 
         Projet::create([
             'titre' => $validated['titre'],
@@ -114,22 +169,67 @@ class ProjetController extends Controller
         ];
 
         if ($request->hasFile('photo_avant')) {
-            if ($projet->photo_avant && Storage::disk('public')->exists('projets/' . $projet->photo_avant)) {
+            /*if ($projet->photo_avant && Storage::disk('public')->exists('projets/' . $projet->photo_avant)) {
                 Storage::disk('public')->delete('projets/' . $projet->photo_avant);
             }
             $file = $request->file('photo_avant');
             $photoAvantName = time() . '_avant_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->storeAs('projets', $photoAvantName, 'public');
+            $file->storeAs('projets', $photoAvantName, 'public');*/
+            if (
+                $projet->photo_avant &&
+                Storage::disk('s3')->exists('projets/' . $projet->photo_avant)
+            ) {
+                Storage::disk('s3')->delete(
+                    'projets/' . $projet->photo_avant
+                );
+            }
+
+            $file = $request->file('photo_avant');
+
+            $photoAvantName = time() . '_avant_' .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '_',
+                    $file->getClientOriginalName()
+                );
+
+            // Enregistrer la nouvelle photo dans Supabase
+            $file->storeAs('projets', $photoAvantName, 's3');
+
             $dataToUpdate['photo_avant'] = $photoAvantName;
+
         }
 
         if ($request->hasFile('photo_apres')) {
-            if ($projet->photo_apres && Storage::disk('public')->exists('projets/' . $projet->photo_apres)) {
+            /*if ($projet->photo_apres && Storage::disk('public')->exists('projets/' . $projet->photo_apres)) {
                 Storage::disk('public')->delete('projets/' . $projet->photo_apres);
             }
             $file = $request->file('photo_apres');
             $photoApresName = time() . '_apres_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->storeAs('projets', $photoApresName, 'public');
+            $file->storeAs('projets', $photoApresName, 'public');*/
+            if (
+                $projet->photo_apres &&
+                $projet->photo_apres !== 'default_after.jpg' &&
+                Storage::disk('s3')->exists('projets/' . $projet->photo_apres)
+            ) {
+                Storage::disk('s3')->delete(
+                    'projets/' . $projet->photo_apres
+                );
+            }
+
+            $file = $request->file('photo_apres');
+
+            $photoApresName = time() . '_apres_' .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '_',
+                    $file->getClientOriginalName()
+                );
+
+            // Enregistrer la nouvelle photo dans Supabase
+            $file->storeAs('projets', $photoApresName, 's3');
+
+
             $dataToUpdate['photo_apres'] = $photoApresName;
         }
 
@@ -143,7 +243,34 @@ class ProjetController extends Controller
      */
     public function destroy(Projet $projet)
     {
-        if ($projet->photo_avant && Storage::disk('public')->exists('projets/' . $projet->photo_avant)) {
+        // Supprimer la photo AVANT de Supabase
+        if (
+            $projet->photo_avant &&
+            Storage::disk('s3')->exists('projets/' . $projet->photo_avant)
+        ) {
+            Storage::disk('s3')->delete(
+                'projets/' . $projet->photo_avant
+            );
+        }
+
+        // Supprimer la photo APRÈS de Supabase
+        if (
+            $projet->photo_apres &&
+            $projet->photo_apres !== 'default_after.jpg' &&
+            Storage::disk('s3')->exists('projets/' . $projet->photo_apres)
+        ) {
+            Storage::disk('s3')->delete(
+                'projets/' . $projet->photo_apres
+            );
+        }
+
+        $projet->delete();
+
+        return redirect()->back()->with(
+            'success',
+            'Le chantier a été supprimé de la galerie.'
+        );
+        /*if ($projet->photo_avant && Storage::disk('public')->exists('projets/' . $projet->photo_avant)) {
             Storage::disk('public')->delete('projets/' . $projet->photo_avant);
         }
         if ($projet->photo_apres && Storage::disk('public')->exists('projets/' . $projet->photo_apres)) {
@@ -152,6 +279,19 @@ class ProjetController extends Controller
 
         $projet->delete();
 
-        return redirect()->back()->with('success', 'Le chantier a été supprimé de la galerie.');
+        return redirect()->back()->with('success', 'Le chantier a été supprimé de la galerie.');*/
+    }
+
+    private function getImageUrl(?string $filename): ?string
+    {
+        if (!$filename || $filename === 'default_after.jpg') {
+            return null;
+        }
+
+        $filename = str_replace('projets/', '', $filename);
+
+        return rtrim(config('filesystems.supabase_public_url'), '/')
+            . '/projets/'
+            . $filename;
     }
 }

@@ -15,7 +15,40 @@ class ServiceController extends Controller
      */
     public function publicIndex()
     {
-        $services = Service::latest()->get();
+        /*$services = Service::latest()->get();
+
+        return Inertia::render('services', [
+            'servicesList' => $services,
+        ]);*/
+               /* $services = Service::latest()->get()->map(function ($service) {
+            if (
+                $service->image_service &&
+                $service->image_service !== 'default_service.jpg'
+            ) {
+                $service->image_url = Storage::disk('s3')->url(
+                    'services/' . $service->image_service
+                );
+            } else {
+                $service->image_url = null;
+            }
+
+            return $service;
+        });*/
+
+            $services = Service::latest()->get()->map(function ($service) {
+            if (
+                $service->image_service &&
+                $service->image_service !== 'default_service.jpg'
+            ) {
+                $service->image_url = Storage::disk('s3')->url(
+                    'services/' . $service->image_service
+                );
+            } else {
+                $service->image_url = null;
+            }
+
+            return $service;
+        });
 
         return Inertia::render('services', [
             'servicesList' => $services,
@@ -27,18 +60,48 @@ class ServiceController extends Controller
      */
     public function homeIndex()
     {
-        $services = Service::latest()->take(6)->get();
+        /*$services = Service::latest()->take(6)->get();
 
-        // Récupère les avis publiés paginés par 3 (ou 6 selon vos préférences)
+        // Récupère les avis publiés paginés par 3
         $avis = \App\Models\Avis::where('statut', 'publie')
             ->orderBy('is_featured', 'desc')
             ->latest()
-            ->paginate(3); // On envoie 3 avis par page à React via Inertia
+            ->paginate(3);
+
+        return Inertia::render('accueil', [
+            'featuredServices' => $services,
+            'testimonialsList' => $avis,
+        ]);*/
+
+                    $services = Service::latest()
+            ->take(6)
+            ->get()
+            ->map(function ($service) {
+                if (
+                    $service->image_service &&
+                    $service->image_service !== 'default_service.jpg'
+                ) {
+                    $service->image_url = Storage::disk('s3')->url(
+                        'services/' . $service->image_service
+                    );
+                } else {
+                    $service->image_url = null;
+                }
+
+                return $service;
+            });
+
+        // Récupère les avis publiés paginés par 3
+        $avis = \App\Models\Avis::where('statut', 'publie')
+            ->orderBy('is_featured', 'desc')
+            ->latest()
+            ->paginate(3);
 
         return Inertia::render('accueil', [
             'featuredServices' => $services,
             'testimonialsList' => $avis,
         ]);
+
     }
 
     /**
@@ -46,10 +109,46 @@ class ServiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Service::query()->latest();
+            $query = Service::query()->latest();
 
         if ($request->filled('search')) {
             $search = $request->search;
+
+            $query->where('nom_service', 'like', "%{$search}%")
+                ->orWhere('description_service', 'like', "%{$search}%");
+        }
+
+        $services = $query->paginate(12)->withQueryString();
+
+        $services->getCollection()->transform(function ($service) {
+            if (
+                $service->image_service &&
+                $service->image_service !== 'default_service.jpg'
+            ) {
+                /*$service->image_url = Storage::disk('s3')->url(
+                    'services/' . $service->image_service
+                );*/
+                $service->image_url =
+                    rtrim(config('filesystems.supabase_public_url'), '/')
+                    . '/services/'
+                    . $service->image_service;
+            } else {
+                $service->image_url = null;
+            }
+
+            return $service;
+        });
+
+        return Inertia::render('admin/services', [
+            'servicesList' => $services,
+            'filters' => $request->only(['search']),
+        ]);
+
+        /*$query = Service::query()->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
             $query->where('nom_service', 'like', "%{$search}%")
                   ->orWhere('description_service', 'like', "%{$search}%");
         }
@@ -59,7 +158,17 @@ class ServiceController extends Controller
         return Inertia::render('admin/services', [
             'servicesList' => $services,
             'filters' => $request->only(['search']),
-        ]);
+        ]);*/
+
+        /*$services = $query->paginate(12)->withQueryString();
+
+        $services->getCollection()->transform(function ($service) {
+            $service->image_url = $service->image_service
+                ? \Storage::disk('s3')->url('services/' . $service->image_service)
+                : null;
+
+            return $service;
+        });*/
     }
 
     /**
@@ -73,8 +182,16 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image_service')) {
             $file = $request->file('image_service');
-            $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->storeAs('services', $imageName, 'public');
+
+            $imageName = time() . '_' .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '_',
+                    $file->getClientOriginalName()
+                );
+
+            // Enregistrement dans Supabase Storage
+            $file->storeAs('services', $imageName, 's3');
         }
 
         Service::create([
@@ -86,7 +203,10 @@ class ServiceController extends Controller
             'image_service' => $imageName,
         ]);
 
-        return redirect()->back()->with('success', 'Nouveau service créé avec succès !');
+        return redirect()->back()->with(
+            'success',
+            'Nouveau service créé avec succès !'
+        );
     }
 
     /**
@@ -105,20 +225,41 @@ class ServiceController extends Controller
         ];
 
         if ($request->hasFile('image_service')) {
-            // Supprimer l'ancienne image si elle existe et n'est pas l'image par défaut
-            if ($service->image_service && Storage::disk('public')->exists('services/' . $service->image_service)) {
-                Storage::disk('public')->delete('services/' . $service->image_service);
+
+            // Supprimer l'ancienne image de Supabase
+            if (
+                $service->image_service &&
+                $service->image_service !== 'default_service.jpg' &&
+                Storage::disk('s3')->exists(
+                    'services/' . $service->image_service
+                )
+            ) {
+                Storage::disk('s3')->delete(
+                    'services/' . $service->image_service
+                );
             }
 
             $file = $request->file('image_service');
-            $imageName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->storeAs('services', $imageName, 'public');
+
+            $imageName = time() . '_' .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '_',
+                    $file->getClientOriginalName()
+                );
+
+            // Enregistrer la nouvelle image dans Supabase
+            $file->storeAs('services', $imageName, 's3');
+
             $dataToUpdate['image_service'] = $imageName;
         }
 
         $service->update($dataToUpdate);
 
-        return redirect()->back()->with('success', 'Le service a été mis à jour avec succès !');
+        return redirect()->back()->with(
+            'success',
+            'Le service a été mis à jour avec succès !'
+        );
     }
 
     /**
@@ -126,12 +267,24 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        if ($service->image_service && Storage::disk('public')->exists('services/' . $service->image_service)) {
-            Storage::disk('public')->delete('services/' . $service->image_service);
+        // Supprimer l'image de Supabase
+        if (
+            $service->image_service &&
+            $service->image_service !== 'default_service.jpg' &&
+            Storage::disk('s3')->exists(
+                'services/' . $service->image_service
+            )
+        ) {
+            Storage::disk('s3')->delete(
+                'services/' . $service->image_service
+            );
         }
 
         $service->delete();
 
-        return redirect()->back()->with('success', 'Le service a été supprimé.');
+        return redirect()->back()->with(
+            'success',
+            'Le service a été supprimé.'
+        );
     }
 }
