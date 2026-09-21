@@ -40,9 +40,11 @@ class ServiceController extends Controller
                 $service->image_service &&
                 $service->image_service !== 'default_service.jpg'
             ) {
-                $service->image_url = Storage::disk('s3')->url(
-                    'services/' . $service->image_service
-                );
+                $service->image_url =
+                    rtrim(config('filesystems.supabase_public_url'), '/')
+                    . '/services/'
+                    . $service->image_service;
+                
             } else {
                 $service->image_url = null;
             }
