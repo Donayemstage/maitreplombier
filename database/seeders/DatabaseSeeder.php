@@ -10,9 +10,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-            $this->call([
+        $this->call([
             ServiceSeeder::class,
+            ProjetSeeder::class, //  Ajout du ProjetSeeder
         ]);
+            
+
         // Création de votre compte Super Admin (déjà vérifié)
         User::create([
             'name' => 'Foaleng Neumann',

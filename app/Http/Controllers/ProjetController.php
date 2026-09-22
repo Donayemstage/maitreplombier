@@ -153,6 +153,9 @@ class ProjetController extends Controller
     /**
      * Mettre à jour une réalisation existante
      */
+    /**
+     * Mettre à jour une réalisation existante
+     */
     public function update(ProjetRequest $request, Projet $projet)
     {
         $validated = $request->validated();
@@ -168,68 +171,46 @@ class ProjetController extends Controller
             'is_featured' => $request->boolean('is_featured'),
         ];
 
+        // Gestion de la photo "Avant"
         if ($request->hasFile('photo_avant')) {
-            /*if ($projet->photo_avant && Storage::disk('public')->exists('projets/' . $projet->photo_avant)) {
-                Storage::disk('public')->delete('projets/' . $projet->photo_avant);
+            if (
+                $projet->photo_avant && 
+                !str_starts_with($projet->photo_avant, 'http')
+            ) {
+                try {
+                    Storage::disk('s3')->delete('projets/' . $projet->photo_avant);
+                } catch (\Exception $e) {
+                    // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
+                }
             }
+
             $file = $request->file('photo_avant');
             $photoAvantName = time() . '_avant_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->storeAs('projets', $photoAvantName, 'public');*/
-            if (
-                $projet->photo_avant &&
-                Storage::disk('s3')->exists('projets/' . $projet->photo_avant)
-            ) {
-                Storage::disk('s3')->delete(
-                    'projets/' . $projet->photo_avant
-                );
-            }
-
-            $file = $request->file('photo_avant');
-
-            $photoAvantName = time() . '_avant_' .
-                preg_replace(
-                    '/[^a-zA-Z0-9._-]/',
-                    '_',
-                    $file->getClientOriginalName()
-                );
-
-            // Enregistrer la nouvelle photo dans Supabase
+            
+            // Enregistrement dans Supabase Storage
             $file->storeAs('projets', $photoAvantName, 's3');
-
             $dataToUpdate['photo_avant'] = $photoAvantName;
-
         }
 
+        // Gestion de la photo "Après"
         if ($request->hasFile('photo_apres')) {
-            /*if ($projet->photo_apres && Storage::disk('public')->exists('projets/' . $projet->photo_apres)) {
-                Storage::disk('public')->delete('projets/' . $projet->photo_apres);
-            }
-            $file = $request->file('photo_apres');
-            $photoApresName = time() . '_apres_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            $file->storeAs('projets', $photoApresName, 'public');*/
             if (
                 $projet->photo_apres &&
                 $projet->photo_apres !== 'default_after.jpg' &&
-                Storage::disk('s3')->exists('projets/' . $projet->photo_apres)
+                !str_starts_with($projet->photo_apres, 'http')
             ) {
-                Storage::disk('s3')->delete(
-                    'projets/' . $projet->photo_apres
-                );
+                try {
+                    Storage::disk('s3')->delete('projets/' . $projet->photo_apres);
+                } catch (\Exception $e) {
+                    // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
+                }
             }
 
             $file = $request->file('photo_apres');
-
-            $photoApresName = time() . '_apres_' .
-                preg_replace(
-                    '/[^a-zA-Z0-9._-]/',
-                    '_',
-                    $file->getClientOriginalName()
-                );
-
-            // Enregistrer la nouvelle photo dans Supabase
+            $photoApresName = time() . '_apres_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+            
+            // Enregistrement dans Supabase Storage
             $file->storeAs('projets', $photoApresName, 's3');
-
-
             $dataToUpdate['photo_apres'] = $photoApresName;
         }
 
@@ -237,61 +218,58 @@ class ProjetController extends Controller
 
         return redirect()->back()->with('success', 'Le projet a été mis à jour avec succès !');
     }
-
+    /**
+     * Supprimer un chantier
+     */
     /**
      * Supprimer un chantier
      */
     public function destroy(Projet $projet)
     {
-        // Supprimer la photo AVANT de Supabase
+        // Supprimer la photo AVANT de Supabase si elle existe et n'est pas une URL externe
         if (
-            $projet->photo_avant &&
-            Storage::disk('s3')->exists('projets/' . $projet->photo_avant)
+            $projet->photo_avant && 
+            !str_starts_with($projet->photo_avant, 'http')
         ) {
-            Storage::disk('s3')->delete(
-                'projets/' . $projet->photo_avant
-            );
+            try {
+                Storage::disk('s3')->delete('projets/' . $projet->photo_avant);
+            } catch (\Exception $e) {
+                // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
+            }
         }
 
-        // Supprimer la photo APRÈS de Supabase
+        // Supprimer la photo APRÈS de Supabase si elle existe, n'est pas par défaut et n'est pas une URL externe
         if (
             $projet->photo_apres &&
             $projet->photo_apres !== 'default_after.jpg' &&
-            Storage::disk('s3')->exists('projets/' . $projet->photo_apres)
+            !str_starts_with($projet->photo_apres, 'http')
         ) {
-            Storage::disk('s3')->delete(
-                'projets/' . $projet->photo_apres
-            );
+            try {
+                Storage::disk('s3')->delete('projets/' . $projet->photo_apres);
+            } catch (\Exception $e) {
+                // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
+            }
         }
 
         $projet->delete();
 
-        return redirect()->back()->with(
-            'success',
-            'Le chantier a été supprimé de la galerie.'
-        );
-        /*if ($projet->photo_avant && Storage::disk('public')->exists('projets/' . $projet->photo_avant)) {
-            Storage::disk('public')->delete('projets/' . $projet->photo_avant);
-        }
-        if ($projet->photo_apres && Storage::disk('public')->exists('projets/' . $projet->photo_apres)) {
-            Storage::disk('public')->delete('projets/' . $projet->photo_apres);
-        }
-
-        $projet->delete();
-
-        return redirect()->back()->with('success', 'Le chantier a été supprimé de la galerie.');*/
+        return redirect()->back()->with('success', 'Le chantier a été supprimé de la galerie.');
     }
+        private function getImageUrl(?string $filename): ?string
+        {
+            if (!$filename || $filename === 'default_after.jpg') {
+                return null;
+            }
 
-    private function getImageUrl(?string $filename): ?string
-    {
-        if (!$filename || $filename === 'default_after.jpg') {
-            return null;
+            // 👈 Si c'est déjà une URL HTTP/HTTPS (ex: Unsplash ou lien direct), on la renvoie directement
+            if (str_starts_with($filename, 'http://') || str_starts_with($filename, 'https://')) {
+                return $filename;
+            }
+
+            $filename = str_replace('projets/', '', $filename);
+
+            return rtrim(config('filesystems.supabase_public_url'), '/')
+                . '/projets/'
+                . $filename;
         }
-
-        $filename = str_replace('projets/', '', $filename);
-
-        return rtrim(config('filesystems.supabase_public_url'), '/')
-            . '/projets/'
-            . $filename;
-    }
 }
