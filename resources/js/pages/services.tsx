@@ -209,19 +209,23 @@ export default function Services({
               <div>
                 {/* Image d'illustration */}
                 <div className="relative h-56 w-full overflow-hidden bg-slate-100">
+                   
                   <img
                     src={
-                      service.image_url ||
-                      (service.image_service.startsWith('http')
+                      service.image_service && service.image_service.startsWith('http')
                         ? service.image_service
-                        : `/storage/services/${service.image_service}`)
+                        : (service.image_url || `/storage/services/${service.image_service || ''}`)
                     }
                     alt={service.nom_service}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
+                      const target = e.target as HTMLImageElement;
+                      if (target.src !== "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600") {
+                        target.src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
+                      }
                     }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  
 
                   {/* Badge Icône */}
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-3 rounded-2xl text-blue-600 shadow-md">

@@ -15,27 +15,30 @@ class ServiceController extends Controller
      */
     public function publicIndex()
     {
-        /*$services = Service::latest()->get();
-
-        return Inertia::render('services', [
-            'servicesList' => $services,
-        ]);*/
-               /* $services = Service::latest()->get()->map(function ($service) {
-            if (
-                $service->image_service &&
-                $service->image_service !== 'default_service.jpg'
-            ) {
-                $service->image_url = Storage::disk('s3')->url(
-                    'services/' . $service->image_service
-                );
+            $services = Service::latest()->get()->map(function ($service) {
+            if ($service->image_service && $service->image_service !== 'default_service.jpg') {
+                // Si l'image est déjà une URL complète (ex: https://supabase.co/...)
+                if (str_starts_with($service->image_service, 'http://') || str_starts_with($service->image_service, 'https://')) {
+                    $service->image_url = $service->image_service;
+                } else {
+                    // Si c'est seulement le nom du fichier (ex: 1789934127_plombier.jpg)
+                    $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
+                        . '/services/'
+                        . $service->image_service;
+                }
             } else {
                 $service->image_url = null;
             }
 
             return $service;
-        });*/
+        });
 
-            $services = Service::latest()->get()->map(function ($service) {
+        return Inertia::render('services', [
+            'servicesList' => $services,
+        ]);
+    
+
+            /*$services = Service::latest()->get()->map(function ($service) {
             if (
                 $service->image_service &&
                 $service->image_service !== 'default_service.jpg'
@@ -54,7 +57,7 @@ class ServiceController extends Controller
 
         return Inertia::render('services', [
             'servicesList' => $services,
-        ]);
+        ]);*/
     }
 
     /**
