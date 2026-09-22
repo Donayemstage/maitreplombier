@@ -65,20 +65,44 @@ class ServiceController extends Controller
      */
     public function homeIndex()
     {
-        /*$services = Service::latest()->take(6)->get();
+                /**
+         * Page d'accueil publique avec les services mis en avant et les avis clients
+         */
 
-        // Récupère les avis publiés paginés par 3
-        $avis = \App\Models\Avis::where('statut', 'publie')
-            ->orderBy('is_featured', 'desc')
-            ->latest()
-            ->paginate(3);
+            $services = Service::latest()
+                ->take(6)
+                ->get()
+                ->map(function ($service) {
+                    if ($service->image_service && $service->image_service !== 'default_service.jpg') {
+                        // Si l'image est déjà une URL complète (ex: https://supabase.co/...)
+                        if (str_starts_with($service->image_service, 'http://') || str_starts_with($service->image_service, 'https://')) {
+                            $service->image_url = $service->image_service;
+                        } else {
+                            // Si c'est seulement le nom du fichier (ex: 1789934127_plombier.jpg)
+                            $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
+                                . '/services/'
+                                . $service->image_service;
+                        }
+                    } else {
+                        $service->image_url = null;
+                    }
 
-        return Inertia::render('accueil', [
-            'featuredServices' => $services,
-            'testimonialsList' => $avis,
-        ]);*/
+                    return $service;
+                });
 
-                    $services = Service::latest()
+            // Récupère les avis publiés paginés par 3
+            $avis = \App\Models\Avis::where('statut', 'publie')
+                ->orderBy('is_featured', 'desc')
+                ->latest()
+                ->paginate(3);
+
+            return Inertia::render('accueil', [
+                'featuredServices' => $services,
+                'testimonialsList' => $avis,
+            ]);
+
+        
+                   /* $services = Service::latest()
             ->take(6)
             ->get()
             ->map(function ($service) {
@@ -105,7 +129,7 @@ class ServiceController extends Controller
         return Inertia::render('accueil', [
             'featuredServices' => $services,
             'testimonialsList' => $avis,
-        ]);
+        ]);*/
 
     }
 
