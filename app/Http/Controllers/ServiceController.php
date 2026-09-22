@@ -15,13 +15,11 @@ class ServiceController extends Controller
      */
     public function publicIndex()
     {
-            $services = Service::latest()->get()->map(function ($service) {
+        $services = Service::latest()->get()->map(function ($service) {
             if ($service->image_service && $service->image_service !== 'default_service.jpg') {
-                // Si l'image est déjà une URL complète (ex: https://supabase.co/...)
                 if (str_starts_with($service->image_service, 'http://') || str_starts_with($service->image_service, 'https://')) {
                     $service->image_url = $service->image_service;
                 } else {
-                    // Si c'est seulement le nom du fichier (ex: 1789934127_plombier.jpg)
                     $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
                         . '/services/'
                         . $service->image_service;
@@ -36,28 +34,6 @@ class ServiceController extends Controller
         return Inertia::render('services', [
             'servicesList' => $services,
         ]);
-    
-
-            /*$services = Service::latest()->get()->map(function ($service) {
-            if (
-                $service->image_service &&
-                $service->image_service !== 'default_service.jpg'
-            ) {
-                $service->image_url =
-                    rtrim(config('filesystems.supabase_public_url'), '/')
-                    . '/services/'
-                    . $service->image_service;
-                
-            } else {
-                $service->image_url = null;
-            }
-
-            return $service;
-        });
-
-        return Inertia::render('services', [
-            'servicesList' => $services,
-        ]);*/
     }
 
     /**
@@ -65,54 +41,18 @@ class ServiceController extends Controller
      */
     public function homeIndex()
     {
-                /**
-         * Page d'accueil publique avec les services mis en avant et les avis clients
-         */
-
-            $services = Service::latest()
-                ->take(6)
-                ->get()
-                ->map(function ($service) {
-                    if ($service->image_service && $service->image_service !== 'default_service.jpg') {
-                        // Si l'image est déjà une URL complète (ex: https://supabase.co/...)
-                        if (str_starts_with($service->image_service, 'http://') || str_starts_with($service->image_service, 'https://')) {
-                            $service->image_url = $service->image_service;
-                        } else {
-                            // Si c'est seulement le nom du fichier (ex: 1789934127_plombier.jpg)
-                            $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
-                                . '/services/'
-                                . $service->image_service;
-                        }
-                    } else {
-                        $service->image_url = null;
-                    }
-
-                    return $service;
-                });
-
-            // Récupère les avis publiés paginés par 3
-            $avis = \App\Models\Avis::where('statut', 'publie')
-                ->orderBy('is_featured', 'desc')
-                ->latest()
-                ->paginate(3);
-
-            return Inertia::render('accueil', [
-                'featuredServices' => $services,
-                'testimonialsList' => $avis,
-            ]);
-
-        
-                   /* $services = Service::latest()
+        $services = Service::latest()
             ->take(6)
             ->get()
             ->map(function ($service) {
-                if (
-                    $service->image_service &&
-                    $service->image_service !== 'default_service.jpg'
-                ) {
-                    $service->image_url = Storage::disk('s3')->url(
-                        'services/' . $service->image_service
-                    );
+                if ($service->image_service && $service->image_service !== 'default_service.jpg') {
+                    if (str_starts_with($service->image_service, 'http://') || str_starts_with($service->image_service, 'https://')) {
+                        $service->image_url = $service->image_service;
+                    } else {
+                        $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
+                            . '/services/'
+                            . $service->image_service;
+                    }
                 } else {
                     $service->image_url = null;
                 }
@@ -120,7 +60,6 @@ class ServiceController extends Controller
                 return $service;
             });
 
-        // Récupère les avis publiés paginés par 3
         $avis = \App\Models\Avis::where('statut', 'publie')
             ->orderBy('is_featured', 'desc')
             ->latest()
@@ -129,9 +68,9 @@ class ServiceController extends Controller
         return Inertia::render('accueil', [
             'featuredServices' => $services,
             'testimonialsList' => $avis,
-        ]);*/
-
+        ]);
     }
+
 
     /**
      * Dashboard Admin : Gestion de tous les services (CRUD)
