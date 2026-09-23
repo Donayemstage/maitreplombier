@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 class Devis extends Model
 {
+    protected $table = 'devis';
     public function contact()
     {
         return $this->belongsTo(Contact::class, 'contact_id');
