@@ -27,7 +27,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {/* 4. Bouton WhatsApp flottant */}
         <div className="animate__animated animate__pulse animate__infinite fixed bottom-6 right-6 z-50">
           <a
-            href="https://wa.me/237678953071"
+            href="https://wa.me/237679473691"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center w-14 h-14 bg-[#25D366] rounded-full text-white shadow-2xl hover:scale-110 transition-transform duration-300"
