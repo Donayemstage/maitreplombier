@@ -245,11 +245,9 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
                   <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                     <img
                        src={
-                        service.image_url ||
-                        (service.image_service
-                          ? `/storage/services/${service.image_service}`
-                          : "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600")
-                      }
+        service.image_service ||
+        "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600"
+    }
                       /*src={
                         service.image_service.startsWith('http')
                           ? service.image_service
