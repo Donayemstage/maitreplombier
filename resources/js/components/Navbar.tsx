@@ -21,8 +21,8 @@ interface NavbarProps {
 }
 
 export function Navbar({
-  phoneNumber = "+237 678 95 30 71",
-  whatsappNumber = "237678953071",
+  phoneNumber = "+237 679 47 36 91",
+  whatsappNumber = "237679473691",
 }: NavbarProps) {
   const page = usePage()
   const currentUrl = page.url

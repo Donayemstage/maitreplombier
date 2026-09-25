@@ -45,8 +45,8 @@ export default function Contact() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const phoneNumber = '+237 678 95 30 71';
-  const whatsappNumber = '237678953071';
+  const phoneNumber = '+237 679 47 36 91';
+  const whatsappNumber = '237679473691';
   const prefilledMessage = "Bonjour Maître Plombier, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
   
   // Adresse pour la carte Google Maps
