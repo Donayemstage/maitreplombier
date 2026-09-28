@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { Navbar } from "@/components/Navbar";
-import { NavFooter } from "@/components/nav-footer";
-//import { FloatingWhatsapp } from "@/components/FloatingWhatsapp";
+import type { ReactNode } from "react";
 import { FaWhatsapp } from 'react-icons/fa';
+import { NavFooter } from "@/components/nav-footer";
+import { Navbar } from "@/components/Navbar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+//import { FloatingWhatsapp } from "@/components/FloatingWhatsapp";
 
 interface AppLayoutProps {
   children: ReactNode;

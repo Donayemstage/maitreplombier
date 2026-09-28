@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "@inertiajs/react"
 import { ArrowRight, Wrench, Droplets, Flame, ShowerHead, Bath, ShieldCheck } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
 
 export interface ServiceItem {
   id: number;

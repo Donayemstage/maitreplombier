@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
-use App\Models\Devis;
 use App\Http\Requests\DevisRequestForm;
 use App\Mail\DevisClientMail;
 use App\Mail\DevisRejeteMail;
+use App\Models\Contact;
+use App\Models\Devis;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class DevisController extends Controller
@@ -28,17 +28,17 @@ class DevisController extends Controller
             } elseif ($request->status === 'en_attente') {
                 $query->where(function ($q) {
                     $q->where('statut', 'en_cours')
-                      ->orWhereHas('devis', fn($d) => $d->where('statut_client', 'en_attente'));
+                        ->orWhereHas('devis', fn ($d) => $d->where('statut_client', 'en_attente'));
                 });
             } elseif ($request->status === 'accepte') {
                 $query->where(function ($q) {
                     $q->where('statut', 'traite')
-                      ->orWhereHas('devis', fn($d) => $d->where('statut_client', 'accepte'));
+                        ->orWhereHas('devis', fn ($d) => $d->where('statut_client', 'accepte'));
                 });
             } elseif ($request->status === 'refuse') {
                 $query->where(function ($q) {
                     $q->where('statut', 'annule')
-                      ->orWhereHas('devis', fn($d) => $d->where('statut_client', 'refuse'));
+                        ->orWhereHas('devis', fn ($d) => $d->where('statut_client', 'refuse'));
                 });
             }
         }
@@ -48,10 +48,10 @@ class DevisController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('telephone', 'like', "%{$search}%")
-                  ->orWhere('ville', 'like', "%{$search}%")
-                  ->orWhere('type_intervention', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('telephone', 'like', "%{$search}%")
+                    ->orWhere('ville', 'like', "%{$search}%")
+                    ->orWhere('type_intervention', 'like', "%{$search}%");
             });
         }
 
@@ -61,9 +61,9 @@ class DevisController extends Controller
         $stats = [
             'total' => Contact::count(),
             'nouveau' => Contact::where('statut', 'en_attente')->whereDoesntHave('devis')->count(),
-            'en_cours' => Contact::where('statut', 'en_cours')->orWhereHas('devis', fn($q) => $q->where('statut_client', 'en_attente'))->count(),
-            'traite' => Contact::where('statut', 'traite')->orWhereHas('devis', fn($q) => $q->where('statut_client', 'accepte'))->count(),
-            'refuse' => Contact::where('statut', 'annule')->orWhereHas('devis', fn($q) => $q->where('statut_client', 'refuse'))->count(),
+            'en_cours' => Contact::where('statut', 'en_cours')->orWhereHas('devis', fn ($q) => $q->where('statut_client', 'en_attente'))->count(),
+            'traite' => Contact::where('statut', 'traite')->orWhereHas('devis', fn ($q) => $q->where('statut_client', 'accepte'))->count(),
+            'refuse' => Contact::where('statut', 'annule')->orWhereHas('devis', fn ($q) => $q->where('statut_client', 'refuse'))->count(),
         ];
 
         return Inertia::render('admin/devis/requettes_devis', [
@@ -108,7 +108,7 @@ class DevisController extends Controller
         );
 
         // Mettre à jour le statut de la demande
-        if (!empty($validated['statut_demande'])) {
+        if (! empty($validated['statut_demande'])) {
             $contact->update(['statut' => $validated['statut_demande']]);
         } elseif ($validated['statut_client'] === 'accepte') {
             $contact->update(['statut' => 'traite']);
@@ -119,7 +119,7 @@ class DevisController extends Controller
         }
 
         // Si l'option d'envoi par email est cochée
-        if ($request->boolean('send_email') && !empty($contact->email)) {
+        if ($request->boolean('send_email') && ! empty($contact->email)) {
             try {
                 Mail::to($contact->email)->send(new DevisClientMail($contact, $devis));
                 $devis->update([
@@ -128,10 +128,12 @@ class DevisController extends Controller
                     'statut_client' => 'en_attente',
                 ]);
                 $contact->update(['statut' => 'en_cours']);
+
                 return redirect()->back()->with('success', 'Votre devis a été envoyé par mail');
             } catch (\Exception $e) {
-                Log::error("Erreur lors de l'envoi de l'email du devis : " . $e->getMessage());
-                return redirect()->back()->with('warning', 'Votre devis a été enregistré avec succès ! Mais une erreur est survenue lors de l’envoi de l’email : ' . $e->getMessage());
+                Log::error("Erreur lors de l'envoi de l'email du devis : ".$e->getMessage());
+
+                return redirect()->back()->with('warning', 'Votre devis a été enregistré avec succès ! Mais une erreur est survenue lors de l’envoi de l’email : '.$e->getMessage());
             }
         }
 
@@ -145,7 +147,7 @@ class DevisController extends Controller
     {
         $contact->load('devis');
 
-        if (!$contact->devis) {
+        if (! $contact->devis) {
             return redirect()->back()->with('error', 'Veuillez chiffrer le devis avant de l’envoyer.');
         }
 
@@ -166,8 +168,9 @@ class DevisController extends Controller
 
             return redirect()->back()->with('success', 'Votre devis a été envoyé par mail');
         } catch (\Exception $e) {
-            Log::error("Erreur d'envoi d'email : " . $e->getMessage());
-            return redirect()->back()->with('error', 'Erreur lors de l’envoi de l’email : ' . $e->getMessage());
+            Log::error("Erreur d'envoi d'email : ".$e->getMessage());
+
+            return redirect()->back()->with('error', 'Erreur lors de l’envoi de l’email : '.$e->getMessage());
         }
     }
 
@@ -209,12 +212,12 @@ class DevisController extends Controller
             ]);
 
             // Notification du client par email si demandée
-            if ($request->boolean('notifier_client') && !empty($contact->email)) {
+            if ($request->boolean('notifier_client') && ! empty($contact->email)) {
                 try {
                     Mail::to($contact->email)->send(new DevisRejeteMail($contact, $contact->devis, $motif));
                     $msg = 'Le devis a été marqué comme Refusé et le client a été notifié par email avec le motif.';
                 } catch (\Exception $e) {
-                    Log::error("Erreur lors de l'envoi de l'email de refus : " . $e->getMessage());
+                    Log::error("Erreur lors de l'envoi de l'email de refus : ".$e->getMessage());
                     $msg = 'Statut mis à jour en Refusé, mais l’envoi de l’email a échoué.';
                 }
             } else {
@@ -273,6 +276,7 @@ class DevisController extends Controller
         if ($validated['decision'] === 'accepte') {
             $contact->devis?->update(['statut_client' => 'accepte']);
             $contact->update(['statut' => 'traite']);
+
             return redirect()->back()->with('success', 'Merci ! Votre devis a bien été accepté. Notre équipe vous contacte sous peu.');
         } else {
             $motif = $validated['motif_refus'] ?? 'Refusé par le client depuis l’interface web.';
@@ -284,6 +288,7 @@ class DevisController extends Controller
                 'statut' => 'annule',
                 'motif_refus' => $motif,
             ]);
+
             return redirect()->back()->with('info', 'Votre réponse a été enregistrée. Nous vous remercions pour votre retour.');
         }
     }
@@ -299,8 +304,8 @@ class DevisController extends Controller
     }
 
     /**
- * Exporter toutes les demandes de devis en CSV pour Excel / WPS
- */
+     * Exporter toutes les demandes de devis en CSV pour Excel / WPS
+     */
     public function exportCsv()
     {
         // Récupérer TOUTES les demandes de devis
@@ -308,13 +313,12 @@ class DevisController extends Controller
         $contacts = Contact::with(['devis', 'service'])
             ->latest()
             ->get();
-         
 
-        $filename = 'demandes_devis_' . now()->format('Y-m-d_His') . '.csv';
+        $filename = 'demandes_devis_'.now()->format('Y-m-d_His').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
             'Pragma' => 'no-cache',
             'Expires' => '0',

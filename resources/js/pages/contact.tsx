@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import AppLayout from "@/layouts/AppLayout";
-import { toast } from 'sonner';
 import { 
   Phone, Mail, MapPin, ShieldCheck, Send, AlertTriangle, 
   X, Check, Copy, MessageSquare, PhoneCall, Clock, Navigation
 } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import AppLayout from "@/layouts/AppLayout";
 
 interface DevisForm {
   nom: string;

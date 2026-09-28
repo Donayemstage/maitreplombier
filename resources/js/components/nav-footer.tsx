@@ -1,6 +1,6 @@
-import React from 'react';
-import { Wrench, MapPin, Phone, Mail } from 'lucide-react';
 import { Link } from '@inertiajs/react';
+import { Wrench, MapPin, Phone, Mail } from 'lucide-react';
+import React from 'react';
 
 interface FooterProps {
   className?: string;

@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class ServiceRequest extends FormRequest
 {
@@ -19,7 +20,7 @@ class ServiceRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -54,7 +55,7 @@ class ServiceRequest extends FormRequest
                     ->min('1kb')
                     ->max('5mb'),
             ],
-        ]; 
+        ];
     }
 
     public function messages(): array

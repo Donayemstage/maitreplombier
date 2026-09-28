@@ -16,8 +16,11 @@ class DevisRejeteMail extends Mailable
     use Queueable, SerializesModels;
 
     public Contact $contact;
+
     public ?Devis $devis;
+
     public string $motif;
+
     public string $whatsappUrl;
 
     /**
@@ -25,12 +28,24 @@ class DevisRejeteMail extends Mailable
      */
     public function __construct(Contact $contact, ?Devis $devis, string $motif)
     {
+        
+    
         $this->contact = $contact;
         $this->devis = $devis;
         $this->motif = $motif;
 
         $waText = "Bonjour Maître Plombier, je fais suite au message concernant ma demande #{$contact->id} ({$contact->type_intervention}).";
-        $this->whatsappUrl = "https://wa.me/237678953071?text=" . urlencode($waText);
+
+        $this->whatsappUrl =
+            'https://wa.me/237679473691?text=' . urlencode($waText);
+    
+
+        /*$this->contact = $contact;
+        $this->devis = $devis;
+        $this->motif = $motif;
+
+        $waText = "Bonjour Maître Plombier, je fais suite au message concernant ma demande #{$contact->id} ({$contact->type_intervention}).";
+        $this->whatsappUrl = 'https://wa.me/237678953071?text='.urlencode($waText);*/
     }
 
     /**
@@ -39,9 +54,24 @@ class DevisRejeteMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('foalengfranck6@gmail.com', 'Maître Plombier'),
+            from: new Address(
+                config('mail.from.address'),
+                config('mail.from.name')
+            ),
+
+            replyTo: [
+                new Address(
+                    config('mail.from.address'),
+                    config('mail.from.name')
+                )
+            ],
+
             subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Maître Plombier",
         );
+        /*return new Envelope(
+            from: new Address('foalengfranck6@gmail.com', 'Maître Plombier'),
+            subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Maître Plombier",
+        );*/
     }
 
     /**

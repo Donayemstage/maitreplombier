@@ -16,8 +16,11 @@ class DevisClientMail extends Mailable
     use Queueable, SerializesModels;
 
     public Contact $contact;
+
     public Devis $devis;
+
     public string $consultUrl;
+
     public string $whatsappUrl;
 
     /**
@@ -27,13 +30,36 @@ class DevisClientMail extends Mailable
     {
         $this->contact = $contact;
         $this->devis = $devis;
+
+        $this->consultUrl = route(
+            'devis.consulter',
+            ['token' => $contact->token]
+        );
+
+        $totalFormatted = number_format(
+            (float) $devis->total_devis,
+            0,
+            ',',
+            ' '
+        );
+
+        $prestation = $contact->type_intervention;
+
+        $waText = "Bonjour Maître Plombier, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
+
+        $this->whatsappUrl =
+            'https://wa.me/237679473691?text=' . urlencode($waText);
+
+
+        /*$this->contact = $contact;
+        $this->devis = $devis;
         $this->consultUrl = route('devis.consulter', ['token' => $contact->token]);
 
-        $totalFormatted = number_format((float)$devis->total_devis, 0, ',', ' ');
+        $totalFormatted = number_format((float) $devis->total_devis, 0, ',', ' ');
         $prestation = $contact->type_intervention;
         $waText = "Bonjour Maître Plombier, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
-        
-        $this->whatsappUrl = "https://wa.me/237679473691?text=" . urlencode($waText);
+
+        $this->whatsappUrl = 'https://wa.me/237679473691?text='.urlencode($waText);*/
     }
 
     /**
@@ -41,14 +67,36 @@ class DevisClientMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $fromAddress = config('mail.from.address', 'foalengfranck6@gmail.com');
+        return new Envelope(
+            from: new Address(
+                config('mail.from.address'),
+                config('mail.from.name')
+            ),
+
+            replyTo: [
+                new Address(
+                    config('mail.from.address'),
+                    config('mail.from.name')
+                )
+            ],
+
+            subject: 'Votre Devis Officiel N° DEVIS-'
+                . str_pad(
+                    (string) $this->devis->id,
+                    4,
+                    '0',
+                    STR_PAD_LEFT
+                )
+                . ' - Maître Plombier',
+        );
+        /*$fromAddress = config('mail.from.address', 'foalengfranck6@gmail.com');
         $fromName = config('mail.from.name', 'Maître Plombier');
 
         return new Envelope(
             from: new Address($fromAddress, $fromName),
             replyTo: [new Address($fromAddress, $fromName)],
-            subject: "Votre Devis Officiel N° DEVIS-" . str_pad((string)$this->devis->id, 4, '0', STR_PAD_LEFT) . " - Maître Plombier",
-        );
+            subject: 'Votre Devis Officiel N° DEVIS-'.str_pad((string) $this->devis->id, 4, '0', STR_PAD_LEFT).' - Maître Plombier',
+        );*/
     }
 
     /**

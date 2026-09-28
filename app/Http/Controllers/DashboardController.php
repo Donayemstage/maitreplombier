@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Devis;
-use App\Models\Projet;
 use App\Models\Avis;
 use App\Models\Contact;
+use App\Models\Devis;
+use App\Models\Projet;
+use App\Models\Service;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -18,14 +19,14 @@ class DashboardController extends Controller
         $totalDevis = Contact::count();
         $totalInterventions = Projet::count();
         $caEstimeRaw = Devis::sum('total_devis') ?? 0;
-        $caEstime = number_format($caEstimeRaw, 0, ',', ' ') . ' FCFA';
+        $caEstime = number_format($caEstimeRaw, 0, ',', ' ').' FCFA';
         $noteMoyenneRaw = Avis::where('statut', 'publie')->avg('note');
         $noteMoyenne = round($noteMoyenneRaw ?: 0, 1);
 
         // 2. Bloc Urgences & Actions Requises
         // Demandes reçues sans aucun devis rattaché
         $devisAChiffrerCount = Contact::doesntHave('devis')->count();
-        
+
         // Demandes urgentes et très urgentes non encore traitées
         $urgencesCount = Contact::whereIn('urgence', ['urgente', 'tres_urgente', 'urgent', 'tres_urgent'])
             ->whereNotIn('statut', ['traite', 'annule'])
@@ -39,8 +40,8 @@ class DashboardController extends Controller
         // 3. Métrique d'efficacité : Taux de conversion
         $totalDevisEnvoyes = Devis::count();
         $devisAcceptes = Devis::where('statut_client', 'accepte')->count();
-        $tauxAcceptation = $totalDevisEnvoyes > 0 
-            ? round(($devisAcceptes / $totalDevisEnvoyes) * 100, 1) 
+        $tauxAcceptation = $totalDevisEnvoyes > 0
+            ? round(($devisAcceptes / $totalDevisEnvoyes) * 100, 1)
             : 0;
 
         // 4. Mini-Planning / Prochaines interventions (cette semaine & aujourd'hui)
@@ -67,17 +68,17 @@ class DashboardController extends Controller
         $recentDevisQuery = Contact::with(['devis', 'service'])->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
-            $searchTerm = trim((string)$search);
+            $searchTerm = trim((string) $search);
             $recentDevisQuery->where(function ($q) use ($searchTerm) {
                 $q->where('nom', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%")
-                  ->orWhere('telephone', 'like', "%{$searchTerm}%")
-                  ->orWhere('ville', 'like', "%{$searchTerm}%")
-                  ->orWhere('type_intervention', 'like', "%{$searchTerm}%")
-                  ->orWhere('equipement', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('service', function ($s) use ($searchTerm) {
-                      $s->where('name', 'like', "%{$searchTerm}%");
-                  });
+                    ->orWhere('email', 'like', "%{$searchTerm}%")
+                    ->orWhere('telephone', 'like', "%{$searchTerm}%")
+                    ->orWhere('ville', 'like', "%{$searchTerm}%")
+                    ->orWhere('type_intervention', 'like', "%{$searchTerm}%")
+                    ->orWhere('equipement', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('service', function ($s) use ($searchTerm) {
+                        $s->where('name', 'like', "%{$searchTerm}%");
+                    });
             });
         }
 
@@ -85,8 +86,8 @@ class DashboardController extends Controller
             ->take(15)
             ->get()
             ->map(function ($contact) {
-                $serviceName = $contact->type_intervention 
-                    ?? $contact->equipement 
+                $serviceName = $contact->type_intervention
+                    ?? $contact->equipement
                     ?? 'Non spécifié';
 
                 $statutLabel = 'Nouveau';
@@ -106,7 +107,7 @@ class DashboardController extends Controller
 
                 $montant = null;
                 if ($contact->devis && $contact->devis->total_devis) {
-                    $montant = number_format((float)$contact->devis->total_devis, 0, ',', ' ') . ' FCFA';
+                    $montant = number_format((float) $contact->devis->total_devis, 0, ',', ' ').' FCFA';
                 }
 
                 return [
@@ -119,7 +120,7 @@ class DashboardController extends Controller
                     'statut_client' => $contact->devis?->statut_client ?? 'nouveau',
                     'urgence' => $contact->urgence ?? 'normale',
                     'total_devis' => $montant,
-                    'has_devis' => (bool)$contact->devis,
+                    'has_devis' => (bool) $contact->devis,
                     'motif_refus' => $contact->devis?->motif_refus ?? $contact->motif_refus,
                     'heure' => $contact->created_at ? $contact->created_at->format('H:i') : '--:--',
                     'date' => $contact->created_at ? $contact->created_at->format('d/m/Y') : '',
@@ -136,6 +137,7 @@ class DashboardController extends Controller
             })
             ->map(function ($items, $serviceName) use ($totalDevisForStats) {
                 $count = $items->count();
+
                 return [
                     'service_name' => $serviceName,
                     'count' => $count,
@@ -170,7 +172,7 @@ class DashboardController extends Controller
      */
     public function globalSearch(Request $request)
     {
-        $q = trim((string)$request->get('q', ''));
+        $q = trim((string) $request->get('q', ''));
 
         if (mb_strlen($q) < 2) {
             return response()->json([
@@ -185,31 +187,32 @@ class DashboardController extends Controller
         // 1. Recherche dans les Demandes et Devis
         $devis = Contact::where(function ($query) use ($q) {
             $query->where('nom', 'like', "%{$q}%")
-                  ->orWhere('telephone', 'like', "%{$q}%")
-                  ->orWhere('email', 'like', "%{$q}%")
-                  ->orWhere('type_intervention', 'like', "%{$q}%")
-                  ->orWhere('ville', 'like', "%{$q}%");
+                ->orWhere('telephone', 'like', "%{$q}%")
+                ->orWhere('email', 'like', "%{$q}%")
+                ->orWhere('type_intervention', 'like', "%{$q}%")
+                ->orWhere('ville', 'like', "%{$q}%");
         })
-        ->with('devis')
-        ->latest()
-        ->take(6)
-        ->get()
-        ->map(function ($c) {
-            $total = $c->devis && $c->devis->total_devis 
-                ? number_format((float)$c->devis->total_devis, 0, ',', ' ') . ' FCFA' 
-                : 'À chiffrer';
-            return [
-                'id' => $c->id,
-                'title' => $c->nom,
-                'subtitle' => ($c->type_intervention ?? 'Intervention') . ' • ' . ($c->ville ?? ''),
-                'badge' => $total,
-                'url' => route('admin.devis.show', $c->id),
-                'type' => 'devis',
-            ];
-        });
+            ->with('devis')
+            ->latest()
+            ->take(6)
+            ->get()
+            ->map(function ($c) {
+                $total = $c->devis && $c->devis->total_devis
+                    ? number_format((float) $c->devis->total_devis, 0, ',', ' ').' FCFA'
+                    : 'À chiffrer';
+
+                return [
+                    'id' => $c->id,
+                    'title' => $c->nom,
+                    'subtitle' => ($c->type_intervention ?? 'Intervention').' • '.($c->ville ?? ''),
+                    'badge' => $total,
+                    'url' => route('admin.devis.show', $c->id),
+                    'type' => 'devis',
+                ];
+            });
 
         // 2. Recherche dans les Services
-        $services = \App\Models\Service::where('nom', 'like', "%{$q}%")
+        $services = Service::where('nom', 'like', "%{$q}%")
             ->orWhere('categorie', 'like', "%{$q}%")
             ->orWhere('description', 'like', "%{$q}%")
             ->take(4)
@@ -218,7 +221,7 @@ class DashboardController extends Controller
                 return [
                     'id' => $s->id,
                     'title' => $s->nom,
-                    'subtitle' => ($s->categorie ?? 'Service') . ($s->prix_estime ? ' • ' . number_format((float)$s->prix_estime, 0, ',', ' ') . ' FCFA' : ''),
+                    'subtitle' => ($s->categorie ?? 'Service').($s->prix_estime ? ' • '.number_format((float) $s->prix_estime, 0, ',', ' ').' FCFA' : ''),
                     'badge' => 'Service',
                     'url' => route('admin.services.index'),
                     'type' => 'service',

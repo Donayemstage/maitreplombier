@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import { 
   ArrowLeft, Phone, Mail, MapPin, Calendar, Clock, 
@@ -6,6 +5,7 @@ import {
   MessageSquare, Calculator, Shield, FileText, Check, 
   X, Copy, ExternalLink, User, Wrench, ChevronRight
 } from 'lucide-react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Devis {
@@ -91,6 +91,7 @@ export default function DevisShow({ contact }: Props) {
     const vMo = parseFloat(mo) || 0;
     const vMat = parseFloat(mat) || 0;
     const vDep = parseFloat(dep) || 0;
+
     return (vMo + vMat + vDep).toString();
   };
 
@@ -142,6 +143,7 @@ export default function DevisShow({ contact }: Props) {
   const handleSendEmailDirect = () => {
     if (!contact.devis && Number(devisData.total_devis) <= 0) {
       toast.error("Veuillez d’abord chiffrer et enregistrer le devis.", { id: 'devis-direct-warn' });
+
       return;
     }
 
@@ -193,7 +195,10 @@ export default function DevisShow({ contact }: Props) {
     : '';
 
   const copyClientLink = () => {
-    if (!clientConsultUrl) return;
+    if (!clientConsultUrl) {
+return;
+}
+
     navigator.clipboard.writeText(clientConsultUrl);
     setCopiedLink(true);
     toast.success('Lien du devis client copié dans le presse-papiers');
@@ -213,12 +218,14 @@ export default function DevisShow({ contact }: Props) {
     const message = `Bienvenue au sein de la structure Maître Plombier pour toutes vos préoccupations en plomberie.\n\nBonjour *${contact.nom}* 👋,\n\nVoici votre proposition de devis officiel pour votre intervention (*${contact.type_intervention}*) :\n\n🛠️ *Détail du Chiffrage :*\n- Main d'œuvre : *${mo} FCFA*\n${Number(mat) > 0 ? `- Matériel / Pièces : *${mat} FCFA*\n` : ''}${Number(dep) > 0 ? `- Déplacement : *${dep} FCFA*\n` : ''}\n💰 *TOTAL : ${total} FCFA*\n📅 *Offre valable jusqu'au :* ${validite}\n\n📄 *Consultez & imprimez votre devis en ligne :*\n${clientConsultUrl}\n\n👉 Vous pouvez confirmer ou refuser ce devis en répondant directement à ce message WhatsApp.\n\n*Maître Plombier* - Douala\n📞 +237 678 95 30 71`;
 
     const cleanPhone = contact.telephone.replace(/\D/g, '');
+
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   };
 
   // Badge statut
   const renderStatusBadge = () => {
     const status = contact.devis?.statut_client || 'en_attente';
+
     if (status === 'accepte') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -226,6 +233,7 @@ export default function DevisShow({ contact }: Props) {
         </span>
       );
     }
+
     if (status === 'refuse') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300">
@@ -233,6 +241,7 @@ export default function DevisShow({ contact }: Props) {
         </span>
       );
     }
+
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
         <Clock className="w-4 h-4 text-amber-600" /> {contact.devis ? 'Devis envoyé (En attente)' : 'En attente de chiffrage'}
@@ -659,7 +668,9 @@ export default function DevisShow({ contact }: Props) {
                     <span className="text-[10px] text-slate-400 font-semibold uppercase">Motifs fréquents en plomberie :</span>
                     <select
                       onChange={(e) => {
-                        if (e.target.value) setStatusData('motif_refus', e.target.value);
+                        if (e.target.value) {
+setStatusData('motif_refus', e.target.value);
+}
                       }}
                       className="w-full text-xs p-2 rounded-none border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200"
                     >

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import { useForm, router } from '@inertiajs/react';
 import { Star, ShieldCheck, Check, X, ChevronLeft, ChevronRight, Search, Lock, ArrowLeft, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 export interface TestimonialItem {
@@ -75,7 +75,10 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ testimonialsList }) 
   // ÉTAPE 1 : Vérification si le client a déjà effectué un contact/devis via Fetch API (Remplace Axios)
   const handleVerifyClient = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!identifier.trim()) return;
+
+    if (!identifier.trim()) {
+return;
+}
 
     setIsVerifying(true);
     setVerificationError('');

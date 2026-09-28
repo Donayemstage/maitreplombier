@@ -1,6 +1,4 @@
-import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/AppLayout';
 import { 
   ShieldCheck, 
   Clock, 
@@ -14,6 +12,8 @@ import {
   Lock, 
   BadgeCheck 
 } from 'lucide-react';
+import React from 'react';
+import AppLayout from '@/layouts/AppLayout';
 
 interface CguSummaryItem {
   id: string;

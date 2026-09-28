@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import { 
   User, Lock, Palette, LogOut, ShieldCheck, 
   Check, Eye, EyeOff, Sun, Moon, Monitor,
   Mail, KeyRound, Sparkles, CheckCircle2, AlertCircle
 } from 'lucide-react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { useAppearance, Appearance } from '@/hooks/use-appearance';
 
@@ -42,11 +42,13 @@ export default function AdminSettings({ adminUser }: PageProps) {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('dashboard_accent') || 'blue';
     }
+
     return 'blue';
   });
 
   const handleAccentChange = (accentId: string) => {
     setSelectedAccent(accentId);
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('dashboard_accent', accentId);
       toast.success('Couleur d’accentuation enregistrée !');
@@ -471,6 +473,7 @@ export default function AdminSettings({ adminUser }: PageProps) {
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {ACCENT_COLORS.map((accent) => {
                       const isSelected = selectedAccent === accent.id;
+
                       return (
                         <button
                           key={accent.id}

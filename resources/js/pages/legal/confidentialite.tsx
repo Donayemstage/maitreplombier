@@ -1,6 +1,4 @@
-import React from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import AppLayout from '@/layouts/AppLayout';
 import { 
     ShieldCheck, 
     Zap, 
@@ -16,6 +14,8 @@ import {
     Phone, 
     MessageSquare 
 } from 'lucide-react';
+import React from 'react';
+import AppLayout from '@/layouts/AppLayout';
 
 interface Props {
     appName?: string;

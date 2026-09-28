@@ -1,4 +1,3 @@
-import React, { useState, useMemo } from 'react';
 import { Head, useForm, router, Link } from '@inertiajs/react';
 import { 
   Search, Download, Eye, Phone, Mail, 
@@ -8,6 +7,7 @@ import {
   DollarSign, Calculator, Send, ExternalLink,
   ChevronRight, ArrowRight, User
 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 
 interface Devis {
@@ -95,6 +95,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
     const mo = parseFloat(mainOeuvre) || 0;
     const mat = parseFloat(materiel) || 0;
     const dep = parseFloat(deplacement) || 0;
+
     return (mo + mat + dep).toString();
   };
 
@@ -178,7 +179,10 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
   // Soumission du chiffrage de devis
   const handleSaveDevis = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedDemande) return;
+
+    if (!selectedDemande) {
+return;
+}
 
     postDevis(`/admin/devis/${selectedDemande.id}`, {
       preserveScroll: true,
@@ -208,7 +212,10 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
   // Suppression d'une demande
   const handleDeleteDemande = () => {
-    if (!selectedDemande) return;
+    if (!selectedDemande) {
+return;
+}
+
     router.delete(`/admin/devis/${selectedDemande.id}`, {
       preserveScroll: true,
       onSuccess: () => {
@@ -228,6 +235,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
     if (!items || items.length === 0) {
       alert('Aucune donnée à exporter !');
+
       return;
     }
 
@@ -290,13 +298,29 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
         item.ville.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.type_intervention.toLowerCase().includes(searchTerm.toLowerCase());
 
-      if (!matchesSearch) return false;
+      if (!matchesSearch) {
+return false;
+}
 
-      if (statusFilter === 'all') return true;
-      if (statusFilter === 'nouveau') return !item.devis && item.statut === 'en_attente';
-      if (statusFilter === 'en_attente') return item.statut === 'en_cours' || item.devis?.statut_client === 'en_attente';
-      if (statusFilter === 'accepte') return item.statut === 'traite' || item.devis?.statut_client === 'accepte';
-      if (statusFilter === 'refuse') return item.statut === 'annule' || item.devis?.statut_client === 'refuse';
+      if (statusFilter === 'all') {
+return true;
+}
+
+      if (statusFilter === 'nouveau') {
+return !item.devis && item.statut === 'en_attente';
+}
+
+      if (statusFilter === 'en_attente') {
+return item.statut === 'en_cours' || item.devis?.statut_client === 'en_attente';
+}
+
+      if (statusFilter === 'accepte') {
+return item.statut === 'traite' || item.devis?.statut_client === 'accepte';
+}
+
+      if (statusFilter === 'refuse') {
+return item.statut === 'annule' || item.devis?.statut_client === 'refuse';
+}
 
       return true;
     });
@@ -314,6 +338,7 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
       wc: 'Installation / Réparation WC',
       autre: 'Autre intervention',
     };
+
     return labels[type] || type;
   };
 
@@ -380,7 +405,10 @@ export default function RequettesDevis({ demandesList, stats, filters }: PagePro
 
   // Générateur de message WhatsApp pré-rempli pour le client
   const generateWhatsAppMessage = () => {
-    if (!selectedDemande) return '';
+    if (!selectedDemande) {
+return '';
+}
+
     const nom = selectedDemande.nom;
     const intervention = formatInterventionLabel(selectedDemande.type_intervention);
     const total = Number(devisData.total_devis).toLocaleString('fr-FR');

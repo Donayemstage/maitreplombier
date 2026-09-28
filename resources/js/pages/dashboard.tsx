@@ -34,7 +34,6 @@ Dashboard.layout = {
         },
     ],
 };*/
-import React, { useState, useMemo } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { 
     FileText, 
@@ -52,6 +51,7 @@ import {
     Search,
     X
 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 
 interface ServiceStat {
     service_name: string;
@@ -123,8 +123,12 @@ export default function Dashboard({
 
     // Filtrage réactif et insensible à la casse (icontains)
     const filteredRecentDevis = useMemo(() => {
-        if (!searchTerm.trim()) return recentDevis;
+        if (!searchTerm.trim()) {
+return recentDevis;
+}
+
         const term = searchTerm.toLowerCase().trim();
+
         return recentDevis.filter(item => {
             const nom = (item.nom || '').toLowerCase();
             const service = (item.service?.name || '').toLowerCase();
@@ -132,6 +136,7 @@ export default function Dashboard({
             const tel = (item.telephone || '').toLowerCase();
             const statut = (item.statut || '').toLowerCase();
             const urgence = (item.urgence || '').toLowerCase();
+
             return nom.includes(term) ||
                    service.includes(term) ||
                    ville.includes(term) ||
@@ -162,6 +167,7 @@ export default function Dashboard({
             const colorHex = colorPalette[index % colorPalette.length].hex;
             const startDegree = accumulatedDegree;
             accumulatedDegree += (stat.percentage / 100) * 360;
+
             return `${colorHex} ${startDegree}deg ${accumulatedDegree}deg`;
         });
 
@@ -471,6 +477,7 @@ export default function Dashboard({
                         <div className="space-y-3 text-sm">
                             {servicesStats.map((stat, index) => {
                                 const colorClass = colorPalette[index % colorPalette.length].bg;
+
                                 return (
                                     <div key={index} className="flex items-center justify-between text-xs">
                                         <div className="flex items-center gap-2">

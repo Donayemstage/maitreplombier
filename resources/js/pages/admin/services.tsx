@@ -1,4 +1,3 @@
-import React, { useState, useMemo } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import {
   Plus, Search, Edit2, Trash2, X, Check, Eye,
@@ -7,6 +6,7 @@ import {
   Zap, Upload, Image as ImageIcon, DollarSign,
   Info, ExternalLink, Layers
 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 
 export interface ServiceItem {
@@ -115,6 +115,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setData('image_service', file);
+
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -161,7 +162,9 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
 
   // Suppression
   const handleDelete = () => {
-    if (!serviceToDelete) return;
+    if (!serviceToDelete) {
+return;
+}
 
     router.delete(`/admin/services/${serviceToDelete.id}`, {
       preserveScroll: true,
@@ -186,6 +189,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
   const renderIcon = (iconName: string, className = "w-5 h-5") => {
     const found = AVAILABLE_ICONS.find(i => i.id === iconName);
     const IconComp = found ? found.icon : Wrench;
+
     return <IconComp className={className} />;
   };
 
@@ -405,6 +409,7 @@ export default function AdminServices({ servicesList, filters }: PageProps) {
                   {AVAILABLE_ICONS.map((iconObj) => {
                     const IconComp = iconObj.icon;
                     const isSelected = data.icone_service === iconObj.id;
+
                     return (
                       <button
                         key={iconObj.id}

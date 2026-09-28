@@ -30,7 +30,7 @@ class UtilisationController extends Controller
                 ['id' => 'art-4', 'title' => 'Article 4 : Tarifs & Approbation Préalable'],
                 ['id' => 'art-5', 'title' => 'Article 5 : Garanties & Décennale'],
                 ['id' => 'art-6', 'title' => 'Article 6 : Données Personnelles (RGPD)'],
-            ]
+            ],
         ]);
     }
 }

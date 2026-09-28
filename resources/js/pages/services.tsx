@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from "@/layouts/AppLayout";
 import { 
   Wrench, Droplets, Droplet, Flame, ShieldCheck, 
   Hammer, ShowerHead, Bath, Thermometer, Sparkles, 
@@ -8,6 +6,8 @@ import {
   FileText, Clock, HelpCircle, X, Shield, Star,
   PhoneCall, Copy, Asterisk
 } from 'lucide-react';
+import React, { useState } from 'react';
+import AppLayout from "@/layouts/AppLayout";
 
 export interface ServiceItem {
   id: number;
@@ -112,6 +112,7 @@ export default function Services({
 
   const renderIcon = (iconName: string, className = "w-6 h-6") => {
     const IconComp = ICONS_MAP[iconName] || Wrench;
+
     return <IconComp className={className} />;
   };
 
@@ -219,6 +220,7 @@ export default function Services({
                     alt={service.nom_service}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
+
                       if (target.src !== "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600") {
                         target.src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
                       }

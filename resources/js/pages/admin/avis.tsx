@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import { 
   Plus, Search, Edit2, Trash2, X, Check, Eye,
   Star, MessageSquare, CheckCircle, Clock, AlertCircle,
   MapPin, Wrench, ThumbsUp, ShieldCheck, User
 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 
 export interface AvisItem {
@@ -134,7 +134,10 @@ export default function AdminAvis({ avisList, stats, filters }: PageProps) {
 
   // Suppression
   const handleDelete = () => {
-    if (!avisToDelete) return;
+    if (!avisToDelete) {
+return;
+}
+
     router.delete(`/admin/avis/${avisToDelete.id}`, {
       preserveScroll: true,
       onSuccess: () => {
@@ -154,8 +157,14 @@ export default function AdminAvis({ avisList, stats, filters }: PageProps) {
         (a.ville && a.ville.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (a.service_concerne && a.service_concerne.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      if (!matchesSearch) return false;
-      if (selectedStatus !== 'all' && a.statut !== selectedStatus) return false;
+      if (!matchesSearch) {
+return false;
+}
+
+      if (selectedStatus !== 'all' && a.statut !== selectedStatus) {
+return false;
+}
+
       return true;
     });
   }, [avisList.data, searchTerm, selectedStatus]);

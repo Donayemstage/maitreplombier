@@ -1,9 +1,4 @@
-import React, { useState } from 'react';
-
 import { Head, Link } from '@inertiajs/react';
-
-import AppLayout from "@/layouts/AppLayout";
-
 import {
 
   MapPin, Clock, Calendar,
@@ -15,6 +10,11 @@ import {
   MessageSquare, Eye, X
 
 } from 'lucide-react';
+import React, { useState } from 'react';
+
+
+import AppLayout from "@/layouts/AppLayout";
+
 
 
 
@@ -146,7 +146,9 @@ export default function Projets({ projetsList }: ProjetsProps) {
 
   const filteredProjets = displayProjets.filter(p => {
 
-    if (activeCategory === 'all') return true;
+    if (activeCategory === 'all') {
+return true;
+}
 
     return p.categorie === activeCategory;
 

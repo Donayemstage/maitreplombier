@@ -17,6 +17,7 @@ export function FeaturesSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature) => {
             let icon;
+
             switch (feature.id) {
               case "intervention-24-7":
                 icon = <Clock className="h-6 w-6 text-blue-600" />;

@@ -1,11 +1,13 @@
-import React from "react"
 import { Head } from "@inertiajs/react"
-import AppLayout from "@/layouts/AppLayout"
-import { HeroSection } from "@/components/HeroSection"
-import { FeaturesSection } from "@/components/FeaturesSection"
-import { ExpertiseSection, ServiceItem } from "@/components/ExpertiseSection"
-import { Testimonials, TestimonialItem } from "@/components/Testimonials"
+import React from "react"
 import EmergencyBanner from "@/components/EmergencyBanner"
+import type { ServiceItem } from "@/components/ExpertiseSection";
+import { ExpertiseSection } from "@/components/ExpertiseSection"
+import { FeaturesSection } from "@/components/FeaturesSection"
+import { HeroSection } from "@/components/HeroSection"
+import type { TestimonialItem } from "@/components/Testimonials";
+import { Testimonials } from "@/components/Testimonials"
+import AppLayout from "@/layouts/AppLayout"
 
 interface AccueilProps {
   featuredServices?: ServiceItem[];

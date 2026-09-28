@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             ProjetSeeder::class, //  Ajout du ProjetSeeder
         ]);
-            
 
         // Création de votre compte Super Admin (déjà vérifié)
         /*User::updateOrCreate([
@@ -26,15 +25,13 @@ class DatabaseSeeder extends Seeder
         ]);*/
 
         User::updateOrCreate(
-                ['email' => 'foalengfranck6@gmail.com'], // Condition pour chercher si l'utilisateur existe
-                [
-                    'name' => 'Foaleng Neumann',
-                    'password' => Hash::make('MaitrePlombier2026@'),
-                    'is_admin' => true,
-                    'email_verified_at' => now(),
-                ]
-  );
+            ['email' => 'foalengfranck6@gmail.com'], // Condition pour chercher si l'utilisateur existe
+            [
+                'name' => 'Foaleng Neumann',
+                'password' => Hash::make('MaitrePlombier2026@'),
+                'is_admin' => true,
+                'email_verified_at' => now(),
+            ]
+        );
     }
-
-
 }

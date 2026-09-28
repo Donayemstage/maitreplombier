@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Avis;
 use App\Http\Requests\AvisRequest;
+use App\Models\Avis;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Contact;
 
 class AvisController extends Controller
 {
@@ -21,9 +21,9 @@ class AvisController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nom_client', 'like', "%{$search}%")
-                  ->orWhere('commentaire', 'like', "%{$search}%")
-                  ->orWhere('ville', 'like', "%{$search}%")
-                  ->orWhere('service_concerne', 'like', "%{$search}%");
+                    ->orWhere('commentaire', 'like', "%{$search}%")
+                    ->orWhere('ville', 'like', "%{$search}%")
+                    ->orWhere('service_concerne', 'like', "%{$search}%");
             });
         }
 
@@ -134,8 +134,6 @@ class AvisController extends Controller
         return redirect()->back()->with('success', 'Avis supprimé.');
     }
 
-    
-
     public function verifyClient(Request $request)
     {
         $request->validate([
@@ -149,18 +147,18 @@ class AvisController extends Controller
 
         // Recherche dans la table contacts (par téléphone ou par email)
         $contact = Contact::where(function ($query) use ($identifier, $cleanPhone) {
-            if (!empty($cleanPhone)) {
+            if (! empty($cleanPhone)) {
                 $query->whereRaw("REPLACE(REPLACE(telephone, ' ', ''), '+', '') LIKE ?", ["%{$cleanPhone}%"]);
             }
             $query->orWhere('email', 'like', "%{$identifier}%");
         })
-        ->latest()
-        ->first();
+            ->latest()
+            ->first();
 
-        if (!$contact) {
+        if (! $contact) {
             return response()->json([
                 'verified' => false,
-                'message' => 'Aucune intervention ou demande enregistrée avec cet identifiant.'
+                'message' => 'Aucune intervention ou demande enregistrée avec cet identifiant.',
             ], 404);
         }
 
@@ -170,7 +168,7 @@ class AvisController extends Controller
                 'nom' => $contact->nom,
                 'ville' => $contact->ville,
                 'service' => $contact->type_intervention ?? $contact->equipement,
-            ]
+            ],
         ]);
     }
 }

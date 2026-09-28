@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User; // <-- Importation ajoutée
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str; // <-- Importation ajoutée
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule; // <-- Importation ajoutée
 use Inertia\Inertia;
 
 class AdminSettingsController extends Controller

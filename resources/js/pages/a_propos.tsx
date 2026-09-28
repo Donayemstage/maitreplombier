@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import { Head } from "@inertiajs/react";
-import AppLayout from "@/layouts/AppLayout";
 import { Link } from '@inertiajs/react';
 import {
   ShieldCheck,
@@ -16,6 +14,8 @@ import {
   ArrowRight,
   ChevronDown,  Star
 } from 'lucide-react';
+import React, { useState } from 'react';
+import AppLayout from "@/layouts/AppLayout";
 
 export default function APropos() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -512,6 +512,7 @@ export default function APropos() {
               <div className="space-y-4">
                 {faqItems.map((item, index) => {
                   const isOpen = openFaq === index;
+
                   return (
                     <div
                       key={index}

@@ -1,19 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\EmailVerificationRequest; // <-- À ajouter en haut
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\DevisController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\ProjetController;
-use App\Http\Controllers\AvisController;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\AvisController;
+use App\Http\Controllers\ContactController; // <-- À ajouter en haut
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DevisController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\ProjetController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UtilisationController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Routes publiques
 Route::get('/', [ServiceController::class, 'homeIndex'])->name('home');
@@ -41,6 +41,7 @@ Route::get('/espace-prive-admin', function (Request $request) {
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     }
+
     return Inertia::render('auth/login');
 })->name('admin.login');
 
@@ -91,11 +92,11 @@ Route::middleware(['auth', 'admin', 'verified'])->group(function () {
     Route::delete('/admin/avis/{avi}', [AvisController::class, 'destroy'])->name('admin.avis.destroy');
 
     // Paramètres & Configuration Administrateur
-    //Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
-    //Route::patch('/admin/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
-    //Route::put('/admin/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('admin.settings.password');
+    // Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
+    // Route::patch('/admin/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
+    // Route::put('/admin/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('admin.settings.password');
     // Route d'invitation d'un administrateur adjoint
-    //Route::post('/admin/settings/add-admin', [AdminSettingsController::class, 'storeAdmin'])->name('admin.settings.add-admin');
+    // Route::post('/admin/settings/add-admin', [AdminSettingsController::class, 'storeAdmin'])->name('admin.settings.add-admin');
     // Paramètres & Configuration Administrateur
     Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
     Route::patch('/admin/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
@@ -120,11 +121,13 @@ Route::get('/email/verify', function () {
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
+
     return redirect('/dashboard')->with('success', 'Votre adresse email a été vérifiée avec succès !');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
+
     return back()->with('message', 'Un nouveau lien de vérification a été envoyé !');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 

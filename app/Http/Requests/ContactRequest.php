@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
 class ContactRequest extends FormRequest
@@ -31,28 +31,27 @@ class ContactRequest extends FormRequest
             'ville' => ['required', 'string', 'max:100'],
             'adresse' => ['required', 'string', 'max:255'],
             'type_intervention' => ['required', 'string', Rule::in([
-                'depannage', 'installation', 'fuite', 'canalisation', 
-                'chauffe_eau', 'salle_bain', 'wc', 'autre'
+                'depannage', 'installation', 'fuite', 'canalisation',
+                'chauffe_eau', 'salle_bain', 'wc', 'autre',
             ])],
             'equipement' => ['nullable', 'string', Rule::in([
-                'robinet', 'evier', 'lavabo', 'douche', 'baignoire', 
-                'wc', 'chauffe_eau', 'canalisation', 'autre'
+                'robinet', 'evier', 'lavabo', 'douche', 'baignoire',
+                'wc', 'chauffe_eau', 'canalisation', 'autre',
             ])],
             'urgence' => ['required', Rule::in(['normale', 'urgente', 'tres_urgente'])],
-            
+
             'date_intervention' => ['required', 'date', 'after_or_equal:today'],
             'heure_intervention' => ['nullable', 'date_format:H:i'],
             'message' => ['required', 'string', 'min:10'],
             'materiel_fourni' => ['required', 'boolean'],
             'photo_probleme' => [
                 'nullable',
-                 File::image()
-                     ->min('1kb')
-                     ->max('5mb')],
-            
+                File::image()
+                    ->min('1kb')
+                    ->max('5mb')],
+
         ];
     }
-
 
     public function messages(): array
     {
@@ -73,4 +72,3 @@ class ContactRequest extends FormRequest
         ];
     }
 }
-

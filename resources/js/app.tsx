@@ -1,6 +1,6 @@
 import { createInertiaApp, router } from '@inertiajs/react';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster, toast } from 'sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
 import AppSidebarLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
@@ -10,13 +10,18 @@ import SettingsLayout from '@/layouts/settings/layout';
 const recentToasts = new Map<string, number>();
 
 export function showDeduplicatedToast(type: 'success' | 'error' | 'warning' | 'info', message: string, description?: string) {
-    if (!message) return;
+    if (!message) {
+return;
+}
+
     const key = `${type}:${message}:${description || ''}`;
     const now = Date.now();
     const lastShown = recentToasts.get(key);
+
     if (lastShown && now - lastShown < 2500) {
         return;
     }
+
     recentToasts.set(key, now);
 
     const toastFn = toast[type] || toast;
@@ -28,15 +33,19 @@ export function showDeduplicatedToast(type: 'success' | 'error' | 'warning' | 'i
 
 router.on('success', (event) => {
     const flash = (event.detail.page.props as any)?.flash;
+
     if (flash?.success) {
         showDeduplicatedToast('success', flash.success);
     }
+
     if (flash?.error) {
         showDeduplicatedToast('error', flash.error);
     }
+
     if (flash?.warning) {
         showDeduplicatedToast('warning', flash.warning);
     }
+
     if (flash?.info) {
         showDeduplicatedToast('info', flash.info);
     }

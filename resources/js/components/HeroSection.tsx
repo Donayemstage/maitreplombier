@@ -1,5 +1,5 @@
-import React from "react"
 import { ArrowRight, ShieldCheck } from "lucide-react"
+import React from "react"
 
 interface HeroSectionProps {
   cityBackgroundImage?: string;

@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 #[Fillable([
     'token', 'nom', 'telephone', 'email', 'ville', 'adresse',
     'type_intervention', 'equipement', 'urgence',
     'date_intervention', 'heure_intervention', 'message', 'materiel_fourni',
-    'photo_probleme', 'service_id', 'statut', 'motif_refus'
+    'photo_probleme', 'service_id', 'statut', 'motif_refus',
 ])]
 class Contact extends Model
 {
@@ -17,7 +18,7 @@ class Contact extends Model
     {
         static::creating(function ($contact) {
             if (empty($contact->token)) {
-                $contact->token = \Illuminate\Support\Str::random(32);
+                $contact->token = Str::random(32);
             }
         });
     }

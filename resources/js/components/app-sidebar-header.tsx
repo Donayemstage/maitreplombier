@@ -18,11 +18,11 @@ export function AppSidebarHeader({
 }*/
 
 
-import React, { useState, useEffect, useRef } from 'react';
 import { Link, router } from '@inertiajs/react';
+import { Search, Bell, Clock, AlertTriangle, ChevronRight, FileText, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
-import { Search, Bell, Clock, AlertTriangle, ChevronRight, FileText, X } from 'lucide-react';
 
 interface NotificationItem {
     id: number;
@@ -54,6 +54,7 @@ export function AppSidebarHeader({
             const res = await fetch('/admin/notifications/unread-count', {
                 headers: { 'Accept': 'application/json' }
             });
+
             if (res.ok) {
                 const data = await res.json();
                 setUnreadCount(prev => {
@@ -61,6 +62,7 @@ export function AppSidebarHeader({
                         setHasNewAlert(true);
                         setTimeout(() => setHasNewAlert(false), 3000);
                     }
+
                     return data.count;
                 });
                 setUrgentCount(data.urgent_count || 0);
@@ -76,6 +78,7 @@ export function AppSidebarHeader({
             const res = await fetch('/admin/notifications/latest', {
                 headers: { 'Accept': 'application/json' }
             });
+
             if (res.ok) {
                 const data = await res.json();
                 setNotifications(data.notifications || []);
@@ -104,6 +107,7 @@ export function AppSidebarHeader({
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
+
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
@@ -112,12 +116,16 @@ export function AppSidebarHeader({
             fetchLatestNotifications();
             fetchUnreadCount();
         }
+
         setIsOpen(!isOpen);
     };
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!searchTerm.trim()) return;
+
+        if (!searchTerm.trim()) {
+return;
+}
 
         // Redirection vers devis ou dashboard avec paramètre de recherche
         router.get('/admin/devis', { search: searchTerm.trim() }, { preserveState: true });

@@ -16,9 +16,10 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // 1. On vérifie si l'utilisateur N'EST PAS connecté OU N'EST PAS admin
-        if (!auth()->check() || !auth()->user()->is_admin) {
+        if (! auth()->check() || ! auth()->user()->is_admin) {
             abort(403, 'Accès réservé aux administrateurs.'); // On bloque
         }
+
         return $next($request);
     }
 }

@@ -18,16 +18,15 @@ return new class extends Migration
             $table->string('email');
             $table->string('ville');
             $table->foreignId('service_id')
-                    ->constrained('services')
-                    ->onDelete('cascade');
-                        
+                ->constrained('services')
+                ->onDelete('cascade');
 
-                // Intervention
+            // Intervention
             $table->string('type_intervention');
             $table->string('equipement')->nullable();
             $table->string('urgence')->default('normal');
 
-                // Description
+            // Description
             $table->longText('message');
 
             // Rendez-vous souhaité
@@ -38,17 +37,15 @@ return new class extends Migration
             $table->boolean('materiel_fourni')->default(false);
 
             // Budget
-            //$table->string('budget');
+            // $table->string('budget');
             // Photo
             $table->string('photo_probleme')->nullable();
 
             // Suivi de la demande
             $table->string('statut')->default('en_attente');
 
-            
             $table->timestamps();
 
-            
         });
     }
 

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
 use App\Http\Requests\ServiceRequest;
+use App\Models\Avis;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -21,8 +22,8 @@ class ServiceController extends Controller
                     $service->image_url = $service->image_service;
                 } else {
                     $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
-                        . '/services/'
-                        . $service->image_service;
+                        .'/services/'
+                        .$service->image_service;
                 }
             } else {
                 $service->image_url = null;
@@ -50,8 +51,8 @@ class ServiceController extends Controller
                         $service->image_url = $service->image_service;
                     } else {
                         $service->image_url = rtrim(config('filesystems.supabase_public_url'), '/')
-                            . '/services/'
-                            . $service->image_service;
+                            .'/services/'
+                            .$service->image_service;
                     }
                 } else {
                     $service->image_url = null;
@@ -60,7 +61,7 @@ class ServiceController extends Controller
                 return $service;
             });
 
-        $avis = \App\Models\Avis::where('statut', 'publie')
+        $avis = Avis::where('statut', 'publie')
             ->orderBy('is_featured', 'desc')
             ->latest()
             ->paginate(3);
@@ -71,13 +72,12 @@ class ServiceController extends Controller
         ]);
     }
 
-
     /**
      * Dashboard Admin : Gestion de tous les services (CRUD)
      */
     public function index(Request $request)
     {
-            $query = Service::query()->latest();
+        $query = Service::query()->latest();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -98,8 +98,8 @@ class ServiceController extends Controller
                 );*/
                 $service->image_url =
                     rtrim(config('filesystems.supabase_public_url'), '/')
-                    . '/services/'
-                    . $service->image_service;
+                    .'/services/'
+                    .$service->image_service;
             } else {
                 $service->image_url = null;
             }
@@ -151,7 +151,7 @@ class ServiceController extends Controller
         if ($request->hasFile('image_service')) {
             $file = $request->file('image_service');
 
-            $imageName = time() . '_' .
+            $imageName = time().'_'.
                 preg_replace(
                     '/[^a-zA-Z0-9._-]/',
                     '_',
@@ -199,17 +199,17 @@ class ServiceController extends Controller
                 $service->image_service &&
                 $service->image_service !== 'default_service.jpg' &&
                 Storage::disk('s3')->exists(
-                    'services/' . $service->image_service
+                    'services/'.$service->image_service
                 )
             ) {
                 Storage::disk('s3')->delete(
-                    'services/' . $service->image_service
+                    'services/'.$service->image_service
                 );
             }
 
             $file = $request->file('image_service');
 
-            $imageName = time() . '_' .
+            $imageName = time().'_'.
                 preg_replace(
                     '/[^a-zA-Z0-9._-]/',
                     '_',
@@ -240,11 +240,11 @@ class ServiceController extends Controller
             $service->image_service &&
             $service->image_service !== 'default_service.jpg' &&
             Storage::disk('s3')->exists(
-                'services/' . $service->image_service
+                'services/'.$service->image_service
             )
         ) {
             Storage::disk('s3')->delete(
-                'services/' . $service->image_service
+                'services/'.$service->image_service
             );
         }
 

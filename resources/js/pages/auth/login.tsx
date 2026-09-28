@@ -1,6 +1,7 @@
-import React, { FormEventHandler } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Mail, Lock, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import type { FormEventHandler } from 'react';
+import React from 'react';
 
 type LoginProps = {
   status?: string;

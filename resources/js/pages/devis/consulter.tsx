@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import { 
   Printer, MessageSquare, Phone, Mail, MapPin, 
   Calendar, CheckCircle, XCircle, Clock, ShieldCheck, 
   Wrench, Download, AlertTriangle, ArrowRight, X, Check
 } from 'lucide-react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Devis {
@@ -79,6 +79,7 @@ export default function DevisConsulter({ contact }: Props) {
     }
 
     const cleanPhone = '237678953071';
+
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
   };
 

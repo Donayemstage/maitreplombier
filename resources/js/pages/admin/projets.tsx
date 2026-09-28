@@ -1,4 +1,3 @@
-import React, { useState, useMemo } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import { 
   Plus, Search, Edit2, Trash2, X, Check, Eye,
@@ -6,6 +5,7 @@ import {
   Upload, Image as ImageIcon, Video, ArrowRight,
   Sparkles, CheckCircle, Split
 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 
 export interface ProjetItem {
@@ -127,6 +127,7 @@ export default function AdminProjets({ projetsList, filters }: PageProps) {
   const handlePhotoAvantChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setData('photo_avant', file);
+
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => setPreviewAvant(reader.result as string);
@@ -138,6 +139,7 @@ export default function AdminProjets({ projetsList, filters }: PageProps) {
   const handlePhotoApresChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setData('photo_apres', file);
+
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => setPreviewApres(reader.result as string);
@@ -180,7 +182,10 @@ export default function AdminProjets({ projetsList, filters }: PageProps) {
 
   // Suppression
   const handleDelete = () => {
-    if (!projetToDelete) return;
+    if (!projetToDelete) {
+return;
+}
+
     router.delete(`/admin/projets/${projetToDelete.id}`, {
       preserveScroll: true,
       onSuccess: () => {
@@ -199,19 +204,29 @@ export default function AdminProjets({ projetsList, filters }: PageProps) {
         p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (p.lieu && p.lieu.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      if (!matchesSearch) return false;
-      if (selectedCategory !== 'all' && p.categorie !== selectedCategory) return false;
+      if (!matchesSearch) {
+return false;
+}
+
+      if (selectedCategory !== 'all' && p.categorie !== selectedCategory) {
+return false;
+}
+
       return true;
     });
   }, [projetsList.data, searchTerm, selectedCategory]);
 
   const getCategoryLabel = (cat: string) => {
     const found = CATEGORIES.find(c => c.id === cat);
+
     return found ? found.label : cat;
   };
 
   const getImageUrl = (path?: string | null) => {
-    if (!path) return "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
+    if (!path) {
+return "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
+}
+
     return path.startsWith('http') ? path : `/storage/projets/${path}`;
   };
 

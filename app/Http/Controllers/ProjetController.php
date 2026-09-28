@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Projet;
 use App\Http\Requests\ProjetRequest;
+use App\Models\Projet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -53,8 +53,8 @@ class ProjetController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('titre', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('lieu', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('lieu', 'like', "%{$search}%");
             });
         }
 
@@ -97,7 +97,7 @@ class ProjetController extends Controller
         if ($request->hasFile('photo_avant')) {
             $file = $request->file('photo_avant');
 
-            $photoAvantName = time() . '_avant_' .
+            $photoAvantName = time().'_avant_'.
                 preg_replace(
                     '/[^a-zA-Z0-9._-]/',
                     '_',
@@ -111,7 +111,7 @@ class ProjetController extends Controller
         if ($request->hasFile('photo_apres')) {
             $file = $request->file('photo_apres');
 
-            $photoApresName = time() . '_apres_' .
+            $photoApresName = time().'_apres_'.
                 preg_replace(
                     '/[^a-zA-Z0-9._-]/',
                     '_',
@@ -174,19 +174,19 @@ class ProjetController extends Controller
         // Gestion de la photo "Avant"
         if ($request->hasFile('photo_avant')) {
             if (
-                $projet->photo_avant && 
-                !str_starts_with($projet->photo_avant, 'http')
+                $projet->photo_avant &&
+                ! str_starts_with($projet->photo_avant, 'http')
             ) {
                 try {
-                    Storage::disk('s3')->delete('projets/' . $projet->photo_avant);
+                    Storage::disk('s3')->delete('projets/'.$projet->photo_avant);
                 } catch (\Exception $e) {
                     // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
                 }
             }
 
             $file = $request->file('photo_avant');
-            $photoAvantName = time() . '_avant_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            
+            $photoAvantName = time().'_avant_'.preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+
             // Enregistrement dans Supabase Storage
             $file->storeAs('projets', $photoAvantName, 's3');
             $dataToUpdate['photo_avant'] = $photoAvantName;
@@ -197,18 +197,18 @@ class ProjetController extends Controller
             if (
                 $projet->photo_apres &&
                 $projet->photo_apres !== 'default_after.jpg' &&
-                !str_starts_with($projet->photo_apres, 'http')
+                ! str_starts_with($projet->photo_apres, 'http')
             ) {
                 try {
-                    Storage::disk('s3')->delete('projets/' . $projet->photo_apres);
+                    Storage::disk('s3')->delete('projets/'.$projet->photo_apres);
                 } catch (\Exception $e) {
                     // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
                 }
             }
 
             $file = $request->file('photo_apres');
-            $photoApresName = time() . '_apres_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-            
+            $photoApresName = time().'_apres_'.preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+
             // Enregistrement dans Supabase Storage
             $file->storeAs('projets', $photoApresName, 's3');
             $dataToUpdate['photo_apres'] = $photoApresName;
@@ -218,6 +218,7 @@ class ProjetController extends Controller
 
         return redirect()->back()->with('success', 'Le projet a été mis à jour avec succès !');
     }
+
     /**
      * Supprimer un chantier
      */
@@ -228,11 +229,11 @@ class ProjetController extends Controller
     {
         // Supprimer la photo AVANT de Supabase si elle existe et n'est pas une URL externe
         if (
-            $projet->photo_avant && 
-            !str_starts_with($projet->photo_avant, 'http')
+            $projet->photo_avant &&
+            ! str_starts_with($projet->photo_avant, 'http')
         ) {
             try {
-                Storage::disk('s3')->delete('projets/' . $projet->photo_avant);
+                Storage::disk('s3')->delete('projets/'.$projet->photo_avant);
             } catch (\Exception $e) {
                 // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
             }
@@ -242,10 +243,10 @@ class ProjetController extends Controller
         if (
             $projet->photo_apres &&
             $projet->photo_apres !== 'default_after.jpg' &&
-            !str_starts_with($projet->photo_apres, 'http')
+            ! str_starts_with($projet->photo_apres, 'http')
         ) {
             try {
-                Storage::disk('s3')->delete('projets/' . $projet->photo_apres);
+                Storage::disk('s3')->delete('projets/'.$projet->photo_apres);
             } catch (\Exception $e) {
                 // Ignore l'erreur si le fichier n'est pas trouvé sur le stockage
             }
@@ -255,21 +256,22 @@ class ProjetController extends Controller
 
         return redirect()->back()->with('success', 'Le chantier a été supprimé de la galerie.');
     }
-        private function getImageUrl(?string $filename): ?string
-        {
-            if (!$filename || $filename === 'default_after.jpg') {
-                return null;
-            }
 
-            // 👈 Si c'est déjà une URL HTTP/HTTPS (ex: Unsplash ou lien direct), on la renvoie directement
-            if (str_starts_with($filename, 'http://') || str_starts_with($filename, 'https://')) {
-                return $filename;
-            }
-
-            $filename = str_replace('projets/', '', $filename);
-
-            return rtrim(config('filesystems.supabase_public_url'), '/')
-                . '/projets/'
-                . $filename;
+    private function getImageUrl(?string $filename): ?string
+    {
+        if (! $filename || $filename === 'default_after.jpg') {
+            return null;
         }
+
+        // 👈 Si c'est déjà une URL HTTP/HTTPS (ex: Unsplash ou lien direct), on la renvoie directement
+        if (str_starts_with($filename, 'http://') || str_starts_with($filename, 'https://')) {
+            return $filename;
+        }
+
+        $filename = str_replace('projets/', '', $filename);
+
+        return rtrim(config('filesystems.supabase_public_url'), '/')
+            .'/projets/'
+            .$filename;
+    }
 }
