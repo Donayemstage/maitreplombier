@@ -26,7 +26,7 @@ export default function Login({ status, canResetPassword = true }: LoginProps) {
     <>
       <Head>
         <title>Connexion - Donayem Plomberie</title>
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
       </Head>
 
       {/* fixed inset-0 garantit que l'arrière-plan couvre 100% de la fenêtre d'affichage */}
@@ -47,7 +47,7 @@ export default function Login({ status, canResetPassword = true }: LoginProps) {
           <div className="text-center mb-4">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-950 shadow-xl mb-3 border border-slate-800">
               <img 
-                src="/favicon.ico" 
+                src="/favicon.svg?v=2" 
                 alt="Logo" 
                 className="w-10 h-10 object-contain"
                 onError={(e) => {

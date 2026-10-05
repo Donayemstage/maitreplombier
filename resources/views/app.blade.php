@@ -32,14 +32,14 @@
 
         <!-- <link rel="icon" href="/favicon.ico" sizes="any"> -->
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
-        <!-- <link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 
         @fonts
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            <title>{{ config('app.name', 'Donayem Plomberie') }}</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">
