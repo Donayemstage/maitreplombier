@@ -67,8 +67,8 @@ export default function DevisConsulter({ contact }: Props) {
 
   // WhatsApp redirection URL
   const generateWhatsAppUrl = (intention: 'confirmer' | 'refuser' | 'general' = 'general') => {
-    let msg = `Bienvenue au sein de la structure Maître Plombier pour toutes vos préoccupations en plomberie.\n\n`;
-    msg += `Bonjour Maître Plombier, je fais suite au devis N° DEVIS-${String(devis?.id || contact.id).padStart(4, '0')} d'un montant de ${totalFCFA} FCFA pour mon intervention (${contact.type_intervention}).\n\n`;
+    let msg = `Bienvenue au sein de la structure Donayem Plomberie pour toutes vos préoccupations en plomberie.\n\n`;
+    msg += `Bonjour Donayem Plomberie, je fais suite au devis N° DEVIS-${String(devis?.id || contact.id).padStart(4, '0')} d'un montant de ${totalFCFA} FCFA pour mon intervention (${contact.type_intervention}).\n\n`;
 
     if (intention === 'confirmer') {
       msg += `✅ Je souhaite CONFIRMER et accepter ce devis pour planifier l'intervention.`;
@@ -78,7 +78,7 @@ export default function DevisConsulter({ contact }: Props) {
       msg += `Je souhaite échanger avec vous concernant cette proposition.`;
     }
 
-    const cleanPhone = '237678953071';
+    const cleanPhone = '237696580487';
 
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
   };
@@ -105,7 +105,7 @@ export default function DevisConsulter({ contact }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800 py-6 px-4 sm:px-6 lg:px-8 print:p-0 print:bg-white">
-      <Head title={`Devis Officiel #${contact.id} - Maître Plombier`} />
+      <Head title={`Devis Officiel #${contact.id} - Donayem Plomberie`} />
 
       {/* BARRE D'ACTIONS FLOTTANTE EN HAUT (MASQUÉE À L'IMPRESSION) */}
       <div className="max-w-4xl mx-auto mb-6 print:hidden">
@@ -115,7 +115,7 @@ export default function DevisConsulter({ contact }: Props) {
               MP
             </div>
             <div>
-              <h2 className="font-bold text-slate-900 text-sm sm:text-base">Maître Plombier - Devis Officiel</h2>
+              <h2 className="font-bold text-slate-900 text-sm sm:text-base">Donayem Plomberie - Devis Officiel</h2>
               <p className="text-xs text-slate-500">Document téléchargeable et imprimable</p>
             </div>
           </div>
@@ -151,14 +151,14 @@ export default function DevisConsulter({ contact }: Props) {
             <div>
               <div className="flex items-center gap-2 text-blue-600 font-black text-2xl tracking-tight">
                 <Wrench className="w-7 h-7" />
-                <span>MAÎTRE PLOMBIER</span>
+                <span>DONAYEM PLOMBERIE</span>
               </div>
               <p className="text-xs text-slate-500 font-medium mt-1">
                 Entreprise de plomberie sanitaire, dépannage rapide & rénovation
               </p>
               <div className="text-xs text-slate-600 mt-2 space-y-0.5">
                 <p>📍 Douala, Cameroun</p>
-                <p>📞 +237 678 95 30 71</p>
+                <p>📞 +237 6 96 58 04 87</p>
                 <p>✉️ contact@maitreplombier.cm</p>
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function DevisConsulter({ contact }: Props) {
         <div className="mx-8 sm:mx-10 mt-6 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-blue-900 text-xs sm:text-sm font-semibold flex items-center gap-3">
           <ShieldCheck className="w-5 h-5 text-blue-600 flex-shrink-0" />
           <span>
-            Bienvenue au sein de la structure Maître Plombier pour toutes vos préoccupations en plomberie.
+            Bienvenue au sein de la structure Donayem Plomberie pour toutes vos préoccupations en plomberie.
           </span>
         </div>
 
@@ -206,7 +206,7 @@ export default function DevisConsulter({ contact }: Props) {
                 Intervention souhaitée : {new Date(contact.date_intervention).toLocaleDateString('fr-FR')}
                 {contact.heure_intervention && ` à ${contact.heure_intervention.substring(0, 5)}`}
               </p>
-              <p>Fourniture matériel : <strong>{contact.materiel_fourni ? 'Fourni par vos soins' : 'Inclus par Maître Plombier'}</strong></p>
+              <p>Fourniture matériel : <strong>{contact.materiel_fourni ? 'Fourni par vos soins' : 'Inclus par Donayem Plomberie'}</strong></p>
             </div>
           </div>
         </div>
@@ -380,7 +380,7 @@ export default function DevisConsulter({ contact }: Props) {
 
         {/* PIED DE PAGE DU DEVIS */}
         <div className="p-6 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-400 space-y-1">
-          <p><strong>Maître Plombier</strong> • SARL Artisanale Sanitaire & Tuyauterie • Douala, Cameroun</p>
+          <p><strong>Donayem Plomberie</strong> • SARL Artisanale Sanitaire & Tuyauterie • Douala, Cameroun</p>
           <p>Document généré électroniquement, valable comme bon pour accord après confirmation.</p>
         </div>
 

@@ -15,10 +15,10 @@ class UtilisationController extends Controller
     {
         return Inertia::render('utilisation', [
             'company' => [
-                'name' => config('app.name', 'Maître Plombier'),
-                'fullName' => 'Maître Plombier SAS',
-                'phone' => '679 47 36 91',
-                'whatsappPhone' => '679 47 36 91',
+                'name' => config('app.name', 'Donayem Plomberie'),
+                'fullName' => 'Donayem Plomberie SAS',
+                'phone' => '+237 6 96 58 04 87',
+                'whatsappPhone' => '237696580487',
                 'email' => 'donayemtech@gmail.com',
                 'domain' => 'maitre-plombier.fr',
                 'updatedAt' => 'Février 2025',

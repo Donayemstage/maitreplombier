@@ -18,7 +18,7 @@ export default function Accueil({ featuredServices, testimonialsList }: AccueilP
   return (
     <>
       {/* Titre de l'onglet */}
-      <Head title="Accueil - Maître Plombier" />
+      <Head title="Accueil - Donayem Plomberie" />
 
       {/* Contenu principal */}
       <HeroSection />

@@ -51,7 +51,7 @@ router.on('success', (event) => {
     }
 });
 
-const appName = import.meta.env.VITE_APP_NAME || 'Maître Plombier';
+const appName = import.meta.env.VITE_APP_NAME || 'Donayem Plomberie';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

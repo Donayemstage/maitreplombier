@@ -59,7 +59,7 @@ export default function APropos() {
 
   return (
     <>
-      <Head title="À Propos - Maître Plombier">
+      <Head title="À Propos - Donayem Plomberie">
         {/* Balise SEO JSON-LD injectée au <head> */}
         <script type="application/ld+json">
           {JSON.stringify(faqSchema)}
@@ -79,7 +79,7 @@ export default function APropos() {
         <div className="relative lg:col-span-6 min-h-[300px] lg:min-h-[420px]">
           <img
             src="images/img10.webp"
-            alt="Maître Plombier intervention"
+            alt="Donayem Plomberie intervention"
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-slate-900/10" />
@@ -108,7 +108,7 @@ export default function APropos() {
 
           <h1 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
             Pourquoi faire confiance à <br className="hidden sm:inline" />
-            Maître Plombier ?
+            Donayem Plomberie ?
           </h1>
 
           {/* Arguments */}
@@ -168,7 +168,7 @@ export default function APropos() {
                     Une histoire d'expertise et d'engagement au service de votre confort
                   </h2>
                   <p className="text-slate-600 text-base md:text-lg leading-relaxed">
-                    Fondée avec la volonté de moderniser les services de plomberie, <strong>Maître Plombier</strong> a su s'imposer grâce à la rigueur de ses interventions et la réactivité de ses équipes.
+                    Fondée avec la volonté de moderniser les services de plomberie, <strong>Donayem Plomberie</strong> a su s'imposer grâce à la rigueur de ses interventions et la réactivité de ses équipes.
                   </p>
                   <p className="text-slate-600 text-base md:text-lg leading-relaxed">
                     Chaque fuite réparée, chaque installation sanitaire conçue et chaque système de chauffage optimisé repose sur une même ambition : offrir à nos clients des solutions durables, sécurisées et conformes aux normes les plus strictes.
@@ -281,7 +281,7 @@ export default function APropos() {
                 <div className="order-1 lg:order-2 space-y-8">
                   <div>
                     <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                      Pourquoi Choisir Maître Plombier ?
+                      Pourquoi Choisir Donayem Plomberie ?
                     </h2>
                     <p className="text-slate-600 text-lg">
                       Nous nous engagons à offrir une expérience client sans stress et des résultats impeccables.
@@ -459,7 +459,7 @@ export default function APropos() {
                     />
                   </div>
                   <p className="italic text-slate-700 mb-4">
-                    « Nous avons fait appel à Maître Plombier pour la rénovation complète de nos sanitaires. Le travail a été impeccable, les délais respectés et l'équipe très courtoise. »
+                    « Nous avons fait appel à Donayem Plomberie pour la rénovation complète de nos sanitaires. Le travail a été impeccable, les délais respectés et l'équipe très courtoise. »
                   </p>
                   <div className="flex items-center justify-between">
                     <div>

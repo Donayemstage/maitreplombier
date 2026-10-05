@@ -102,7 +102,7 @@ export default function AdminSettings({ adminUser }: PageProps) {
 
   return (
     <>
-      <Head title="Paramètres Administrateur - Maître Plombier" />
+      <Head title="Paramètres Administrateur - Donayem Plomberie" />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-8">
         

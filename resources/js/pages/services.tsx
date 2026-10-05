@@ -99,14 +99,14 @@ const ICONS_MAP: Record<string, React.ElementType> = {
 
 export default function Services({ 
   servicesList, 
-  phoneNumber = '+237 679 47 36 91',
-  whatsappNumber = '237679473691' 
+  phoneNumber = '+237 6 96 58 04 87',
+  whatsappNumber = '237696580487' 
 }: ServicesProps) {
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const prefilledMessage = "Bonjour Maître Plombier 🛠️, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
+  const prefilledMessage = "Bonjour Donayem Plomberie 🛠️, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
 
   const displayServices = (servicesList && servicesList.length > 0) ? servicesList : DEFAULT_SERVICES;
 
@@ -133,7 +133,7 @@ export default function Services({
 
   return (
     <div className="bg-slate-50 text-slate-800">
-      <Head title="Nos Services de Plomberie - Maître Plombier" />
+      <Head title="Nos Services de Plomberie - Donayem Plomberie" />
 
       {/* 1. EN-TÊTE / BANNIÈRE HERO (Style Stitch) */}
       <section className="bg-slate-50 py-12 md:py-20 border-b border-slate-200">
@@ -271,7 +271,7 @@ export default function Services({
                   </Link>
 
                   <a
-                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Bonjour Maître Plombier, je souhaite un renseignement ou un devis pour le service : ${service.nom_service}`)}`}
+                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Bonjour Donayem Plomberie, je souhaite un renseignement ou un devis pour le service : ${service.nom_service}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs flex items-center justify-center transition-colors"
@@ -411,7 +411,7 @@ export default function Services({
               <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-start gap-2 text-left mt-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <p className="text-[11px] text-emerald-800 leading-tight">
-                  <strong>Service Officiel Maître Plombier :</strong> Vous allez être redirigé vers l'application ou la version web de WhatsApp. Votre message d'urgence est déjà préparé !
+                  <strong>Service Officiel Donayem Plomberie :</strong> Vous allez être redirigé vers l'application ou la version web de WhatsApp. Votre message d'urgence est déjà préparé !
                 </p>
               </div>
             </div>
@@ -450,7 +450,7 @@ export default function Services({
                     {renderIcon(selectedService.icone_service, "w-5 h-5")}
                   </div>
                   <span className="text-xs font-bold uppercase tracking-wider bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-lg">
-                    Prestation Maître Plombier
+                    Prestation Donayem Plomberie
                   </span>
                 </div>
                 <h3 className="text-2xl font-black">{selectedService.nom_service}</h3>
@@ -513,7 +513,7 @@ export default function Services({
                 </Link>
 
                 <a
-                  href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Bonjour Maître Plombier, je souhaite commander ou avoir un devis pour la prestation : ${selectedService.nom_service}`)}`}
+                  href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Bonjour Donayem Plomberie, je souhaite commander ou avoir un devis pour la prestation : ${selectedService.nom_service}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"

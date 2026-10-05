@@ -14,15 +14,15 @@ class LegalController extends Controller
     {
         return Inertia::render('legal/confidentialite', [
             'company' => [
-                'fullName' => config('app.name', 'Maître Plombier'),
+                'fullName' => config('app.name', 'Donayem Plomberie'),
                 'domain' => 'maitreplombier.onrender.com',
-                'phone' => '+237 79 47 36 91',
-                'whatsappPhone' => '+237 79 47 36 91',
+                'phone' => '+237 6 96 58 04 87',
+                'whatsappPhone' => '237696580487',
                 'updatedAt' => '20/09/2026',
             ],
             'cguSummary' => [],
             'contactEmail' => 'donayemtech@gmail.com',
-            'contactPhone' => '+237 79 47 36 91',
+            'contactPhone' => '+237 6 96 58 04 87',
             'location' => 'Douala, Cameroun',
         ]);
     }

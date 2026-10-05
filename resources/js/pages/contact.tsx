@@ -45,9 +45,9 @@ export default function Contact() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const phoneNumber = '+237 679 47 36 91';
-  const whatsappNumber = '237679473691';
-  const prefilledMessage = "Bonjour Maître Plombier, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
+  const phoneNumber = '+237 6 96 58 04 87';
+  const whatsappNumber = '237696580487';
+  const prefilledMessage = "Bonjour Donayem Plomberie, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
   
   // Adresse pour la carte Google Maps
   const mapAddress = "Douala, Cameroun";
@@ -88,12 +88,12 @@ export default function Contact() {
 
   return (
     <div className="bg-slate-50 text-slate-800">
-      <Head title="Contact & Devis - Maître Plombier" />
+      <Head title="Contact & Devis - Donayem Plomberie" />
 
       {/* EN-TÊTE DE LA PAGE */}
       <section className="bg-slate-900 text-white py-12 md:py-16">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-extrabold mb-4">Contactez Maître Plombier</h1>
+          <h1 className="text-3xl md:text-5xl font-extrabold mb-4">Contactez Donayem Plomberie</h1>
           <p className="text-slate-300 text-base md:text-lg">
             Une urgence, un projet de rénovation ou une question ? Nos équipes sont à votre écoute.
           </p>
@@ -120,7 +120,7 @@ export default function Contact() {
             className="w-full md:w-auto px-8 py-4 bg-white text-red-600 font-extrabold rounded-xl hover:bg-red-50 transition-colors text-center text-lg flex items-center justify-center gap-3 shadow-md cursor-pointer"
           >
             <Phone className="w-6 h-6 animate-bounce" />
-            <span>Appeler le 679 47 36 91</span>
+            <span>Appeler le +237 6 96 58 04 87</span>
           </a>
         </div>
 
@@ -140,7 +140,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-900 text-sm">Téléphone Service Client</h3>
-                    <p className="text-slate-800 font-bold text-sm mt-0.5">+237 679 47 36 91</p>
+                    <p className="text-slate-800 font-bold text-sm mt-0.5">+237 6 96 58 04 87</p>
                     <p className="text-slate-500 text-xs mt-1 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-slate-400" /> Du Lundi au Samedi : 8h00 - 18h00
                     </p>
@@ -182,7 +182,7 @@ export default function Contact() {
               </div>
               <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-100 shadow-inner">
                 <iframe
-                  title="Localisation Maître Plombier"
+                  title="Localisation Donayem Plomberie"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -197,7 +197,7 @@ export default function Contact() {
             <div className="p-5 bg-blue-50/80 rounded-2xl border border-blue-100 space-y-3">
               <div className="flex items-center gap-2 text-blue-900 font-bold text-sm">
                 <ShieldCheck className="w-5 h-5 text-blue-600" />
-                <span>Engagements Maître Plombier</span>
+                <span>Engagements Donayem Plomberie</span>
               </div>
               <ul className="text-slate-600 text-xs space-y-2">
                 <li className="flex items-center gap-2">

@@ -29,7 +29,7 @@ export default function AppLogo() {
             </div>
             <div className="flex flex-col text-left leading-tight">
                 <span className="truncate font-bold text-white text-base">
-                    Maître Plombier
+                    Donayem Plomberie
                 </span>
                 <span className="truncate text-xs font-medium text-slate-400">
                     Admin Panel
@@ -53,7 +53,7 @@ export default function AppLogo({ variant = 'dark', className = '' }: AppLogoPro
     <div className={`flex items-center gap-3 ${className}`}>
       <img 
         src={logoSrc} 
-        alt="Maître Plombier" 
+        alt="Donayem Plomberie" 
         className="h-11 w-auto object-contain drop-shadow-sm transition-transform hover:scale-105" 
       />
     </div>

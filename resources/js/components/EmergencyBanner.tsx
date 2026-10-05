@@ -10,8 +10,8 @@ interface EmergencyBannerProps {
 }
 
 export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
-  phoneNumber = '+237 79 47 36 91',
-  whatsappNumber = '237679473691',
+  phoneNumber = '+237 6 96 58 04 87',
+  whatsappNumber = '237696580487',
   responseTime = '30 min',
   // URL d'image par défaut (modifiable via les props)
   backgroundImageUrl = '/images/gpt0.png',
@@ -19,7 +19,7 @@ export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const prefilledMessage = "Bonjour Maître Plombier 🛠️, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
+  const prefilledMessage = "Bonjour Donayem Plomberie 🛠️, j'ai une urgence de plomberie à mon domicile. Merci de me prendre en charge rapidement !";
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -137,7 +137,7 @@ export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
               <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-start gap-2 text-left mt-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <p className="text-[11px] text-emerald-800 leading-tight">
-                  <strong>Service Officiel Maître Plombier :</strong> Vous allez être redirigé vers l'application ou la version web de WhatsApp. Votre message d'urgence est déjà préparé !
+                  <strong>Service Officiel Donayem Plomberie :</strong> Vous allez être redirigé vers l'application ou la version web de WhatsApp. Votre message d'urgence est déjà préparé !
                 </p>
               </div>
             </div>

@@ -45,10 +45,10 @@ class DevisClientMail extends Mailable
 
         $prestation = $contact->type_intervention;
 
-        $waText = "Bonjour Maître Plombier, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
+        $waText = "Bonjour Donayem Plomberie, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
 
         $this->whatsappUrl =
-            'https://wa.me/237679473691?text=' . urlencode($waText);
+            'https://wa.me/237696580487?text=' . urlencode($waText);
 
 
         /*$this->contact = $contact;
@@ -57,9 +57,9 @@ class DevisClientMail extends Mailable
 
         $totalFormatted = number_format((float) $devis->total_devis, 0, ',', ' ');
         $prestation = $contact->type_intervention;
-        $waText = "Bonjour Maître Plombier, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
+        $waText = "Bonjour Donayem Plomberie, je fais suite au devis #{$devis->id} d'un montant de {$totalFormatted} FCFA pour mon intervention ({$prestation}). Je souhaite donner suite à ce devis.";
 
-        $this->whatsappUrl = 'https://wa.me/237679473691?text='.urlencode($waText);*/
+        $this->whatsappUrl = 'https://wa.me/237696580487?text='.urlencode($waText);*/
     }
 
     /**
@@ -87,15 +87,15 @@ class DevisClientMail extends Mailable
                     '0',
                     STR_PAD_LEFT
                 )
-                . ' - Maître Plombier',
+                . ' - Donayem Plomberie',
         );
         /*$fromAddress = config('mail.from.address', 'foalengfranck6@gmail.com');
-        $fromName = config('mail.from.name', 'Maître Plombier');
+        $fromName = config('mail.from.name', 'Donayem Plomberie');
 
         return new Envelope(
             from: new Address($fromAddress, $fromName),
             replyTo: [new Address($fromAddress, $fromName)],
-            subject: 'Votre Devis Officiel N° DEVIS-'.str_pad((string) $this->devis->id, 4, '0', STR_PAD_LEFT).' - Maître Plombier',
+            subject: 'Votre Devis Officiel N° DEVIS-'.str_pad((string) $this->devis->id, 4, '0', STR_PAD_LEFT).' - Donayem Plomberie',
         );*/
     }
 

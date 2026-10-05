@@ -10,7 +10,7 @@ export function FeaturesSection() {
             Savoir-faire & Réactivité
           </span>
           <h4 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-             Pour tous vos problèmes, vous trouverez une solution chez Maître Plombier 
+             Pour tous vos problèmes, vous trouverez une solution chez Donayem Plomberie 
             
           </h4>
         </div>

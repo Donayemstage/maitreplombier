@@ -5,8 +5,8 @@ interface FloatingWhatsappProps {
   whatsappNumber?: string;
 }
 
-export function FloatingWhatsapp({ whatsappNumber = '237679473691' }: FloatingWhatsappProps) {
-  const prefilledMessage = "Bonjour Maître Plombier 🛠️, j'ai besoin d'une assistance ou d'un devis. Êtes-vous disponible ?";
+export function FloatingWhatsapp({ whatsappNumber = '237696580487' }: FloatingWhatsappProps) {
+  const prefilledMessage = "Bonjour Donayem Plomberie 🛠️, j'ai besoin d'une assistance ou d'un devis. Êtes-vous disponible ?";
   const cleanWhatsappNumber = whatsappNumber.replace(/\D/g, '');
 
   return (

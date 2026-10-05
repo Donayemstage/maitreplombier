@@ -10,7 +10,7 @@ export function NavFooter({ className = '' }: FooterProps) {
   // Variables à mettre à jour plus tard avec les données réelles du client
   const contactInfo = {
     address: "Douala, Cameroun",
-    phone: "+237 79 47 36 91",
+    phone: "+237 6 96 58 04 87",
     email: "donayemtech.com",
   };
 
@@ -24,7 +24,7 @@ export function NavFooter({ className = '' }: FooterProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-bold text-white text-base">
               <Wrench className="w-5 h-5 text-blue-500" />
-              <span>Maître Plombier</span>
+              <span>Donayem Plomberie</span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Votre partenaire de confiance pour tous vos travaux de plomberie et chauffage. Intervention rapide, expertise garantie.
@@ -85,7 +85,7 @@ export function NavFooter({ className = '' }: FooterProps) {
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                <a href="tel:23779473691" className="hover:text-blue-400 transition-colors">{contactInfo.phone}</a>
+                <a href="tel:+237696580487" className="hover:text-blue-400 transition-colors">{contactInfo.phone}</a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
@@ -99,8 +99,8 @@ export function NavFooter({ className = '' }: FooterProps) {
         </div>
 
         {/* Ligne inférieure de Copyright avec lien Donayem Tech */}
-        <div className="border-t border-slate-800 mt-8 pt-5 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>© {new Date().getFullYear()} Maître Plombier. Tous droits réservés.</span>
+        <div className="border-t border-slate-800 mt-8 pt-5 pb-14 sm:pb-0 sm:pr-20 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span>© {new Date().getFullYear()} Donayem Plomberie. Tous droits réservés.</span>
           <span>
             Propulsé avec passion par{' '}
             <a 

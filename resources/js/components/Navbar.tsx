@@ -21,8 +21,8 @@ interface NavbarProps {
 }
 
 export function Navbar({
-  phoneNumber = "+237 679 47 36 91",
-  whatsappNumber = "237679473691",
+  phoneNumber = "+237 6 96 58 04 87",
+  whatsappNumber = "237696580487",
 }: NavbarProps) {
   const page = usePage()
   const currentUrl = page.url
@@ -34,7 +34,7 @@ export function Navbar({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const prefilledMessage = "Bonjour Maître Plombier, j'ai une demande de devis ou d'urgence. Merci de me contacter !"
+  const prefilledMessage = "Bonjour Donayem Plomberie, j'ai une demande de devis ou d'urgence. Merci de me contacter !"
 
   const rawPhoneNumber = phoneNumber.replace(/\s+/g, "")
 
@@ -266,7 +266,7 @@ export function Navbar({
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Contactez Maître Plombier</h3>
+                <h3 className="text-lg font-bold text-slate-900">Contactez Donayem Plomberie</h3>
                 <p className="text-xs text-slate-500 mt-1">
                   Composez ce numéro directement ou lancez une discussion WhatsApp pour un devis gratuit.
                 </p>
@@ -307,7 +307,7 @@ export function Navbar({
               <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-start gap-2 text-left mt-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <p className="text-[11px] text-emerald-800 leading-tight">
-                  <strong>Service Officiel Maître Plombier :</strong> Réponse rapide pour vos demandes d'intervention et de devis.
+                  <strong>Service Officiel Donayem Plomberie :</strong> Réponse rapide pour vos demandes d'intervention et de devis.
                 </p>
               </div>
             </div>

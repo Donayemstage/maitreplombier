@@ -32,7 +32,7 @@ class AdminNewContactMail extends Mailable
     public function envelope(): Envelope
     {
         /*return new Envelope(
-            from: new Address('foalengfranck6@gmail.com', 'Maître Plombier - Site'),
+            from: new Address('foalengfranck6@gmail.com', 'Donayem Plomberie - Site'),
             replyTo: [new Address($this->contact->email, $this->contact->nom)],
             subject: 'Nouvelle demande de devis de : '.$this->contact->nom,
         );*/

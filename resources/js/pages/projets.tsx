@@ -198,7 +198,7 @@ return true;
 
     <div className="relative w-full max-w-full overflow-x-hidden bg-slate-50 text-slate-800">
 
-      <Head title="Galerie de Réalisations - Maître Plombier" />
+      <Head title="Galerie de Réalisations - Donayem Plomberie" />
 
 
 
@@ -795,7 +795,7 @@ return true;
 
                 <a
 
-                  href={`https://wa.me/237678953071?text=${encodeURIComponent(`Bonjour, je suis intéressé par le projet "${selectedProjetModal.titre}".`)}`}
+                  href={`https://wa.me/237696580487?text=${encodeURIComponent(`Bonjour, je suis intéressé par le projet "${selectedProjetModal.titre}".`)}`}
 
                   target="_blank"
 

@@ -176,7 +176,7 @@ return recentDevis;
 
     return (
         <>
-            <Head title="Centre de Pilotage - Maître Plombier" />
+            <Head title="Centre de Pilotage - Donayem Plomberie" />
 
             <div className="flex flex-col gap-6 p-6 bg-slate-50/50 min-h-full">
 

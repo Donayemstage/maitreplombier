@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Votre Devis Officiel - Maître Plombier</title>
+    <title>Votre Devis Officiel - Donayem Plomberie</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -145,7 +145,7 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <h1>MAÎTRE PLOMBIER</h1>
+            <h1>DONAYEM PLOMBERIE</h1>
             <p>Plomberie Sanitaire • Dépannage Rapide • Douala & Environs</p>
         </div>
 
@@ -153,7 +153,7 @@
         <div class="content">
             <!-- MESSAGE D'ACCUEIL OBLIGATOIRE -->
             <div class="welcome-box">
-                Bienvenue au sein de la structure Maître Plombier pour toutes vos préoccupations en plomberie.
+                Bienvenue au sein de la structure Donayem Plomberie pour toutes vos préoccupations en plomberie.
             </div>
 
             <p style="font-size: 15px; line-height: 1.6; margin-top: 0;">
@@ -225,8 +225,8 @@
 
         <!-- FOOTER -->
         <div class="footer">
-            <strong>Maître Plombier</strong> • Douala, Cameroun<br>
-            Téléphone & WhatsApp : +237 678 95 30 71<br>
+            <strong>Donayem Plomberie</strong> • Douala, Cameroun<br>
+            Téléphone & WhatsApp : +237 6 96 58 04 87<br>
             Service disponible 7j/7 pour les urgences
         </div>
     </div>

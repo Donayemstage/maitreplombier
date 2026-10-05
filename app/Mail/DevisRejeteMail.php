@@ -34,18 +34,18 @@ class DevisRejeteMail extends Mailable
         $this->devis = $devis;
         $this->motif = $motif;
 
-        $waText = "Bonjour Maître Plombier, je fais suite au message concernant ma demande #{$contact->id} ({$contact->type_intervention}).";
+        $waText = "Bonjour Donayem Plomberie, je fais suite au message concernant ma demande #{$contact->id} ({$contact->type_intervention}).";
 
         $this->whatsappUrl =
-            'https://wa.me/237679473691?text=' . urlencode($waText);
+            'https://wa.me/237696580487?text=' . urlencode($waText);
     
 
         /*$this->contact = $contact;
         $this->devis = $devis;
         $this->motif = $motif;
 
-        $waText = "Bonjour Maître Plombier, je fais suite au message concernant ma demande #{$contact->id} ({$contact->type_intervention}).";
-        $this->whatsappUrl = 'https://wa.me/237678953071?text='.urlencode($waText);*/
+        $waText = "Bonjour Donayem Plomberie, je fais suite au message concernant ma demande #{$contact->id} ({$contact->type_intervention}).";
+        $this->whatsappUrl = 'https://wa.me/237696580487?text='.urlencode($waText);*/
     }
 
     /**
@@ -66,11 +66,11 @@ class DevisRejeteMail extends Mailable
                 )
             ],
 
-            subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Maître Plombier",
+            subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Donayem Plomberie",
         );
         /*return new Envelope(
-            from: new Address('foalengfranck6@gmail.com', 'Maître Plombier'),
-            subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Maître Plombier",
+            from: new Address('foalengfranck6@gmail.com', 'Donayem Plomberie'),
+            subject: "Information relative à votre demande de plomberie N° #{$this->contact->id} - Donayem Plomberie",
         );*/
     }
 

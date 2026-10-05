@@ -26,17 +26,17 @@ interface Props {
 }
 
 export default function Confidentialite({
-    appName = "Maître Plombier",
+    appName = "Donayem Plomberie",
     contactEmail = "donayemtech@gmail.com",
-    contactPhone = "+237 79 47 36 91",
-    whatsappNumber = "23779473691",
+    contactPhone = "+237 6 96 58 04 87",
+    whatsappNumber = "237696580487",
     location = "Douala, Cameroun"
 }: Props) {
     const { url } = usePage();
     const isConfidentialiteActive = url.startsWith('/confidentialite');
 
     const formattedPhone = contactPhone.replace(/\s+/g, '');
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=Bonjour%20Ma%C3%AEtre%20Plombier,%20j'ai%20une%20question%20concernant%20mes%20donn%C3%A9es%20personnelles.`;
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=Bonjour%20Donayem%20Plomberie,%20j'ai%20une%20question%20concernant%20mes%20donn%C3%A9es%20personnelles.`;
 
     return (
         <AppLayout>

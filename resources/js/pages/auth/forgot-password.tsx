@@ -12,7 +12,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
     return (
         <>
             <Head>
-                <title>Mot de passe oublié - Maître Plombier</title>
+                <title>Mot de passe oublié - Donayem Plomberie</title>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
             </Head>
 
@@ -104,7 +104,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                     {/* Pied de page */}
                     <p className="mt-4 text-center text-[11px] font-bold text-slate-950/80">
-                        © {new Date().getFullYear()} Maître Plombier. Tous droits réservés.
+                        © {new Date().getFullYear()} Donayem Plomberie. Tous droits réservés.
                     </p>
                 </div>
             </div>

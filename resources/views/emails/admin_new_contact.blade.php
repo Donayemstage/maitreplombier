@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; color: #333;">
     <h2>Nouvelle demande de devis reçue !</h2>
-    <p>Un client vient de soumettre une demande sur le site de Maître Plombier.</p>
+    <p>Un client vient de soumettre une demande sur le site de Donayem Plomberie.</p>
     
     <hr>
     <ul>

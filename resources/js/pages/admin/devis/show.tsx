@@ -215,7 +215,7 @@ return;
       ? new Date(contact.devis?.date_validite || devisData.date_validite!).toLocaleDateString('fr-FR')
       : '15 jours';
 
-    const message = `Bienvenue au sein de la structure Maître Plombier pour toutes vos préoccupations en plomberie.\n\nBonjour *${contact.nom}* 👋,\n\nVoici votre proposition de devis officiel pour votre intervention (*${contact.type_intervention}*) :\n\n🛠️ *Détail du Chiffrage :*\n- Main d'œuvre : *${mo} FCFA*\n${Number(mat) > 0 ? `- Matériel / Pièces : *${mat} FCFA*\n` : ''}${Number(dep) > 0 ? `- Déplacement : *${dep} FCFA*\n` : ''}\n💰 *TOTAL : ${total} FCFA*\n📅 *Offre valable jusqu'au :* ${validite}\n\n📄 *Consultez & imprimez votre devis en ligne :*\n${clientConsultUrl}\n\n👉 Vous pouvez confirmer ou refuser ce devis en répondant directement à ce message WhatsApp.\n\n*Maître Plombier* - Douala\n📞 +237 678 95 30 71`;
+    const message = `Bienvenue au sein de la structure Donayem Plomberie pour toutes vos préoccupations en plomberie.\n\nBonjour *${contact.nom}* 👋,\n\nVoici votre proposition de devis officiel pour votre intervention (*${contact.type_intervention}*) :\n\n🛠️ *Détail du Chiffrage :*\n- Main d'œuvre : *${mo} FCFA*\n${Number(mat) > 0 ? `- Matériel / Pièces : *${mat} FCFA*\n` : ''}${Number(dep) > 0 ? `- Déplacement : *${dep} FCFA*\n` : ''}\n💰 *TOTAL : ${total} FCFA*\n📅 *Offre valable jusqu'au :* ${validite}\n\n📄 *Consultez & imprimez votre devis en ligne :*\n${clientConsultUrl}\n\n👉 Vous pouvez confirmer ou refuser ce devis en répondant directement à ce message WhatsApp.\n\n*Donayem Plomberie* - Douala\n📞 +237 6 96 58 04 87`;
 
     const cleanPhone = contact.telephone.replace(/\D/g, '');
 
@@ -251,7 +251,7 @@ return;
 
   return (
     <>
-      <Head title={`Devis #${contact.id} - ${contact.nom} - Maître Plombier`} />
+      <Head title={`Devis #${contact.id} - ${contact.nom} - Donayem Plomberie`} />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
         
@@ -299,7 +299,7 @@ return;
           <div className="flex items-center gap-3">
             <Shield className="w-5 h-5 text-blue-600 flex-shrink-0" />
             <span>
-              <strong>Message d'accueil officiel :</strong> « Bienvenue au sein de la structure Maître Plombier pour toutes vos préoccupations en plomberie. »
+              <strong>Message d'accueil officiel :</strong> « Bienvenue au sein de la structure Donayem Plomberie pour toutes vos préoccupations en plomberie. »
             </span>
           </div>
           {clientConsultUrl && (

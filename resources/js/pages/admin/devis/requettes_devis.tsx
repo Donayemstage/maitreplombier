@@ -417,12 +417,12 @@ return '';
     const dep = Number(devisData.frais_deplacement).toLocaleString('fr-FR');
     const validite = devisData.date_validite ? new Date(devisData.date_validite).toLocaleDateString('fr-FR') : '15 jours';
 
-    return `Bonjour *${nom}* 👋,\n\nVoici votre proposition de devis officiel de la part de *Maître Plombier* pour votre demande (*${intervention}*) :\n\n🛠️ *Détail du Chiffrage :*\n- Main d'œuvre : *${mo} FCFA*\n- Fournitures / Matériel : *${mat} FCFA*\n- Déplacement : *${dep} FCFA*\n\n💰 *MONTANT TOTAL : ${total} FCFA*\n📅 *Offre valable jusqu'au :* ${validite}\n${devisData.conditions_execution ? `📝 *Remarques :* ${devisData.conditions_execution}\n` : ''}\nRestant à votre entière disposition pour convenir de l'intervention.\n\n*Maître Plombier*\n📞 +237 678 95 30 71`;
+    return `Bonjour *${nom}* 👋,\n\nVoici votre proposition de devis officiel de la part de *Donayem Plomberie* pour votre demande (*${intervention}*) :\n\n🛠️ *Détail du Chiffrage :*\n- Main d'œuvre : *${mo} FCFA*\n- Fournitures / Matériel : *${mat} FCFA*\n- Déplacement : *${dep} FCFA*\n\n💰 *MONTANT TOTAL : ${total} FCFA*\n📅 *Offre valable jusqu'au :* ${validite}\n${devisData.conditions_execution ? `📝 *Remarques :* ${devisData.conditions_execution}\n` : ''}\nRestant à votre entière disposition pour convenir de l'intervention.\n\n*Donayem Plomberie*\n📞 +237 6 96 58 04 87`;
   };
 
   return (
     <>
-      <Head title="Demandes de Devis - Admin Maître Plombier" />
+      <Head title="Demandes de Devis - Admin Donayem Plomberie" />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
         
@@ -849,7 +849,7 @@ return '';
                         <Phone className="w-3.5 h-3.5" /> Appeler
                       </a>
                       <a
-                        href={`https://wa.me/${selectedDemande.telephone.replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour ${selectedDemande.nom}, Maître Plombier fait suite à votre demande de devis pour ${formatInterventionLabel(selectedDemande.type_intervention)}.`)}`}
+                        href={`https://wa.me/${selectedDemande.telephone.replace(/\D/g, '')}?text=${encodeURIComponent(`Bonjour ${selectedDemande.nom}, Donayem Plomberie fait suite à votre demande de devis pour ${formatInterventionLabel(selectedDemande.type_intervention)}.`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-none text-xs font-bold hover:bg-emerald-700 shadow-sm"

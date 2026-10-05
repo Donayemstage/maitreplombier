@@ -25,7 +25,7 @@ export default function Login({ status, canResetPassword = true }: LoginProps) {
   return (
     <>
       <Head>
-        <title>Connexion - Maître Plombier</title>
+        <title>Connexion - Donayem Plomberie</title>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
       </Head>
 
@@ -180,7 +180,7 @@ export default function Login({ status, canResetPassword = true }: LoginProps) {
 
           {/* Footer */}
           <p className="mt-4 text-center text-[11px] font-bold text-slate-950/80">
-            © {new Date().getFullYear()} Maître Plombier. Tous droits réservés.
+            © {new Date().getFullYear()} Donayem Plomberie. Tous droits réservés.
           </p>
         </div>
       </div>

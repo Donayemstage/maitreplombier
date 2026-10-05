@@ -19,7 +19,7 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
     return (
         <>
             <Head>
-                <title>Réinitialisation du mot de passe - Maître Plombier</title>
+                <title>Réinitialisation du mot de passe - Donayem Plomberie</title>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
             </Head>
 
@@ -150,7 +150,7 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
 
                     {/* Pied de page */}
                     <p className="mt-4 text-center text-[11px] font-bold text-slate-950/80">
-                        © {new Date().getFullYear()} Maître Plombier. Tous droits réservés.
+                        © {new Date().getFullYear()} Donayem Plomberie. Tous droits réservés.
                     </p>
                 </div>
             </div>

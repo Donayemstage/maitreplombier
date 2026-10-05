@@ -133,14 +133,14 @@ return;
 
     return (
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white px-6 dark:border-slate-800 dark:bg-slate-900 sticky top-0 z-30">
-            {/* Côté Gauche : Toggle Sidebar + Titre Maître Plombier */}
+            {/* Côté Gauche : Toggle Sidebar + Titre Donayem Plomberie */}
             <div className="flex items-center gap-4">
                 <SidebarTrigger className="-ml-1 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" />
                 <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
                 
                 <div className="flex items-center gap-2">
                     <span className="text-xl font-bold tracking-tight text-blue-600 dark:text-blue-400">
-                        Maître Plombier
+                        Donayem Plomberie
                     </span>
                     <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">
                         Admin Panel
