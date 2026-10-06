@@ -104,7 +104,7 @@ export function NavFooter({ className = '' }: FooterProps) {
           <span>
             Propulsé avec passion par{' '}
             <a 
-              href="https://donayem.tech" 
+              href="https://www.donayemtech.com/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-blue-400 font-bold hover:underline"
