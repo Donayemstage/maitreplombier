@@ -11,7 +11,7 @@ export function NavFooter({ className = '' }: FooterProps) {
   const contactInfo = {
     address: "Douala, Cameroun",
     phone: "+237 6 96 58 04 87",
-    email: "donayemtech.com",
+    email: "contact@donayemtech.com",
   };
 
   return (
