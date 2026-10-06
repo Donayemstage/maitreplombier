@@ -12,23 +12,24 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ServiceSeeder::class,
-            ProjetSeeder::class, //  Ajout du ProjetSeeder
+            ProjetSeeder::class,
         ]);
 
-        // Création de votre compte Super Admin (déjà vérifié)
-        /*User::updateOrCreate([
-            'name' => 'Foaleng Neumann',
-            'email' => 'foalengfranck6@gmail.com',
-            'password' => Hash::make('MaitrePlombier2026@'),
-            'is_admin' => true,
-            'email_verified_at' => now(), // Empêche le blocage 403
-        ]);*/
+        // Compte administrateur : identifiants lus depuis .env (ADMIN_EMAIL / ADMIN_PASSWORD)
+        $email = config('app.admin_email');
+        $password = config('app.admin_password');
+
+        if (! $email || ! $password) {
+            $this->command?->warn('ADMIN_EMAIL / ADMIN_PASSWORD absents du .env : compte admin non créé.');
+
+            return;
+        }
 
         User::updateOrCreate(
-            ['email' => 'foalengfranck6@gmail.com'], // Condition pour chercher si l'utilisateur existe
+            ['email' => $email],
             [
-                'name' => 'Foaleng Neumann',
-                'password' => Hash::make('MaitrePlombier2026@'),
+                'name' => config('app.admin_name'),
+                'password' => Hash::make($password),
                 'is_admin' => true,
                 'email_verified_at' => now(),
             ]

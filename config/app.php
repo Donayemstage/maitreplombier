@@ -15,6 +15,11 @@ return [
 
     'name' => env('APP_NAME', 'Donayem Plomberie'),
 
+    // Compte administrateur (lu depuis .env, compatible config:cache)
+    'admin_name' => env('ADMIN_NAME', 'Administrateur'),
+    'admin_email' => env('ADMIN_EMAIL'),
+    'admin_password' => env('ADMIN_PASSWORD'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

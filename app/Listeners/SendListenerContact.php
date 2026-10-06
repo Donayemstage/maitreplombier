@@ -7,7 +7,7 @@ use App\Mail\AdminNewContactMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class sendListenerContact
+class SendListenerContact
 {
     /**
      * Create the event listener.
@@ -30,7 +30,7 @@ class sendListenerContact
         }*/
 
             try {
-            $adminEmail = env('ADMIN_EMAIL');
+            $adminEmail = config('app.admin_email');
 
             Mail::to($adminEmail)->send(
                 new AdminNewContactMail($event->contact)
