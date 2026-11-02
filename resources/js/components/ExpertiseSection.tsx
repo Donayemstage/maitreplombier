@@ -9,6 +9,7 @@ export interface ServiceItem {
   icone_service?: string;
   prix_service?: string | number;
   image_service: string;
+  image_url?: string | null;
 }
 
 interface ExpertiseSectionProps {
@@ -76,13 +77,15 @@ export function ExpertiseSection({ services }: ExpertiseSectionProps) {
                   <div className="relative h-52 w-full overflow-hidden bg-slate-100">
                     <img 
                       src={
-                        service.image_service.startsWith('http')
-                          ? service.image_service
-                          : `/storage/services/${service.image_service}`
-                      } 
+                        service.image_url
+                          || (service.image_service?.startsWith('http') ? service.image_service : "/images/plombier.jpg")
+                      }
                       alt={service.nom_service} 
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=500";
+                        const img = e.currentTarget;
+                        if (!img.src.endsWith("/images/plombier.jpg")) {
+                          img.src = "/images/plombier.jpg";
+                        }
                       }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

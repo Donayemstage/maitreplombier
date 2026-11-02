@@ -248,21 +248,25 @@ return;
                   {/* Image d'illustration */}
                   <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                     <img
-                       src={
-        service.image_service ||
-        "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600"
-    }
-                      /*src={
-                        service.image_service.startsWith('http')
-                          ? service.image_service
-                          : `/storage/services/${service.image_service}`
+                      src={
+                          service.image_url ||
+                          (service.image_service?.startsWith('http')
+                              ? service.image_service
+                              : service.image_service
+                              ? `/storage/services/${service.image_service}`
+                              : "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600")
                       }
-                      alt={service.nom_service}
+                      alt={service.nom_service || "Prestation"}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
-                      }}*/
+                          const img = e.currentTarget;
+                          // Évite les boucles infinies si l'image de secours échoue aussi
+                          if (!img.src.includes("unsplash.com")) {
+                              img.src = "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600";
+                          }
+                      }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                  />
+                        
 
                     {/* Badge Icône et Prix */}
                     <div className="absolute top-3 left-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm p-2 rounded-xl text-blue-600 shadow-sm border border-slate-200/50">
