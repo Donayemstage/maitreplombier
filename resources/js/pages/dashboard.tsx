@@ -1,39 +1,4 @@
-/*import { Head } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { dashboard } from '@/routes';
 
-export default function Dashboard() {
-    return (
-        <>
-            <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-            </div>
-        </>
-    );
-}
-
-Dashboard.layout = {
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: dashboard(),
-        },
-    ],
-};*/
 import { Head, Link } from '@inertiajs/react';
 import { 
     FileText, 
@@ -252,46 +217,94 @@ return recentDevis;
                     </div>
                 </div>
 
-                {/* 2. Cartes KPI Globaux - Simples cartes sans arrondis avec légère ombre */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white p-5 rounded-none border border-slate-200 shadow-sm transition hover:shadow">
-                        <div className="flex justify-between items-start">
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">DEVIS (TOTAL)</span>
-                            <span className="p-2 bg-blue-50 text-blue-600 rounded-none"><FileText className="w-5 h-5"/></span>
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-2">{totalDevis}</h3>
-                        <span className="text-xs text-emerald-600 font-semibold">Demandes enregistrées</span>
-                    </div>
+                {/* 2. Cartes KPI Globaux */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
-                    <div className="bg-white p-5 rounded-none border border-slate-200 shadow-sm transition hover:shadow">
-                        <div className="flex justify-between items-start">
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">TAUX D'ACCEPTATION</span>
-                            <span className="p-2 bg-emerald-50 text-emerald-600 rounded-none"><CheckCircle2 className="w-5 h-5"/></span>
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-2">{tauxAcceptation}%</h3>
-                        <span className="text-xs text-emerald-600 font-semibold">Conversion des devis</span>
-                    </div>
+    {/* KPI 1 : Devis total - Bleu */}
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md">
+        <div className="h-1 bg-blue-600"></div>
+        <div className="p-5">
+            <div className="flex justify-between items-start">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    DEVIS (TOTAL)
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <FileText className="w-5 h-5" />
+                </span>
+            </div>
+            <h3 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">
+                {totalDevis}
+            </h3>
+            <span className="text-xs font-semibold text-emerald-600">
+                Demandes enregistrées
+            </span>
+        </div>
+    </div>
 
-                    <div className="bg-white p-5 rounded-none border border-slate-200 shadow-sm transition hover:shadow">
-                        <div className="flex justify-between items-start">
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">CA ESTIMÉ</span>
-                            <span className="p-2 bg-emerald-50 text-emerald-600 rounded-none"><TrendingUp className="w-5 h-5"/></span>
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-2">{caEstime}</h3>
-                        <span className="text-xs text-emerald-600 font-semibold">Turnover estimé</span>
-                    </div>
+    {/* KPI 2 : Taux d'acceptation - Orange */}
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md">
+        <div className="h-1 bg-orange-500"></div>
+        <div className="p-5">
+            <div className="flex justify-between items-start">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    TAUX D'ACCEPTATION
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                    <CheckCircle2 className="w-5 h-5" />
+                </span>
+            </div>
+            <h3 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">
+                {tauxAcceptation}%
+            </h3>
+            <span className="text-xs font-semibold text-emerald-600">
+                Conversion des devis
+            </span>
+        </div>
+    </div>
 
-                    <div className="bg-white p-5 rounded-none border border-slate-200 shadow-sm transition hover:shadow">
-                        <div className="flex justify-between items-start">
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">NOTE MOYENNE</span>
-                            <span className="p-2 bg-amber-50 text-amber-600 rounded-none"><Star className="w-5 h-5"/></span>
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                            {noteMoyenne} <span className="text-sm font-normal text-gray-400">/ 5.0</span>
-                        </h3>
-                        <span className="text-xs text-gray-500">Sur les avis publiés</span>
-                    </div>
-                </div>
+    {/* KPI 3 : Chiffre d'affaires estimé - Rouge */}
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md">
+        <div className="h-1 bg-red-500"></div>
+        <div className="p-5">
+            <div className="flex justify-between items-start">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    CA ESTIMÉ
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50 text-red-600">
+                    <TrendingUp className="w-5 h-5" />
+                </span>
+            </div>
+            <h3 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">
+                {caEstime}
+            </h3>
+            <span className="text-xs font-semibold text-slate-500">
+                Turnover estimé
+            </span>
+        </div>
+    </div>
+
+    {/* KPI 4 : Note moyenne */}
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md">
+        <div className="h-1 bg-slate-300"></div>
+        <div className="p-5">
+            <div className="flex justify-between items-start">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    NOTE MOYENNE
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                    <Star className="w-5 h-5" />
+                </span>
+            </div>
+            <h3 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">
+                {noteMoyenne} <span className="text-sm font-normal text-slate-400">/ 5.0</span>
+            </h3>
+            <span className="text-xs font-semibold text-slate-500">
+                Sur les avis publiés
+            </span>
+        </div>
+    </div>
+
+</div>
 
                 {/* 3. Demandes & Devis Récents avec Statuts en direct */}
                 <div className="bg-white p-6 rounded-none border border-slate-200 shadow-sm space-y-4">

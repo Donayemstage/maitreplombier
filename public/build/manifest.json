@@ -1,21 +1,12 @@
 {
-<<<<<<< HEAD
   "_AppLayout-BroxMC6B.js": {
     "file": "assets/AppLayout-BroxMC6B.js",
-=======
-  "_AppLayout-DX_oyTmh.js": {
-    "file": "assets/AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "AppLayout",
     "imports": [
       "_rolldown-runtime-CbXtAM7H.js",
       "_jsx-runtime-CwHwIqvZ.js",
       "_compiler-runtime-d_TZ23AL.js",
-<<<<<<< HEAD
       "_app-logo-CVJ26mdw.js",
-=======
-      "_app-logo-DML5a_E9.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_button-COdqf20D.js",
       "_utils-CCDJ05Ll.js",
       "_createLucideIcon-Buwxb0uL.js",
@@ -42,13 +33,8 @@
       "_input-DOkeFw_2.js"
     ]
   },
-<<<<<<< HEAD
   "_app-logo-CVJ26mdw.js": {
     "file": "assets/app-logo-CVJ26mdw.js",
-=======
-  "_app-logo-DML5a_E9.js": {
-    "file": "assets/app-logo-DML5a_E9.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "app-logo",
     "imports": [
       "_rolldown-runtime-CbXtAM7H.js",
@@ -639,7 +625,7 @@
     "src": "node_modules/.pnpm/@fontsource-variable+geist@5.3.0/node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CKKUeJFW.css",
+    "file": "assets/app-CzgU_cup.css",
     "name": "app",
     "names": [
       "app.css"
@@ -655,11 +641,7 @@
     ]
   },
   "resources/js/app.tsx": {
-<<<<<<< HEAD
-    "file": "assets/app-BQbE2uxS.js",
-=======
-    "file": "assets/app-XRxiwl0w.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
+    "file": "assets/app-Dk3dPCX7.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -668,11 +650,7 @@
       "_jsx-runtime-CwHwIqvZ.js",
       "_dist-CdRo9WnL.js",
       "_compiler-runtime-d_TZ23AL.js",
-<<<<<<< HEAD
       "_app-logo-CVJ26mdw.js",
-=======
-      "_app-logo-DML5a_E9.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_button-COdqf20D.js",
       "_utils-CCDJ05Ll.js",
       "_use-appearance-BQaMt3h-.js",
@@ -725,11 +703,7 @@
     ]
   },
   "resources/js/pages/a_propos.tsx": {
-<<<<<<< HEAD
     "file": "assets/a_propos-D3ueDri0.js",
-=======
-    "file": "assets/a_propos-j8moPIDM.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "a_propos",
     "src": "resources/js/pages/a_propos.tsx",
     "isDynamicEntry": true,
@@ -742,11 +716,7 @@
       "_circle-check-Cr9zGbBa.js",
       "_eye-Bz1ZbgUj.js",
       "_file-text-DcJVpfId.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_phone-93E8XPvg.js",
       "_shield-check-BvATjFnr.js",
       "_star-DwtB9O3V.js",
@@ -755,11 +725,7 @@
     ]
   },
   "resources/js/pages/accueil.tsx": {
-<<<<<<< HEAD
-    "file": "assets/accueil-B1yJrAp9.js",
-=======
-    "file": "assets/accueil-1ZvkdJU_.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
+    "file": "assets/accueil-fQKulD0T.js",
     "name": "accueil",
     "src": "resources/js/pages/accueil.tsx",
     "isDynamicEntry": true,
@@ -776,11 +742,7 @@
       "_chevron-right-BHhtv9yK.js",
       "_clock-DVJ3D1tz.js",
       "_copy-BOYDITOF.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_loader-circle-CajB-vrj.js",
       "_lock-CGv9sFig.js",
       "_message-square-CvHlhpFF.js",
@@ -796,11 +758,7 @@
     ]
   },
   "resources/js/pages/admin/avis.tsx": {
-<<<<<<< HEAD
     "file": "assets/avis-CW_ECtlD.js",
-=======
-    "file": "assets/avis-DCQmpBNU.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "avis",
     "src": "resources/js/pages/admin/avis.tsx",
     "isDynamicEntry": true,
@@ -854,11 +812,7 @@
     ]
   },
   "resources/js/pages/admin/devis/show.tsx": {
-<<<<<<< HEAD
     "file": "assets/show-ZHlhlzPX.js",
-=======
-    "file": "assets/show-T_L3Ntnu.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "show",
     "src": "resources/js/pages/admin/devis/show.tsx",
     "isDynamicEntry": true,
@@ -886,11 +840,7 @@
     ]
   },
   "resources/js/pages/admin/projets.tsx": {
-<<<<<<< HEAD
     "file": "assets/projets-Cp0jbGy8.js",
-=======
-    "file": "assets/projets-DTFGVNMq.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "projets",
     "src": "resources/js/pages/admin/projets.tsx",
     "isDynamicEntry": true,
@@ -914,11 +864,7 @@
     ]
   },
   "resources/js/pages/admin/services.tsx": {
-<<<<<<< HEAD
-    "file": "assets/services-DuX9tlBU.js",
-=======
-    "file": "assets/services-ui01ufQG.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
+    "file": "assets/services-CuPKBsWu.js",
     "name": "services",
     "src": "resources/js/pages/admin/services.tsx",
     "isDynamicEntry": true,
@@ -942,11 +888,7 @@
     ]
   },
   "resources/js/pages/admin/settings.tsx": {
-<<<<<<< HEAD
     "file": "assets/settings-DXr2pyTr.js",
-=======
-    "file": "assets/settings-CTBnztCs.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "settings",
     "src": "resources/js/pages/admin/settings.tsx",
     "isDynamicEntry": true,
@@ -991,11 +933,7 @@
     ]
   },
   "resources/js/pages/auth/forgot-password.tsx": {
-<<<<<<< HEAD
     "file": "assets/forgot-password-BowBEywo.js",
-=======
-    "file": "assets/forgot-password-F71c-Mwv.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "forgot-password",
     "src": "resources/js/pages/auth/forgot-password.tsx",
     "isDynamicEntry": true,
@@ -1030,11 +968,7 @@
     ]
   },
   "resources/js/pages/auth/register.tsx": {
-<<<<<<< HEAD
     "file": "assets/register-0pcQVGZ9.js",
-=======
-    "file": "assets/register-DjWCQJNa.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "register",
     "src": "resources/js/pages/auth/register.tsx",
     "isDynamicEntry": true,
@@ -1052,11 +986,7 @@
     ]
   },
   "resources/js/pages/auth/reset-password.tsx": {
-<<<<<<< HEAD
     "file": "assets/reset-password-DRRXrLq0.js",
-=======
-    "file": "assets/reset-password-oI7eTzct.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "reset-password",
     "src": "resources/js/pages/auth/reset-password.tsx",
     "isDynamicEntry": true,
@@ -1105,11 +1035,7 @@
     ]
   },
   "resources/js/pages/contact.tsx": {
-<<<<<<< HEAD
     "file": "assets/contact-ZrELIDIm.js",
-=======
-    "file": "assets/contact-CHiX2b3r.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "contact",
     "src": "resources/js/pages/contact.tsx",
     "isDynamicEntry": true,
@@ -1122,11 +1048,7 @@
       "_check-CsY2jx-J.js",
       "_clock-DVJ3D1tz.js",
       "_copy-BOYDITOF.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_mail-CM2LdCws.js",
       "_map-pin-C9iJ2uw2.js",
       "_message-square-CvHlhpFF.js",
@@ -1139,7 +1061,7 @@
     ]
   },
   "resources/js/pages/dashboard.tsx": {
-    "file": "assets/dashboard-BP572QwH.js",
+    "file": "assets/dashboard-BTxcWmr6.js",
     "name": "dashboard",
     "src": "resources/js/pages/dashboard.tsx",
     "isDynamicEntry": true,
@@ -1163,11 +1085,7 @@
     ]
   },
   "resources/js/pages/devis/consulter.tsx": {
-<<<<<<< HEAD
     "file": "assets/consulter-Ccemjph-.js",
-=======
-    "file": "assets/consulter-CYZBfTXu.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "consulter",
     "src": "resources/js/pages/devis/consulter.tsx",
     "isDynamicEntry": true,
@@ -1191,11 +1109,7 @@
     ]
   },
   "resources/js/pages/legal/confidentialite.tsx": {
-<<<<<<< HEAD
     "file": "assets/confidentialite-1kkhVgzo.js",
-=======
-    "file": "assets/confidentialite-CXBT9WxZ.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "confidentialite",
     "src": "resources/js/pages/legal/confidentialite.tsx",
     "isDynamicEntry": true,
@@ -1207,11 +1121,7 @@
       "_badge-check-DL0io3BA.js",
       "_circle-check-Cr9zGbBa.js",
       "_clock-DVJ3D1tz.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_mail-CM2LdCws.js",
       "_message-square-CvHlhpFF.js",
       "_phone-93E8XPvg.js",
@@ -1221,11 +1131,7 @@
     ]
   },
   "resources/js/pages/projets.tsx": {
-<<<<<<< HEAD
     "file": "assets/projets-B0KtsMcv.js",
-=======
-    "file": "assets/projets-CxzhCiUt.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "projets",
     "src": "resources/js/pages/projets.tsx",
     "isDynamicEntry": true,
@@ -1240,11 +1146,7 @@
       "_clock-DVJ3D1tz.js",
       "_eye-Bz1ZbgUj.js",
       "_file-text-DcJVpfId.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_map-pin-C9iJ2uw2.js",
       "_message-square-CvHlhpFF.js",
       "_shield-check-BvATjFnr.js",
@@ -1255,11 +1157,7 @@
     ]
   },
   "resources/js/pages/services.tsx": {
-<<<<<<< HEAD
     "file": "assets/services-D9hOHuFY.js",
-=======
-    "file": "assets/services-CNmIo3ap.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "services",
     "src": "resources/js/pages/services.tsx",
     "isDynamicEntry": true,
@@ -1272,11 +1170,7 @@
       "_check-CsY2jx-J.js",
       "_copy-BOYDITOF.js",
       "_file-text-DcJVpfId.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_message-square-CvHlhpFF.js",
       "_phone-call-8H2UZFk-.js",
       "_phone-93E8XPvg.js",
@@ -1359,11 +1253,7 @@
     ]
   },
   "resources/js/pages/utilisation.tsx": {
-<<<<<<< HEAD
     "file": "assets/utilisation-p9g9hMEX.js",
-=======
-    "file": "assets/utilisation-D2Qdar5a.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
     "name": "utilisation",
     "src": "resources/js/pages/utilisation.tsx",
     "isDynamicEntry": true,
@@ -1377,11 +1267,7 @@
       "_circle-check-Cr9zGbBa.js",
       "_clock-DVJ3D1tz.js",
       "_file-text-DcJVpfId.js",
-<<<<<<< HEAD
       "_AppLayout-BroxMC6B.js",
-=======
-      "_AppLayout-DX_oyTmh.js",
->>>>>>> ef969f6 (Correction de la page services et recompilation des assets)
       "_lock-CGv9sFig.js",
       "_phone-call-8H2UZFk-.js",
       "_send-BNGjo4gV.js",
